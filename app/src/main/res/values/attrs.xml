@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="fontPath" format="string"/>
+    <declare-styleable name="SlideButton">
+        <attr name="thumbDisable" format="reference"/>
+        <attr name="backgroundDisable" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="CompoundButton">
+        <attr name="android:button" />
+    </declare-styleable>
+
+    <!-- The DatePicker style. -->
+    <!--<attr name="datePickerStyle" format="reference" />-->
+
+    <!--<declare-styleable name="DatePicker">-->
+        <!--&lt;!&ndash; The first year (inclusive), for example "1940".-->
+             <!--{@deprecated Use minDate instead.} &ndash;&gt;-->
+        <!--<attr name="startYear" format="integer" />-->
+        <!--&lt;!&ndash; The last year (inclusive), for example "2010".-->
+             <!--{@deprecated Use maxDate instead.} &ndash;&gt;-->
+        <!--<attr name="endYear" format="integer" />-->
+        <!--&lt;!&ndash; Whether the spinners are shown. &ndash;&gt;-->
+        <!--<attr name="spinnersShown" format="boolean" />-->
+        <!--&lt;!&ndash; Whether the calendar view is shown. &ndash;&gt;-->
+        <!--<attr name="calendarViewShown" format="boolean" />-->
+        <!--&lt;!&ndash; The minimal date shown by this calendar view in mm/dd/yyyy format. &ndash;&gt;-->
+        <!--<attr name="minDate" format="string" />-->
+        <!--&lt;!&ndash; The maximal date shown by this calendar view in mm/dd/yyyy format. &ndash;&gt;-->
+        <!--<attr name="maxDate" format="string" />-->
+        <!--&lt;!&ndash; The first day of week according to {@link java.util.Calendar}. &ndash;&gt;-->
+        <!--<attr name="firstDayOfWeek" />-->
+        <!--&lt;!&ndash; @hide The layout of the date picker. &ndash;&gt;-->
+        <!--<attr name="internalLayout" format="reference"  />-->
+        <!--&lt;!&ndash; @hide The layout of the legacy DatePicker. &ndash;&gt;-->
+        <!--<attr name="legacyLayout" />-->
+        <!--&lt;!&ndash; The background color for the date selector 's day of week. &ndash;&gt;-->
+        <!--<attr name="dayOfWeekBackground" format="color|reference" />-->
+        <!--&lt;!&ndash; The text color for the date selector's day of week. &ndash;&gt;-->
+        <!--<attr name="dayOfWeekTextAppearance" format="reference" />-->
+        <!--&lt;!&ndash; The month's text appearance in the date selector. &ndash;&gt;-->
+        <!--<attr name="headerMonthTextAppearance" format="reference" />-->
+        <!--&lt;!&ndash; The day of month's text appearance in the date selector. &ndash;&gt;-->
+        <!--<attr name="headerDayOfMonthTextAppearance" format="reference" />-->
+        <!--&lt;!&ndash; The year's text appearance in the date selector. &ndash;&gt;-->
+        <!--<attr name="headerYearTextAppearance" format="reference" />-->
+        <!--&lt;!&ndash; The background for the date selector. &ndash;&gt;-->
+        <!--<attr name="headerBackground" />-->
+        <!--&lt;!&ndash; @hide The selected text color for the date selector. Used as a-->
+             <!--backup if the text appearance does not explicitly have a color-->
+             <!--set for the selected state. &ndash;&gt;-->
+        <!--<attr name="headerSelectedTextColor" />-->
+        <!--&lt;!&ndash; The list year's text appearance in the list. &ndash;&gt;-->
+        <!--<attr name="yearListItemTextAppearance" format="reference" />-->
+        <!--&lt;!&ndash; The list year's selected circle color in the list. &ndash;&gt;-->
+        <!--<attr name="yearListSelectorColor" format="color" />-->
+        <!--&lt;!&ndash; The text color list of the calendar. &ndash;&gt;-->
+        <!--<attr name="calendarTextColor" format="color" />-->
+        <!--&lt;!&ndash; @hide The selected text color for the calendar. Used as a backup-->
+             <!--if the text color does not explicitly have a color set for the-->
+             <!--selected state. &ndash;&gt;-->
+        <!--<attr name="calendarSelectedTextColor" format="color" />-->
+        <!--&lt;!&ndash; Defines the look of the widget. Prior to the L release, the only choice was-->
+             <!--spinner. As of L, with the Material theme selected, the default layout is calendar,-->
+             <!--but this attribute can be used to force spinner to be used instead. &ndash;&gt;-->
+        <!--<attr name="datePickerMode">-->
+            <!--&lt;!&ndash; Date picker with spinner controls to select the date. &ndash;&gt;-->
+            <!--<enum name="spinner" value="1" />-->
+            <!--&lt;!&ndash; Date picker with calendar to select the date. &ndash;&gt;-->
+            <!--<enum name="calendar" value="2" />-->
+        <!--</attr>-->
+    <!--</declare-styleable>-->
+
+</resources>

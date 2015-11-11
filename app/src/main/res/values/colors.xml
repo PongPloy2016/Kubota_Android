@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="orange">#f5841f</color>
+    <color name="blue">#02a1b1</color>
+    <color name="background">#f7f8f8</color>
+    <color name="dark_gray">#5f6060</color>
+    <color name="light_gray">#8d8d8d</color>
+
+    <color name="colorPrimary">#f5841f</color>
+    <color name="colorPrimaryDark">#DB6719</color>
+    <color name="colorAccent">#f5841f</color>
+    <color name="textColorPrimary">#ffffff</color>
+    <color name="windowBackground">#e0e0e0</color>
+    <color name="navigationBarColor">#f5841f</color>
+
+
+    <color name="green_main">#108650</color>
+    <color name="green_button">#108650</color>
+    <color name="green_button_active">#0d5c2c</color>
+    <color name="orange_active_tab">#f07518</color>
+    <color name="gray_item_complete">#c2c2c2</color>
+    <color name="text_hint_gray">#c2c2c2</color>
+    <color name="orange_item_complete">#f28f24</color>
+    <color name="orange_item">#f7bc7c</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#ff000000</color>
+    <color name="edittext_hint">#828584</color>
+
+
+    <!-- Text Color -->
+    <color name="text_gray">#828584</color>
+
+    <color name="tabsScrollColor">#fd7f23</color>
+
+    <color name="border_gray">#ffe3e1e1</color>
+    <color name="red">#bd2931</color>
+    <color name="holo_light_primary">#ff5722</color>
+
+    <color name="transparent">@android:color/transparent</color>
+    <color name="transparent_black">#88000000</color>
+</resources>

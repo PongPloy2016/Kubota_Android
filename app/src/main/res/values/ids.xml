@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="promotionGroup" />
+    <item type="id" name="promotionItemPosition" />
+    <item type="id" name="promotionItemAdapter" />
+    <item type="id" name="holder" />
+    <item type="id" name="item" />
+</resources>

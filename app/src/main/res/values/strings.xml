@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Kubota</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Main -->
+    <string name="main_enter_store_button">เข้าระบบร้าน</string>
+
+
+    <!-- Login -->
+    <string name="login_store_title">เข้าสู่ระบบร้าน</string>
+    <string name="login_store_id_hint">รหัสร้าน</string>
+    <string name="login_password_hint">รหัสผ่าน</string>
+    <string name="login_button">เข้าสู่ระบบ</string>
+
+
+
+
+</resources>
