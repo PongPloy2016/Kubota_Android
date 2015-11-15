@@ -12,7 +12,82 @@
     <string name="login_password_hint">รหัสผ่าน</string>
     <string name="login_button">เข้าสู่ระบบ</string>
 
+    <!-- UnfinishTask -->
+    <string name="unfinish_task">งานที่ยังไม่ส่ง</string>
+    <string name="unfinish_task_button_start_new_job">เริ่มงานใหม่</string>
 
+
+    <!-- Service -->
+    <string name="service_store">ร้าน</string>
+    <string name="service_step_1">ขั้นตอนที่1 : กรอกรายละเอียดลูกค้า</string>
+    <string name="service_step_2">ขั้นตอนที่2 : ภาพถ่าย</string>
+    <string name="service_step_3">ขั้นตอนที่3 : รับรองงาน</string>
+    <string name="service_step_4">ขั้นตอนที่4 : ยืนยันการส่งข้อมูล</string>
+
+    <string name="service_button_previous">ส่วนก่อนหน้านี้</string>
+    <string name="service_button_next">ส่วนถัดไป</string>
+    <string name="service_button_confirm">ยืนยัน</string>
+    <string name="service_button_cancel">ยกเลิก</string>
+    <string name="service_button_ok">ตกลง</string>
+
+    <string name="service_title_usage_info">ข้อมูลการใช้งาน</string>
+    <string name="service_title_customer_info">ข้อมูลลูกค้าเบื้องต้น</string>
+    <string name="service_title_customer_sign">ลงชื่อลูกค้า</string>
+    <string name="service_title_technician_sign">ลงชื่อช่างบริการ</string>
+    <string name="service_title_confirm_submittion">ยืนยันการส่งข้อมูล</string>
+
+    <string name="service_radio_caption_owner">เจ้าของรถ</string>
+    <string name="service_radio_caption_user">ผู้ใช้</string>
+
+    <string name="service_select_title">เลือกรุ่นรถ</string>
+
+    <string name="service_hint_job_type">ประเภทงาน</string>
+    <string name="service_hint_product">สินค้า</string>
+    <string name="service_hint_model">รุ่นรถ</string>
+    <string name="service_hint_job_id">รหัสงาน</string>
+    <string name="service_hint_other">อื่นๆโปรดระบุ</string>
+    <string name="service_hint_name">ชื่อ - นามสกุล</string>
+    <string name="service_hint_mobilenumber_1">เบอร์โทรศัพท์ 1</string>
+    <string name="service_hint_mobilenumber_2">เบอร์โทรศัพท์ 2</string>
+    <string name="service_hint_machine_number">หมายเลขรถ</string>
+    <string name="service_hint_engine_number">หมายเลขเครื่อง</string>
+    <string name="service_hint_working_hours">ชั่วโมงการทำงาน</string>
+    <string name="service_hint_addrss">ที่อยู่</string>
+
+    <string name="service_image_1_engine_number">หมายเลขเครื่อง</string>
+    <string name="service_image_2_working_hours">ชั่วโมงการทำงาน</string>
+    <string name="service_image_3_machine">รถลูกค้า</string>
+    <string name="service_image_4_customer_with_machine">ลูกค้ากับรถลูกค้า</string>
+
+    <string name="service_confirm_suggesttion">ข้าพเจ้าได้รับคำแนะนำเป็นที่เข้าใจอย่างดีแล้ว</string>
+    <string name="service_confirm_give_suggesttion">ข้าพเจ้าได้ให้คำแนะนำแก่ลูกค้าให้เป็นที่เข้าใจอย่างดีแล้ว</string>
+
+    <string name="service_hint_signature">ลายมือชื่อ</string>
+    <string name="service_hint_date">ลงวันที่</string>
+    <string name="service_hint_customer_name">ชื่อลูกค้า</string>
+    <string name="service_hint_technician_name">ชื่อผู้ให้บริการ</string>
+
+
+    <string name="service_confirm_text">ระบบจะส่งข้อมูลหลังจากกดปุ่มยืนยัน กรุณาตรวจสอบข้อมูลและการเชื่อมต่ออินเตอร์เน็ตของท่าน หากไม่สามารถเชื่อมต่ออินเตอร์เน็ตได้ ระบบจะทำการบันทึกข้อมูลอัตโนมัติ และส่งเข้าระบบอีกครั้งเมื่อมีการเชื่อมต่อ</string>
+
+    <!-- Popup -->
+    <string name="service_popup_success_title">สำเร็จ!!</string>
+    <string name="service_popup_fail_title">มีข้อผิดพลาด!</string>
+    <string name="service_popup_success_message">ข้อมูลถูกส่งเข้าระบบแล้ว</string>
+    <string name="service_popup_fail_message">ข้อมูลไม่สามารถส่งเข้าระบบได้</string>
+
+
+    <!-- Survey -->
+    <string name="survey_title_confirm_continue">คุณต้องการทำ\nแบบสอบถามต่อหรือไม่</string>
+    <string name="survey_button_yes">ใช่</string>
+    <string name="survey_button_no">ไม่</string>
+    <string name="survey_title">แบบสอบถามที่ 1</string>
+    <string name="survey_finish_message">จบการทำงาน ขอบคุณค่ะ</string>
+    <string name="title_activity_service">ServiceActivity</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_service_fragment">Service</string>
+    <string name="hello_blank_fragment">Unfinish Task</string>
 
 
 </resources>
