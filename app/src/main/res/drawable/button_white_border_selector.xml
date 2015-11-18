@@ -4,4 +4,5 @@
     <item android:state_focused="true" android:drawable="@drawable/rectangle_round_corner_orange" />
     <item android:state_pressed="true" android:drawable="@drawable/rectangle_round_corner_orange" />
     <item android:drawable="@drawable/rectangle_round_corner_white_orange_border" />
+    <item android:state_enabled="false" android:drawable="@drawable/rectangle_round_corner_white_orange_border_disable"/>
 </selector>

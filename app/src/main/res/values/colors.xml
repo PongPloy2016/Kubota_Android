@@ -9,6 +9,12 @@
     <color name="dark_gray">#5f6060</color>
     <color name="light_gray">#8d8d8d</color>
     <color name="light_gray_divider">#FFCACACA</color>
+    <color name="light_gray_stage">#b7b7B8</color>
+    <color name="orange_disable">#c1f5841f</color>
+    <color name="dark_gray_disable">#b15f6060</color>
+
+
+
 
     <color name="top_bar_divider_1">#BD6728</color>
     <color name="top_bar_divider_2">#BB6428</color>

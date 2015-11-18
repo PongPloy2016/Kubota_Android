@@ -85,9 +85,10 @@
     <string name="survey_finish_message">จบการทำงาน ขอบคุณค่ะ</string>
     <string name="title_activity_service">ServiceActivity</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_service_fragment">Service</string>
     <string name="hello_blank_fragment">Unfinish Task</string>
+    <string name="title_activity_main2">Main2Activity</string>
 
 
 </resources>
