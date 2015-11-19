@@ -12,7 +12,7 @@
     <string name="login_password_hint">รหัสผ่าน</string>
     <string name="login_button">เข้าสู่ระบบ</string>
 
-    <!-- UnfinishTask -->
+    <!-- UnfinishTask -->ServiceFragment
     <string name="unfinish_task">งานที่ยังไม่ส่ง</string>
     <string name="unfinish_task_button_start_new_job">เริ่มงานใหม่</string>
 
@@ -47,8 +47,8 @@
     <string name="service_hint_job_id">รหัสงาน</string>
     <string name="service_hint_other">อื่นๆโปรดระบุ</string>
     <string name="service_hint_name">ชื่อ - นามสกุล</string>
-    <string name="service_hint_mobilenumber_1">เบอร์โทรศัพท์ 1</string>
-    <string name="service_hint_mobilenumber_2">เบอร์โทรศัพท์ 2</string>
+    <string name="service_hint_tel_1">เบอร์โทรศัพท์ 1</string>
+    <string name="service_hint_tel_2">เบอร์โทรศัพท์ 2</string>
     <string name="service_hint_machine_number">หมายเลขรถ</string>
     <string name="service_hint_engine_number">หมายเลขเครื่อง</string>
     <string name="service_hint_working_hours">ชั่วโมงการทำงาน</string>

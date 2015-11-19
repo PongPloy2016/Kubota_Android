@@ -10,7 +10,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:gravity="center"
     android:background="@drawable/login_bg"
-    tools:ignore="MissingPrefix">
+    tools:ignore="MissingPrefix"
+    android:id="@+id/rootLayout">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,9 +52,9 @@
 
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="15dp"
                 android:padding="5dp"
                 android:id="@+id/ic_id"
                 android:src="@drawable/login_fillbox_id_icon"
@@ -67,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:hint="@string/login_store_id_hint"
-                android:textColorHint="@color/light_gray"
+                android:textColorHint="@color/text_hint_gray"
                 android:text=""
                 android:textSize="23dp"
                 android:textColor="@color/black"
@@ -93,9 +94,9 @@
 
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="15dp"
                 android:padding="5dp"
                 android:id="@+id/ic_pass_id"
                 android:src="@drawable/login_fillbox_password_icon"
@@ -111,6 +112,7 @@
                 android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:hint="@string/login_password_hint"
+                android:textColorHint="@color/text_hint_gray"
                 android:text=""
                 android:textSize="23dp"
                 android:inputType="textPassword"
@@ -130,7 +132,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="30dp"
             android:text="@string/login_button"
-            android:background="@drawable/login_login_active_btn"
+            android:background="@drawable/button_orange_selector"
             android:textSize="25dp"
             android:textStyle="bold"
             android:textColor="@color/textColorPrimary"

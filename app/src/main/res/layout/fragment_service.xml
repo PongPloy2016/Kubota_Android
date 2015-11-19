@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:layout_marginBottom="0dp"
-        android:background="@color/windowBackground">
+        android:background="@color/background">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,13 +23,13 @@
             android:gravity="center_vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp">
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp">
             <TextView
                 android:id="@+id/textStepTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18dp"
+                android:textSize="15dp"
                 android:textColor="@color/dark_gray"
                 android:textStyle="bold"
                 android:text="@string/service_step_1"/>
@@ -38,12 +38,12 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center">
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"
+                    android:layout_height="4dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:background="@color/light_gray_stage"
@@ -58,9 +58,9 @@
                     android:showDividers="middle">
 
                     <ImageButton
-                        android:id="@+id/stage1Button"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:id="@+id/step1Button"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:src="@drawable/stage_done"
@@ -69,9 +69,9 @@
                         />
 
                     <ImageButton
-                        android:id="@+id/stage2Button"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:id="@+id/step2Button"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:src="@drawable/stage_step_active"
@@ -80,9 +80,9 @@
                         />
 
                     <ImageButton
-                        android:id="@+id/stage3Button"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:id="@+id/step3Button"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:src="@drawable/stage_step_inactive"
@@ -91,9 +91,9 @@
                         />
 
                     <ImageButton
-                        android:id="@+id/stage4Button"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:id="@+id/step4Button"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:src="@drawable/stage_step_inactive"
@@ -114,8 +114,8 @@
             android:layout_weight="1"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
-            android:paddingTop="15dp"
-            android:paddingBottom="10dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
             />
 
         <!--<com.viewpagerindicator.IconPageIndicator-->
@@ -133,11 +133,12 @@
             android:gravity="center">
 
             <Button
-                android:id="@+id/buttonWhite"
-                android:layout_width="wrap_content"
+                android:id="@+id/previousButton"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
+                android:layout_marginRight="5dp"
                 android:textSize="15dp"
                 android:text="@string/service_button_previous"
                 android:textColor="@color/button_white_text_selector"
@@ -145,11 +146,12 @@
                 android:enabled="false"></Button>
 
             <Button
-                android:id="@+id/buttonOrange"
-                android:layout_width="wrap_content"
+                android:id="@+id/nextButton"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
+                android:layout_marginLeft="5dp"
                 android:textSize="15dp"
                 android:text="@string/service_button_next"
                 android:textColor="@color/white"

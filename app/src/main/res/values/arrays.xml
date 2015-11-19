@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <array name="stage_title">
+        <item>@string/service_step_1</item>
+        <item>@string/service_step_2</item>
+        <item>@string/service_step_3</item>
+        <item>@string/service_step_4</item>
+    </array>
+
     <array name="month_in_number">
         <item>01</item>
         <item>02</item>

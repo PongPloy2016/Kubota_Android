@@ -1,0 +1,16 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
+    tools:context="th.co.siamkubota.kubota.fragment.UnfinishTaskFragment">
+
+    <TextView
+        android:id="@+id/textStepTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="@string/service_step_4"
+        android:textColor="@color/dark_gray"
+        android:textStyle="bold"></TextView>
+</LinearLayout>

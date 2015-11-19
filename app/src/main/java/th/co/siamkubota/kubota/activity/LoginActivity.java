@@ -8,15 +8,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
+import th.co.siamkubota.kubota.utils.function.Ui;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     private AppController app;
+    private RelativeLayout rootLayout;
     private Button loginButton;
 
     @Override
@@ -31,8 +34,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+        rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         loginButton = (Button) findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
+
+        Ui.setupUI(LoginActivity.this, rootLayout);
 
     }
 
