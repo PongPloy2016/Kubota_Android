@@ -95,6 +95,28 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             android:layout_marginTop="3dp"
             android:layout_marginBottom="10dp"/>
 
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/radio_button_state"
+                android:textSize="15dp"
+                android:textColor="@color/light_gray"
+                android:text="@string/service_radio_caption_owner"
+                android:layout_marginRight="15dp"
+                />
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/radio_button_state"
+                android:textSize="15dp"
+                android:textColor="@color/light_gray"
+                android:text="@string/service_radio_caption_user"/>
+        </RadioGroup>
+
 
         <LinearLayout
             style="@style/LinearLayoutSpinner">
