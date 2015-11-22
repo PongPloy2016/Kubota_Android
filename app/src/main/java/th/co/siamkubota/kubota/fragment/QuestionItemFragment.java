@@ -1,8 +1,6 @@
 package th.co.siamkubota.kubota.fragment;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,28 +8,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import th.co.siamkubota.kubota.R;
-import th.co.siamkubota.kubota.activity.ResultActivity;
+import th.co.siamkubota.kubota.model.Photo;
+import th.co.siamkubota.kubota.model.Question;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Step4ConfirmFragment.OnFragmentInteractionListener} interface
+ * {@link QuestionItemFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Step4ConfirmFragment#newInstance} factory method to
+ * Use the {@link QuestionItemFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Step4ConfirmFragment extends Fragment implements
-View.OnClickListener{
+public class QuestionItemFragment extends Fragment {
 
-    private static final String ARG_PARAM_TITLE = "title";
+    private static final String ARG_PARAM_DATA = "data";
 
-    private Button confirmButton;
-    private Button cancelButton;
+    private Question data;
 
-    private String title;
+    private LinearLayout rootLayout;
+    private TextView titleTextView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -49,15 +49,15 @@ View.OnClickListener{
     //////////////////////////////////////////////////////////////////// constructor
 
 
-    public static Step4ConfirmFragment newInstance(String title) {
-        Step4ConfirmFragment fragment = new Step4ConfirmFragment();
+    public static QuestionItemFragment newInstance(Question data) {
+        QuestionItemFragment fragment = new QuestionItemFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM_TITLE, title);
+        args.putParcelable(ARG_PARAM_DATA, data);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public Step4ConfirmFragment() {
+    public QuestionItemFragment() {
         // Required empty public constructor
     }
 
@@ -65,7 +65,7 @@ View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            title = getArguments().getString(ARG_PARAM_TITLE);
+            data = getArguments().getParcelable(ARG_PARAM_DATA);
         }
 
     }
@@ -75,17 +75,20 @@ View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //View v = View.inflate(getActivity(), R.layout.tab_product, null);
-        View v = inflater.inflate(R.layout.fragment_step4_confirm, container, false);
-        confirmButton = (Button) v.findViewById(R.id.confirmButton);
-        cancelButton = (Button) v.findViewById(R.id.cancelButton);
+        View v = inflater.inflate(R.layout.item_page_question, container, false);
 
-        confirmButton.setOnClickListener(this);
-        cancelButton.setOnClickListener(this);
+        rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
+        titleTextView = (TextView) v.findViewById(R.id.titleTextView);
+        titleTextView.setText(data.getTitle());
 
-
-        //mListener.onFragmentPresent(this, title);
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -127,23 +130,7 @@ View.OnClickListener{
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        //public void onFragmentPresent(Fragment fragment, String title);
-        public void onConfirmFragmentCancel();
+        public void onFragmentPresent(Fragment fragment, String title);
     }
 
-    ////////////////////////////////////////////////////////////// implement method
-
-
-    @Override
-    public void onClick(View v) {
-        if(v == confirmButton){
-
-            Intent intent = new Intent(getActivity(), ResultActivity.class);
-            startActivity(intent);
-            getActivity().finish();
-
-        }else{
-            mListener.onConfirmFragmentCancel();
-        }
-    }
 }

@@ -1,5 +1,7 @@
 package th.co.siamkubota.kubota.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import th.co.siamkubota.kubota.R;
@@ -48,6 +51,7 @@ public class ServiceFragment extends Fragment implements
     private TextView textStepTitle;
     private ImageButton step1Button, step2Button, step3Button, step4Button;
     private Button previousButton, nextButton;
+    private LinearLayout navigationControleLayout;
     private int Numboftabs;
     private CustomOnPageChangeListener pageChangeListener;
 
@@ -92,6 +96,7 @@ public class ServiceFragment extends Fragment implements
 
         previousButton = (Button) v.findViewById(R.id.previousButton);
         nextButton = (Button) v.findViewById(R.id.nextButton);
+        navigationControleLayout = (LinearLayout) v.findViewById(R.id.navigationControleLayout);
 
 
         step1Button.setOnClickListener(this);
@@ -154,6 +159,34 @@ public class ServiceFragment extends Fragment implements
         textStepTitle.setText(title);
     }
 
+    public void hideBottomBar(){
+        navigationControleLayout.animate()
+                .translationY(navigationControleLayout.getHeight())
+                .alpha(0.0f)
+                .setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        navigationControleLayout.setVisibility(View.GONE);
+                    }
+                });
+    }
+
+    public void showBottomBar(){
+        navigationControleLayout.animate()
+                .translationY(0)
+                .alpha(0.0f)
+                .setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        navigationControleLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+    }
+
 
     ///////////////////////////////////////////////////////////////////// implement method
 
@@ -179,21 +212,6 @@ public class ServiceFragment extends Fragment implements
         }
     }
 
-    /*
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        setStepTitle(mTitle[position]);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }*/
 
     @Override
     public void onFragmentPresent(Fragment fragment, String title) {
@@ -209,6 +227,11 @@ public class ServiceFragment extends Fragment implements
         }else if(fragment instanceof Step4ConfirmFragment){
 
         }
+    }
+
+    @Override
+    public void onConfirmFragmentCancel() {
+        pager.setCurrentItem((pageChangeListener.getCurrentPage() -1));
     }
 
     /**
@@ -229,7 +252,19 @@ public class ServiceFragment extends Fragment implements
             }else{
                 previousButton.setEnabled(true);
             }
+
+            if(position == 3){
+                //hideBottomBar();
+                navigationControleLayout.setVisibility(View.GONE);
+            }else{
+                if(navigationControleLayout.getVisibility() == View.GONE){
+                    //showBottomBar();
+                    navigationControleLayout.setVisibility(View.VISIBLE);
+                }
+            }
         }
+
+
 
         public final int getCurrentPage() {
             return currentPage;

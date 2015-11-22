@@ -1,6 +1,5 @@
 package th.co.siamkubota.kubota.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.activity.ResultActivity;
@@ -18,20 +16,18 @@ import th.co.siamkubota.kubota.activity.ResultActivity;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link Step4ConfirmFragment.OnFragmentInteractionListener} interface
+ * {@link ContinueQuestionFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link Step4ConfirmFragment#newInstance} factory method to
+ * Use the {@link ContinueQuestionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Step4ConfirmFragment extends Fragment implements
+public class ContinueQuestionFragment extends Fragment implements
 View.OnClickListener{
 
     private static final String ARG_PARAM_TITLE = "title";
 
-    private Button confirmButton;
-    private Button cancelButton;
-
-    private String title;
+    private Button yesButton;
+    private Button noButton;
 
     private OnFragmentInteractionListener mListener;
 
@@ -49,15 +45,15 @@ View.OnClickListener{
     //////////////////////////////////////////////////////////////////// constructor
 
 
-    public static Step4ConfirmFragment newInstance(String title) {
-        Step4ConfirmFragment fragment = new Step4ConfirmFragment();
+    public static ContinueQuestionFragment newInstance() {
+        ContinueQuestionFragment fragment = new ContinueQuestionFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM_TITLE, title);
+        //args.putString(ARG_PARAM_TITLE, title);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public Step4ConfirmFragment() {
+    public ContinueQuestionFragment() {
         // Required empty public constructor
     }
 
@@ -65,7 +61,7 @@ View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            title = getArguments().getString(ARG_PARAM_TITLE);
+            //title = getArguments().getString(ARG_PARAM_TITLE);
         }
 
     }
@@ -75,12 +71,12 @@ View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //View v = View.inflate(getActivity(), R.layout.tab_product, null);
-        View v = inflater.inflate(R.layout.fragment_step4_confirm, container, false);
-        confirmButton = (Button) v.findViewById(R.id.confirmButton);
-        cancelButton = (Button) v.findViewById(R.id.cancelButton);
+        View v = inflater.inflate(R.layout.fragment_continue_question, container, false);
+        yesButton = (Button) v.findViewById(R.id.yesButton);
+        noButton = (Button) v.findViewById(R.id.noButton);
 
-        confirmButton.setOnClickListener(this);
-        cancelButton.setOnClickListener(this);
+        yesButton.setOnClickListener(this);
+        noButton.setOnClickListener(this);
 
 
         //mListener.onFragmentPresent(this, title);
@@ -128,7 +124,7 @@ View.OnClickListener{
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         //public void onFragmentPresent(Fragment fragment, String title);
-        public void onConfirmFragmentCancel();
+        public void onConfirmContinue(boolean result);
     }
 
     ////////////////////////////////////////////////////////////// implement method
@@ -136,14 +132,10 @@ View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if(v == confirmButton){
-
-            Intent intent = new Intent(getActivity(), ResultActivity.class);
-            startActivity(intent);
-            getActivity().finish();
-
+        if(v == yesButton){
+           mListener.onConfirmContinue(true);
         }else{
-            mListener.onConfirmFragmentCancel();
+            mListener.onConfirmContinue(false);
         }
     }
 }

@@ -13,14 +13,13 @@
     <color name="orange_disable">#c1f5841f</color>
     <color name="dark_gray_disable">#b15f6060</color>
     <color name="light_gray_border">#ffe3e1e1</color>
-
+    <color name="blue_dark">#FF008491</color>
+    <color name="dark_gray_alpha">#d15f6060</color>
 
 
 
     <color name="top_bar_divider_1">#BD6728</color>
     <color name="top_bar_divider_2">#BB6428</color>
-
-
 
 
     <color name="colorPrimary">#f5841f</color>
@@ -55,5 +54,6 @@
     <color name="holo_light_primary">#ff5722</color>
 
     <color name="transparent">@android:color/transparent</color>
+    <color name="transparent_white">#f6ffffff</color>
     <color name="transparent_black">#88000000</color>
 </resources>

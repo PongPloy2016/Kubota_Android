@@ -2,15 +2,30 @@ package th.co.siamkubota.kubota.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.adapter.PhotoPagerAdapter;
+import th.co.siamkubota.kubota.model.Photo;
+import th.co.siamkubota.kubota.utils.function.ImageFile;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,15 +35,22 @@ import th.co.siamkubota.kubota.R;
  * Use the {@link Step2PhotoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Step2PhotoFragment extends Fragment {
+public class Step2PhotoFragment extends Fragment implements
+        View.OnClickListener,
+PhotoPageFragment.OnFragmentInteractionListener{
 
     private static final String ARG_PARAM_TITLE = "title";
 
-    private TextView textStepTitle;
+    private ViewPager pager;
+    private Button button1, button2, button3, button4;
+    private ImageButton previousButton, nextButton;
+    private PhotoPagerAdapter adapter;
 
-    private String title;
+    private CustomOnPageChangeListener pageChangeListener;
 
     private OnFragmentInteractionListener mListener;
+
+    private ArrayList<Photo> photos;
 
     //////////////////////////////////////////////////////////////////// getter setter
 
@@ -58,7 +80,7 @@ public class Step2PhotoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            title = getArguments().getString(ARG_PARAM_TITLE);
+            //title = getArguments().getString(ARG_PARAM_TITLE);
         }
     }
 
@@ -69,11 +91,59 @@ public class Step2PhotoFragment extends Fragment {
         //View v = View.inflate(getActivity(), R.layout.tab_product, null);
         View v = inflater.inflate(R.layout.fragment_step2_photo, container, false);
 
+        button1 = (Button) v.findViewById(R.id.button1);
+        button2 = (Button) v.findViewById(R.id.button2);
+        button3 = (Button) v.findViewById(R.id.button3);
+        button4 = (Button) v.findViewById(R.id.button4);
+        pager = (ViewPager) v.findViewById(R.id.pagerPhoto);
 
-        //mListener.onFragmentPresent(this, title);
+        previousButton = (ImageButton) v.findViewById(R.id.previousButton);
+        nextButton = (ImageButton) v.findViewById(R.id.nextButton);
 
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
+        button4.setOnClickListener(this);
+
+        previousButton.setOnClickListener(this);
+        nextButton.setOnClickListener(this);
+
+        photos = new ArrayList<Photo>();
+
+        photos.add(new Photo(getString(R.string.service_image_1_engine_number)));
+        photos.add(new Photo(getString(R.string.service_image_2_working_hours)));
+        photos.add(new Photo(getString(R.string.service_image_3_machine)));
+        photos.add(new Photo(getString(R.string.service_image_4_customer_with_machine)));
+
+        adapter = new PhotoPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), photos , Step2PhotoFragment.this);
+        pager.setAdapter(adapter);
+        pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
+
+        pager.setCurrentItem(0);
 
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        setSelectPhoto();
+        /*
+        if(adapter == null){
+            adapter = new PhotoPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), photos , Step2PhotoFragment.this);
+        }
+
+        pager.setAdapter(adapter);
+        pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
+        //pager.setCurrentItem(pageChangeListener.getCurrentPage(),true);
+        */
+
+    }
+
+    public void setSelectPhoto(){
+        pager.requestLayout();
+        pager.setCurrentItem(pageChangeListener.getCurrentPage());
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -118,4 +188,90 @@ public class Step2PhotoFragment extends Fragment {
         public void onFragmentPresent(Fragment fragment, String title);
     }
 
+
+    //////////////////////////////////////////////////////////// implement method
+
+
+    @Override
+    public void onClick(View v) {
+        if(v == button1){
+            pager.setCurrentItem(0, true);
+        }else if(v == button2){
+            pager.setCurrentItem(1, true);
+        }else if(v == button3){
+            pager.setCurrentItem(2, true);
+        }else if(v == button4){
+            pager.setCurrentItem(3, true);
+        }else if(v == previousButton){
+            int currentPage = pageChangeListener.getCurrentPage();
+            --currentPage;
+            pager.setCurrentItem(currentPage = (currentPage >= 0 ? currentPage : 0));
+        }else if(v == nextButton){
+            int currentPage = pageChangeListener.getCurrentPage();
+            ++currentPage;
+            pager.setCurrentItem(currentPage = (currentPage < adapter.getCount() ? currentPage : (adapter.getCount() - 1)));
+        }
+    }
+
+
+    @Override
+    public void onFragmentPresent(Fragment fragment, String title) {
+
+    }
+
+    /**
+     * Get the current view position from the ViewPager by
+     * extending SimpleOnPageChangeListener class and adding your method
+     */
+    public class CustomOnPageChangeListener extends ViewPager.SimpleOnPageChangeListener {
+
+        private int currentPage;
+
+        @Override
+        public void onPageSelected(int position) {
+
+            currentPage = position;
+
+            if(position == 0){
+                previousButton.setEnabled(false);
+            }else{
+                previousButton.setEnabled(true);
+            }
+
+            button1.setTextColor(ContextCompat.getColor(getActivity(),R.color.button_text_gray_selector));
+            button2.setTextColor(ContextCompat.getColor(getActivity(),R.color.button_text_gray_selector));
+            button3.setTextColor(ContextCompat.getColor(getActivity(),R.color.button_text_gray_selector));
+            button4.setTextColor(ContextCompat.getColor(getActivity(),R.color.button_text_gray_selector));
+
+            switch (position){
+                case 0 :
+                    //button1.requestFocus();
+                    button1.setTextColor(ContextCompat.getColor(getActivity(), R.color.light_gray_stage));
+                    SpannableString content = new SpannableString(button1.getText().toString());
+                    content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                    button1.setText(content);
+                    break;
+                case 1 :
+                    //button2.requestFocus();
+                    button2.setTextColor(ContextCompat.getColor(getActivity(), R.color.light_gray_stage));
+                    break;
+                case 2 :
+                    //button3.requestFocus();
+                    button3.setTextColor(ContextCompat.getColor(getActivity(), R.color.light_gray_stage));
+                    break;
+                case 3 :
+                    //button4.requestFocus();
+                    button4.setTextColor(ContextCompat.getColor(getActivity(), R.color.light_gray_stage));
+                    break;
+            }
+
+
+        }
+
+
+
+        public final int getCurrentPage() {
+            return currentPage;
+        }
+    }
 }

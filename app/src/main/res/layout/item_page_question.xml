@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -5,11 +6,14 @@
     android:background="@color/background"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    tools:context="th.co.siamkubota.kubota.fragment.Step4ConfirmFragment">
+    android:paddingTop="20dp"
+    android:gravity="center">
 
     <TextView
         style="@style/TextTitleOrangeStyle"
-        android:text="@string/service_title_usage_info"/>
+        android:text="@string/survey_title"
+        android:textSize="25dp"
+        android:id="@+id/titleTextView"/>
 
     <View
         android:layout_width="match_parent"
@@ -24,31 +28,34 @@
         android:layout_height="wrap_content"
         android:textColor="@color/dark_gray"
         android:textSize="15dp"
-        android:text="@string/service_confirm_text"/>
+        android:text="@string/service_confirm_text"
+        android:id="@+id/detailText"/>
 
     <LinearLayout
+        android:id="@+id/choicesLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center">
         <Button xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/confirmButton"
+            android:id="@+id/yesButton"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:textSize="15dp"
-            android:text="@string/service_button_confirm"
+            android:text="@string/survey_button_yes"
             android:textColor="@color/white"
             android:background="@drawable/button_blue_selector"></Button>
         <Button
-            android:id="@+id/cancelButton"
+            android:id="@+id/noButton"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textSize="15dp"
-            android:text="@string/service_button_cancel"
+            android:text="@string/survey_button_no"
             android:textColor="@color/button_white_text_selector"
             android:background="@drawable/button_white_border_selector"></Button>
 
     </LinearLayout>
+
 </LinearLayout>

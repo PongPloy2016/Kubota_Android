@@ -77,6 +77,12 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
+    <style name="CustomDialogTheme" parent="android:Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@color/transparent_white</item>
+    </style>
+
 
 
 </resources>

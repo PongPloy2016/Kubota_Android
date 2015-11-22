@@ -2,15 +2,205 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
     android:background="@color/background"
-    tools:context="th.co.siamkubota.kubota.fragment.UnfinishTaskFragment">
+    tools:context="th.co.siamkubota.kubota.fragment.Step3SignFragment">
+
     <TextView
-        android:id="@+id/textStepTitle"
+        style="@style/TextTitleOrangeStyle"
+        android:text="@string/service_title_customer_sign"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:background="@color/light_gray_border"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="10dp"
+        />
+
+
+    <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:text="@string/service_step_3"
+        android:textSize="15dp"
         android:textColor="@color/dark_gray"
-        android:textStyle="bold"></TextView>
+        android:button="@drawable/radio_button_state"
+        android:text="@string/service_confirm_suggesttion"
+        android:id="@+id/checkBoxUserAccept" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:layout_marginRight="3dp"
+            android:background="@drawable/rectangle_round_corner_white_gray_border">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+               >
+                <ImageView
+                    android:src="@drawable/signature_icon"
+                    style="@style/ImageIconStyle"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_hint_gray"
+                    android:textSize="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/service_hint_signature"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageCustomerSignature"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_marginLeft="3dp">
+
+            <LinearLayout
+                style="@style/LinearLayoutSpinner">
+                <ImageView
+                    android:src="@drawable/signature_type_icon"
+                    style="@style/ImageIconStyle"/>
+                <EditText
+                    android:id="@+id/textviewCustomerName"
+                    android:hint="@string/service_hint_customer_name"
+                    style="@style/EditTextStyle"/>
+            </LinearLayout>
+            <LinearLayout
+                style="@style/LinearLayoutSpinner">
+                <ImageView
+                    android:src="@drawable/date_icon"
+                    style="@style/ImageIconStyle"/>
+                <EditText
+                    android:id="@+id/textviewCustomerSignDate"
+                    android:hint="@string/service_hint_date"
+                    style="@style/EditTextStyle"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/TextTitleOrangeStyle"
+        android:text="@string/service_title_customer_sign"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:background="@color/light_gray_border"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="10dp"
+        />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:gravity="top"
+        android:textColor="@color/dark_gray"
+        android:button="@drawable/radio_button_state"
+        android:text="@string/service_confirm_give_suggesttion"
+        android:id="@+id/checkBoxTecnicianAccept" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:layout_marginRight="3dp"
+            android:background="@drawable/rectangle_round_corner_white_gray_border">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                >
+                <ImageView
+                    android:src="@drawable/signature_icon"
+                    style="@style/ImageIconStyle"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_hint_gray"
+                    android:textSize="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/service_hint_signature"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageTechnicianSignature"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_marginLeft="3dp">
+
+            <LinearLayout
+                style="@style/LinearLayoutSpinner">
+                <ImageView
+                    android:src="@drawable/signature_type_icon"
+                    style="@style/ImageIconStyle"/>
+                <EditText
+                    android:id="@+id/textviewTechnicianName"
+                    android:hint="@string/service_hint_technician_name"
+                    style="@style/EditTextStyle"/>
+            </LinearLayout>
+            <LinearLayout
+                style="@style/LinearLayoutSpinner">
+                <ImageView
+                    android:src="@drawable/date_icon"
+                    style="@style/ImageIconStyle"/>
+                <EditText
+                    android:id="@+id/textviewTechnicianSignDate"
+                    android:hint="@string/service_hint_date"
+                    style="@style/EditTextStyle"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

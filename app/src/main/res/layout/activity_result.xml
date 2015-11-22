@@ -7,9 +7,11 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="0dp"
     android:gravity="center"
-    android:background="@drawable/login_bg"
-    tools:ignore="MissingPrefix">
+    android:background="@color/white"
+    tools:ignore="MissingPrefix"
+    android:id="@+id/rootLayout">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,21 +20,45 @@
         android:paddingRight="40dp"
         android:gravity="center">
         <ImageView
-            android:id="@+id/imageView6"
+            android:id="@+id/imageView"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/login_kubota_logo"
+            android:src="@drawable/success_icon"
             android:scaleType="fitCenter"
             android:layout_centerHorizontal="true"
             android:adjustViewBounds="true"/>
 
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/orange"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="@string/service_popup_success_title"/>
+
+        <TextView
+            android:id="@+id/messageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dark_gray"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="@string/service_popup_success_message"/>
+
+
         <Button
-            android:id="@+id/enterBtn"
-            android:layout_width="match_parent"
+            android:id="@+id/okButton"
+            android:layout_width="240dp"
             android:layout_height="50dp"
             android:layout_marginTop="30dp"
-            android:text="@string/main_enter_store_button"
-            android:background="@drawable/button_orange_selector"
+            android:text="@string/service_button_ok"
+            android:background="@drawable/button_blue_selector"
             android:textSize="20dp"
             android:textStyle="bold"
             android:textColor="@color/textColorPrimary"

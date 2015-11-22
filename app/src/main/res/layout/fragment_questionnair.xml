@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    android:gravity="center"
+    tools:context="th.co.siamkubota.kubota.fragment.QuestionnairFragment">
+
+    <!--<TextView-->
+        <!--style="@style/TextTitleOrangeStyle"-->
+        <!--android:text="@string/survey_title"-->
+        <!--android:textSize="25dp"/>-->
+
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0.7dp"-->
+        <!--android:background="@color/light_gray_border"-->
+        <!--android:layout_marginTop="3dp"-->
+        <!--android:layout_marginBottom="10dp"-->
+        <!--/>-->
+
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textColor="@color/dark_gray"-->
+        <!--android:textSize="15dp"-->
+        <!--android:text="@string/service_confirm_text"/>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:orientation="vertical"-->
+        <!--android:gravity="center">-->
+        <!--<Button xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--android:id="@+id/yesButton"-->
+            <!--android:layout_width="220dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="15dp"-->
+            <!--android:text="@string/survey_button_yes"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:background="@drawable/button_blue_selector"></Button>-->
+        <!--<Button-->
+            <!--android:id="@+id/noButton"-->
+            <!--android:layout_width="220dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:textSize="15dp"-->
+            <!--android:text="@string/survey_button_no"-->
+            <!--android:textColor="@color/button_white_text_selector"-->
+            <!--android:background="@drawable/button_white_border_selector"></Button>-->
+
+    <!--</LinearLayout>-->
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        />
+
+    <!--<com.viewpagerindicator.IconPageIndicator-->
+    <!--android:id="@+id/indicator"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_marginBottom="20dp"-->
+    <!--/>-->
+</LinearLayout>

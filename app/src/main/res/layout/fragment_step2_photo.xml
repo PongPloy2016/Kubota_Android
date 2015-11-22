@@ -3,14 +3,167 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background"
-    tools:context="th.co.siamkubota.kubota.fragment.UnfinishTaskFragment">
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    tools:context="th.co.siamkubota.kubota.fragment.Step2PhotoFragment">
 
-    <TextView
-        android:id="@+id/textStepTitle"
-        android:layout_width="wrap_content"
+   <!--<RelativeLayout-->
+       <!--android:layout_width="match_parent"-->
+       <!--android:layout_height="0dp"-->
+       <!--android:layout_weight="1"-->
+       <!--android:background="@drawable/rectangle_round_corner_white_gray_border"-->
+       <!--android:layout_marginTop="10dp"-->
+       <!--android:layout_marginBottom="10dp">-->
+
+      <!--<Button-->
+          <!--android:layout_width="wrap_content"-->
+          <!--android:layout_height="wrap_content"-->
+          <!--android:textColor="@color/button_text_gray_selector"-->
+          <!--android:textSize="18dp"-->
+          <!--android:textStyle="bold"-->
+          <!--android:text="@string/service_image_1_engine_number"-->
+          <!--android:background="@android:color/transparent"-->
+          <!--android:drawableTop="@drawable/photo_camera_btn"-->
+          <!--android:layout_centerInParent="true"-->
+          <!--android:layout_marginTop="-70dp"/>-->
+
+
+       <!--<com.joooonho.SelectableRoundedImageView-->
+           <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+           <!--android:id="@+id/imageView"-->
+           <!--android:layout_width="match_parent"-->
+           <!--android:layout_height="match_parent"-->
+           <!--android:layout_centerInParent="true"-->
+           <!--android:scaleType="centerCrop"-->
+           <!--android:adjustViewBounds="true"-->
+           <!--android:clickable="true"-->
+           <!--android:src="@drawable/login_bg"-->
+           <!--app:sriv_left_top_corner_radius="25dp"-->
+           <!--app:sriv_right_top_corner_radius="25dp"-->
+           <!--app:sriv_left_bottom_corner_radius="25dp"-->
+           <!--app:sriv_right_bottom_corner_radius="25dp"-->
+           <!--app:sriv_border_width="0.8dp"-->
+           <!--app:sriv_border_color="#ffe3e1e1"-->
+           <!--app:sriv_oval="false" />-->
+
+       <!--<LinearLayout-->
+           <!--android:layout_width="match_parent"-->
+           <!--android:layout_height="70dp"-->
+           <!--android:orientation="horizontal"-->
+           <!--android:gravity="center"-->
+           <!--android:background="@drawable/rectangle_bottom_round_corner_gray_alpha"-->
+           <!--android:layout_alignParentBottom="true">-->
+
+           <!--<TextView-->
+               <!--android:layout_width="wrap_content"-->
+               <!--android:layout_height="wrap_content"-->
+               <!--android:layout_weight="1"-->
+               <!--android:layout_marginLeft="15dp"-->
+               <!--android:textColor="@color/white"-->
+               <!--android:textSize="20dp"-->
+               <!--android:textStyle="bold"-->
+               <!--android:text="10/12/15"-->
+               <!--android:id="@+id/textDate"/>-->
+
+           <!--<ImageButton-->
+               <!--android:layout_width="30dp"-->
+               <!--android:layout_height="30dp"-->
+               <!--android:layout_marginRight="25dp"-->
+               <!--android:background="@android:color/transparent"-->
+               <!--android:src="@drawable/zoom_icon_photoframe"-->
+               <!--android:id="@+id/imageZoomButton"-->
+               <!--android:scaleType="fitCenter"-->
+               <!--android:adjustViewBounds="true"/>-->
+
+       <!--</LinearLayout>-->
+
+   <!--</RelativeLayout>-->
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pagerPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:text="@string/service_step_2"
-        android:textColor="@color/dark_gray"
-        android:textStyle="bold"></TextView>
+        android:orientation="horizontal"
+        android:divider="@drawable/horizontal_divider_gray"
+        android:showDividers="middle"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp">
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="18dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:src="@drawable/pagination_arrow_left"
+            android:id="@+id/previousButton"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:textColor="@color/button_text_gray_selector"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:text="1"
+            android:focusable="true"
+            android:id="@+id/button1"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:textColor="@color/button_text_gray_selector"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:text="2"
+            android:focusable="true"
+            android:id="@+id/button2"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:textColor="@color/button_text_gray_selector"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:text="3"
+            android:focusable="true"
+            android:id="@+id/button3"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:textColor="@color/button_text_gray_selector"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:text="4"
+            android:focusable="true"
+            android:id="@+id/button4"/>
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="18dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:src="@drawable/pagination_arrow_right"
+            android:id="@+id/nextButton"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"/>
+
+    </LinearLayout>
 </LinearLayout>

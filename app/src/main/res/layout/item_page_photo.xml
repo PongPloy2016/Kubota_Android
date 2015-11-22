@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@drawable/rectangle_round_corner_white_gray_border"
+android:layout_marginTop="10dp"
+android:layout_marginBottom="10dp"
+    android:gravity="center"
+    android:id="@id/rootLayout">
+
+    <Button
+        android:id="@+id/cameraButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/button_text_gray_selector"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:text="@string/service_image_1_engine_number"
+        android:background="@android:color/transparent"
+        android:drawableTop="@drawable/photo_camera_btn"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="-70dp"/>
+
+
+    <com.joooonho.SelectableRoundedImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:clickable="true"
+        android:src="@drawable/login_bg"
+        app:sriv_left_top_corner_radius="25dp"
+        app:sriv_right_top_corner_radius="25dp"
+        app:sriv_left_bottom_corner_radius="25dp"
+        app:sriv_right_bottom_corner_radius="25dp"
+        app:sriv_border_width="0.8dp"
+        app:sriv_border_color="#ffe3e1e1"
+        app:sriv_oval="false"
+        android:visibility="invisible"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/rectangle_bottom_round_corner_gray_alpha"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:text="10/12/15"
+            android:id="@+id/textDate"/>
+
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="25dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/zoom_icon_photoframe"
+            android:id="@+id/imageZoomButton"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
