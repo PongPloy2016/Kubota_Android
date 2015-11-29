@@ -53,7 +53,7 @@
         <item name="android:layout_centerHorizontal">true</item>
     </style>
 
-    <style name="SpinnerStyle">
+    <style name="SpinnerStyle" parent="android:Widget.Spinner">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
@@ -63,6 +63,11 @@
         <item name="android:spinnerMode">dialog</item>
         <item name="android:padding">0dp</item>
         <item name="android:scrollbars">none</item>
+        <item name="android:background">@drawable/btn_dropdown_disabled</item>
+        <!--<item name="android:drawableRight">@drawable/ic_btn_round_more_disabled</item>-->
+
+        <!--<item name="android:drawSelectorOnTop">true</item>-->
+       <!-- <item name="android:popupWindowStyle">@style/SpinnerDialogTheme</item>-->
     </style>
 
     <style name="EditTextStyle">
@@ -81,6 +86,63 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">@color/transparent_white</item>
+    </style>
+
+    <style name="SpinnerDialogTheme" parent="android:Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <!--<item name="android:windowBackground">@color/background</item>-->
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowFullscreen">true</item>
+
+        <!--<item name="android:windowFrame">@null</item>-->
+        <!--<item name="android:windowContentOverlay">@null</item>-->
+        <!--<item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>-->
+        <!--<item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>-->
+
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+
+        <item name="android:background">@color/orange</item>
+        <item name="android:popupLayout">@dimen/dialog_title_padding</item>
+
+
+        <!--<item name="windowTitleStyle">@style/TitleDialogStyle</item>-->
+
+    </style>
+
+
+
+    <style name="TitleDialogStyle">
+
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/orange</item>
+    </style>
+
+
+    <style name="FullHeightDialog" parent="android:Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <!--<item name="android:windowBackground">@color/background</item>-->
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:windowFullscreen">true</item>
+
+        <!--<item name="android:windowFrame">@null</item>-->
+        <!--<item name="android:windowContentOverlay">@null</item>-->
+        <!--<item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>-->
+        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+
+        <!--<item name="android:windowMinWidthMajor">100%</item>-->
+        <!--<item name="android:windowMinWidthMinor">100%</item>-->
+
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/enter</item>
+        <item name="android:windowExitAnimation">@anim/exit</item>
     </style>
 
 

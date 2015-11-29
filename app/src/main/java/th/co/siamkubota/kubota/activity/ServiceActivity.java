@@ -14,10 +14,11 @@ import android.widget.Button;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
 import th.co.siamkubota.kubota.fragment.ServiceFragment;
+import th.co.siamkubota.kubota.fragment.SignaturePadFragment;
 import th.co.siamkubota.kubota.fragment.UnfinishTaskFragment;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class ServiceActivity extends AppCompatActivity {
+public class ServiceActivity extends AppCompatActivity implements ServiceFragment.OnFragmentInteractionListener{
 
     private AppController app;
 
@@ -35,6 +36,7 @@ public class ServiceActivity extends AppCompatActivity {
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ServiceFragment newFragment = ServiceFragment.newInstance();
+        newFragment.setmListener(this);
         ft.replace(R.id.content, newFragment, "serviceFragment");
         ft.commit();
 
@@ -51,4 +53,16 @@ public class ServiceActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onRelayInvokeSignPad() {
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        //ft.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down);
+        ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        SignaturePadFragment fragment = SignaturePadFragment.newInstance();
+        ft.replace(R.id.content, fragment, "signaturePadFragment");
+        ft.addToBackStack(null);
+        // Start the animated transition.
+        ft.commit();
+    }
 }

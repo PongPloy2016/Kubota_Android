@@ -2,6 +2,7 @@ package th.co.siamkubota.kubota.utils.function;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
 import java.text.ParseException;
@@ -24,6 +25,11 @@ public class Converter {
         );
 
         return px;
+    }
+
+    public static float pxTosp(Context context, int px){
+        Resources r = context.getResources();
+        return px / r.getDisplayMetrics().scaledDensity;
     }
 
     public static String CalendarToString(Calendar calendar, String format){

@@ -86,6 +86,12 @@
     <string name="survey_finish_message">จบการทำงาน ขอบคุณค่ะ</string>
     <string name="title_activity_service">ServiceActivity</string>
 
+    <!--Sign pad-->
+    <string name="sign_pad_clear_button">ลบทั้งหมด</string>
+    <string name="sign_pad_save_button">บันทึกลายมือชื่อ</string>
+    <string name="sign_pad_customer_signature">ลายมือชื่อลูกค้า</string>
+    <string name="sign_pad_technician_signature">ลายมือชื่อผู้ให้บริการ</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_service_fragment">Service</string>
     <string name="hello_blank_fragment">Unfinish Task</string>

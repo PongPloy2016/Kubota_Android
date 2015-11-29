@@ -68,16 +68,19 @@
         <activity
             android:name=".activity.ServiceActivity"
             android:label="@string/title_activity_service"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activity.ResultActivity"
             android:label="@string/title_activity_service"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activity.QuestionnairActivity"
             android:label="@string/title_activity_service"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden"></activity>
     </application>

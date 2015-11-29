@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:ripple="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:gravity="center"
+    tools:ignore="MissingPrefix"
+    android:background="@android:color/transparent"
+    android:id="@+id/rootLayout">
+
+
+    <!--<TextView-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:id="@+id/textViewSelected"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:textColor="@color/dark_gray"-->
+        <!--android:textSize="15dp"-->
+        <!--android:visibility="gone"/>-->
+
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/textView"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="0dp"
+        android:textColor="@color/dark_gray"
+        android:textSize="17dp"
+        android:textStyle="bold"
+        android:background="@android:color/transparent"/>
+
+
+</LinearLayout>

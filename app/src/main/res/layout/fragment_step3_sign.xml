@@ -26,6 +26,8 @@
         android:textSize="15dp"
         android:textColor="@color/dark_gray"
         android:button="@drawable/radio_button_state"
+        android:drawableLeft="@android:color/transparent"
+        android:drawablePadding="10dp"
         android:text="@string/service_confirm_suggesttion"
         android:id="@+id/checkBoxUserAccept" />
 
@@ -69,6 +71,24 @@
                 android:adjustViewBounds="true"
                 android:clickable="true"
                 />
+
+            <!--<com.joooonho.SelectableRoundedImageView-->
+                <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+                <!--android:id="@+id/imageView"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="100dp"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:scaleType="fitCenter"-->
+                <!--android:adjustViewBounds="true"-->
+                <!--android:clickable="true"-->
+                <!--app:sriv_left_top_corner_radius="25dp"-->
+                <!--app:sriv_right_top_corner_radius="25dp"-->
+                <!--app:sriv_left_bottom_corner_radius="25dp"-->
+                <!--app:sriv_right_bottom_corner_radius="25dp"-->
+                <!--app:sriv_border_width="0.8dp"-->
+                <!--app:sriv_border_color="#ffe3e1e1"-->
+                <!--app:sriv_oval="false"-->
+                <!--android:visibility="gone"/>-->
         </RelativeLayout>
 
 
@@ -124,6 +144,8 @@
         android:gravity="top"
         android:textColor="@color/dark_gray"
         android:button="@drawable/radio_button_state"
+        android:drawableLeft="@android:color/transparent"
+        android:drawablePadding="10dp"
         android:text="@string/service_confirm_give_suggesttion"
         android:id="@+id/checkBoxTecnicianAccept" />
 

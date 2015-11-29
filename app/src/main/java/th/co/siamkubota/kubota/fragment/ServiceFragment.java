@@ -56,6 +56,10 @@ public class ServiceFragment extends Fragment implements
     private CustomOnPageChangeListener pageChangeListener;
 
 
+    public void setmListener(OnFragmentInteractionListener mListener) {
+        this.mListener = mListener;
+    }
+
     public static ServiceFragment newInstance() {
         ServiceFragment fragment = new ServiceFragment();
         Bundle args = new Bundle();
@@ -153,6 +157,7 @@ public class ServiceFragment extends Fragment implements
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         //public void onFragmentInteraction(Uri uri);
+        public void onRelayInvokeSignPad();
     }
 
     public void setStepTitle(String title){
@@ -232,6 +237,11 @@ public class ServiceFragment extends Fragment implements
     @Override
     public void onConfirmFragmentCancel() {
         pager.setCurrentItem((pageChangeListener.getCurrentPage() -1));
+    }
+
+    @Override
+    public void onInvokeSignPad() {
+        mListener.onRelayInvokeSignPad();
     }
 
     /**
