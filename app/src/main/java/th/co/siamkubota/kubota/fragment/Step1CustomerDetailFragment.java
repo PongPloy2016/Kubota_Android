@@ -38,14 +38,24 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     private LinearLayout rootLayout;
     private TextView textStepTitle;
-    private CustomSpinner jobTypeSpinner;
+    private CustomSpinner spinnerJobType;
+    private CustomSpinner spinnerProduct;
+    private CustomSpinner spinnerModel;
+    private LinearLayout layoutOtherModel;
 
     private String[] jobTypeDataList;
+    private String[] productDataList;
+    private String[] modelDataList;
     private CustomSpinnerAdapter jobTypeSpinnerAdapter;
+    private CustomSpinnerAdapter productSpinnerAdapter;
+    private CustomSpinnerAdapter modelSpinnerAdapter;
     private SelectNoneSpinnerAdapter selectNoneJobTypeSpinnerAdapter;
+    private SelectNoneSpinnerAdapter selectNoneProductSpinnerAdapter;
+    private SelectNoneSpinnerAdapter selectNoneModelSpinnerAdapter;
+
 
     private String title;
-    private View v;
+    //private View v;
 
     private OnFragmentInteractionListener mListener;
 
@@ -80,11 +90,38 @@ public class Step1CustomerDetailFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         if (getArguments() != null) {
             title = getArguments().getString(ARG_PARAM_TITLE);
         }
 
         jobTypeDataList = getResources().getStringArray(R.array.job_type);
+        productDataList = getResources().getStringArray(R.array.product);
+        modelDataList = new String[0];
+
+
+        jobTypeSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), jobTypeDataList);
+        productSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), productDataList);
+        modelSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), modelDataList);
+
+
+        selectNoneJobTypeSpinnerAdapter = new SelectNoneSpinnerAdapter(
+                jobTypeSpinnerAdapter,
+                R.layout.item_spinner_row_nothing_selected,
+                // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                getActivity(), getString(R.string.service_hint_job_type));
+
+        selectNoneProductSpinnerAdapter = new SelectNoneSpinnerAdapter(
+                productSpinnerAdapter,
+                R.layout.item_spinner_row_nothing_selected,
+                // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                getActivity(), getString(R.string.service_hint_product));
+
+        selectNoneModelSpinnerAdapter = new SelectNoneSpinnerAdapter(
+                modelSpinnerAdapter,
+                R.layout.item_spinner_row_nothing_selected,
+                // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                getActivity(), getString(R.string.service_hint_model));
 
     }
 
@@ -93,26 +130,35 @@ public class Step1CustomerDetailFragment extends Fragment implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //View v = View.inflate(getActivity(), R.layout.tab_product, null);
-        v = inflater.inflate(R.layout.fragment_step1_customer_detail, container, false);
-        rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
-        jobTypeSpinner = (CustomSpinner) v.findViewById(R.id.spinnerJobType);
-
-        jobTypeSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), jobTypeDataList);
-
-        selectNoneJobTypeSpinnerAdapter = new SelectNoneSpinnerAdapter(
-                jobTypeSpinnerAdapter,
-                R.layout.item_spinner_row_nothing_selected,
-                // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
-                getActivity());
-
-        jobTypeSpinner.setAdapter(selectNoneJobTypeSpinnerAdapter);
-        jobTypeSpinner.setOnItemSelectedListener(this);
-
-        Ui.setupUI(getActivity(), rootLayout);
-
+        View v = inflater.inflate(R.layout.fragment_step1_customer_detail, container, false);
 
 
         return v;
+    }
+
+
+    @Override
+    public void onViewCreated(View v, Bundle savedInstanceState) {
+
+        rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
+        spinnerJobType = (CustomSpinner) v.findViewById(R.id.spinnerJobType);
+        spinnerProduct = (CustomSpinner) v.findViewById(R.id.spinnerProduct);
+        spinnerModel = (CustomSpinner) v.findViewById(R.id.spinnerModel);
+        layoutOtherModel = (LinearLayout) v.findViewById(R.id.layoutOtherModel);
+
+        spinnerJobType.setAdapter(selectNoneJobTypeSpinnerAdapter);
+        spinnerProduct.setAdapter(selectNoneProductSpinnerAdapter);
+        spinnerModel.setAdapter(selectNoneModelSpinnerAdapter);
+
+        spinnerJobType.setOnItemSelectedListener(this);
+        spinnerProduct.setOnItemSelectedListener(this);
+        spinnerModel.setOnItemSelectedListener(this);
+
+        spinnerModel.setPrompt(getString(R.string.service_hint_model));
+
+
+        Ui.setupUI(getActivity(), rootLayout);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -161,7 +207,57 @@ public class Step1CustomerDetailFragment extends Fragment implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        if(parent == jobTypeSpinner){
+        if(parent == spinnerJobType){
+
+        }else if(parent == spinnerProduct){
+
+                //int tmppos = position - 1;
+
+            switch(position){
+                case 0:
+                    modelDataList = new String[]{getString(R.string.service_hint_model)};
+                    break;
+                case 1:
+                    modelDataList = getResources().getStringArray(R.array.product_tractor);
+                    break;
+                case 2:
+                    modelDataList = getResources().getStringArray(R.array.product_harvester);
+                    break;
+                case 3:
+                    modelDataList = getResources().getStringArray(R.array.product_digger);
+                    break;
+                case 4:
+                default:
+                    modelDataList = getResources().getStringArray(R.array.product_planter);
+                    break;
+            }
+
+            if(position != 0){
+                spinnerModel.setPrompt(productDataList[position -1]);
+                //selectNoneModelSpinnerAdapter.setPromptText(productDataList[position - 1]);
+                spinnerModel.setEnabled(true);
+                spinnerModel.invalidate();
+            }else{
+                spinnerModel.setPrompt(getString(R.string.service_hint_model));
+                selectNoneModelSpinnerAdapter.setPromptText(getString(R.string.service_hint_model));
+                spinnerModel.setEnabled(false);
+            }
+
+
+            modelSpinnerAdapter.setItemList(modelDataList);
+            selectNoneModelSpinnerAdapter.setAdapter(modelSpinnerAdapter);
+            //spinnerModel.setSelection(0);
+
+
+        }else if(parent == spinnerModel){
+            if(position == selectNoneModelSpinnerAdapter.getCount() -1){
+                layoutOtherModel.setVisibility(View.VISIBLE);
+            }else{
+                layoutOtherModel.setVisibility(View.GONE);
+            }
+        }
+
+        if(view != null){
 
             LinearLayout rootLayout = (LinearLayout) view.findViewById(R.id.rootLayout);
             TextView textViewDialog = (TextView) view.findViewById(R.id.textView);

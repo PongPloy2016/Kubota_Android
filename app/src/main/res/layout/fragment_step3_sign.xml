@@ -23,6 +23,8 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         android:textSize="15dp"
         android:textColor="@color/dark_gray"
         android:button="@drawable/radio_button_state"
@@ -36,7 +38,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="20dp">
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="100dp"
@@ -45,6 +47,7 @@
             android:background="@drawable/rectangle_round_corner_white_gray_border">
 
             <LinearLayout
+                android:id="@+id/signatureCustomerHintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -62,33 +65,37 @@
                     android:text="@string/service_hint_signature"/>
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imageCustomerSignature"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_centerInParent="true"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:clickable="true"
-                />
-
-            <!--<com.joooonho.SelectableRoundedImageView-->
-                <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-                <!--android:id="@+id/imageView"-->
+            <!--<ImageView-->
+                <!--android:id="@+id/imageCustomerSignature"-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="100dp"-->
                 <!--android:layout_centerInParent="true"-->
                 <!--android:scaleType="fitCenter"-->
                 <!--android:adjustViewBounds="true"-->
                 <!--android:clickable="true"-->
-                <!--app:sriv_left_top_corner_radius="25dp"-->
-                <!--app:sriv_right_top_corner_radius="25dp"-->
-                <!--app:sriv_left_bottom_corner_radius="25dp"-->
-                <!--app:sriv_right_bottom_corner_radius="25dp"-->
-                <!--app:sriv_border_width="0.8dp"-->
-                <!--app:sriv_border_color="#ffe3e1e1"-->
-                <!--app:sriv_oval="false"-->
-                <!--android:visibility="gone"/>-->
+                <!--/>-->
+
+            <com.joooonho.SelectableRoundedImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/imageCustomerSignature"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:minHeight="100dp"
+                android:layout_centerInParent="true"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="false"
+                android:clickable="true"
+                app:sriv_left_top_corner_radius="25dp"
+                app:sriv_right_top_corner_radius="25dp"
+                app:sriv_left_bottom_corner_radius="25dp"
+                app:sriv_right_bottom_corner_radius="25dp"
+                app:sriv_border_width="0dp"
+                app:sriv_border_color="#ffe3e1e1"
+                app:sriv_oval="false"
+                android:visibility="visible"
+                android:layout_margin="1dp"/>
+
+
         </RelativeLayout>
 
 
@@ -100,7 +107,7 @@
             android:layout_marginLeft="3dp">
 
             <LinearLayout
-                style="@style/LinearLayoutSpinner">
+                style="@style/LinearLayoutTextView">
                 <ImageView
                     android:src="@drawable/signature_type_icon"
                     style="@style/ImageIconStyle"/>
@@ -110,12 +117,13 @@
                     style="@style/EditTextStyle"/>
             </LinearLayout>
             <LinearLayout
-                style="@style/LinearLayoutSpinner">
+                style="@style/LinearLayoutTextView"
+                android:layout_marginTop="3dp">
                 <ImageView
                     android:src="@drawable/date_icon"
                     style="@style/ImageIconStyle"/>
                 <EditText
-                    android:id="@+id/textviewCustomerSignDate"
+                    android:id="@+id/editTextCustomerSignDate"
                     android:hint="@string/service_hint_date"
                     style="@style/EditTextStyle"/>
             </LinearLayout>
@@ -127,7 +135,7 @@
 
     <TextView
         style="@style/TextTitleOrangeStyle"
-        android:text="@string/service_title_customer_sign"/>
+        android:text="@string/service_title_technician_sign"/>
 
     <View
         android:layout_width="match_parent"
@@ -140,6 +148,8 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         android:textSize="14dp"
         android:gravity="top"
         android:textColor="@color/dark_gray"
@@ -163,6 +173,7 @@
             android:background="@drawable/rectangle_round_corner_white_gray_border">
 
             <LinearLayout
+                android:id="@+id/signatureTechnicianHintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -180,15 +191,35 @@
                     android:text="@string/service_hint_signature"/>
             </LinearLayout>
 
-            <ImageView
+            <!--<ImageView-->
+                <!--android:id="@+id/imageTechnicianSignature"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="100dp"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:scaleType="fitCenter"-->
+                <!--android:adjustViewBounds="true"-->
+                <!--android:clickable="true"-->
+                <!--/>-->
+
+            <com.joooonho.SelectableRoundedImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/imageTechnicianSignature"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
+                android:minHeight="100dp"
                 android:layout_centerInParent="true"
                 android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
+                android:adjustViewBounds="false"
                 android:clickable="true"
-                />
+                app:sriv_left_top_corner_radius="25dp"
+                app:sriv_right_top_corner_radius="25dp"
+                app:sriv_left_bottom_corner_radius="25dp"
+                app:sriv_right_bottom_corner_radius="25dp"
+                app:sriv_border_width="0dp"
+                app:sriv_border_color="#ffe3e1e1"
+                app:sriv_oval="false"
+                android:visibility="visible"
+                android:layout_margin="1dp"/>
         </RelativeLayout>
 
 
@@ -200,7 +231,7 @@
             android:layout_marginLeft="3dp">
 
             <LinearLayout
-                style="@style/LinearLayoutSpinner">
+                style="@style/LinearLayoutTextView">
                 <ImageView
                     android:src="@drawable/signature_type_icon"
                     style="@style/ImageIconStyle"/>
@@ -210,12 +241,13 @@
                     style="@style/EditTextStyle"/>
             </LinearLayout>
             <LinearLayout
-                style="@style/LinearLayoutSpinner">
+                style="@style/LinearLayoutTextView"
+                android:layout_marginTop="3dp">
                 <ImageView
                     android:src="@drawable/date_icon"
                     style="@style/ImageIconStyle"/>
                 <EditText
-                    android:id="@+id/textviewTechnicianSignDate"
+                    android:id="@+id/editTextTechnicianSignDate"
                     android:hint="@string/service_hint_date"
                     style="@style/EditTextStyle"/>
             </LinearLayout>

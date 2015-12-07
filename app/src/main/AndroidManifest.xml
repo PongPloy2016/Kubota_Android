@@ -83,6 +83,21 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden"></activity>
+        <activity
+            android:name=".activity.CameraTakeActivity"
+            android:label="@string/title_activity_service"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity
+            android:name=".activity.ImageViewActivity"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity
+            android:name=".activity.SignaturePadActivity"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/AppTheme">
+        </activity>
     </application>
 
 </manifest>

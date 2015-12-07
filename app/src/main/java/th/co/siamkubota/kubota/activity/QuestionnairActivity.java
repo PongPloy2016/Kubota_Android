@@ -16,15 +16,12 @@ import th.co.siamkubota.kubota.fragment.ServiceFragment;
 import th.co.siamkubota.kubota.fragment.UnfinishTaskFragment;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class QuestionnairActivity extends AppCompatActivity implements
+public class QuestionnairActivity extends BaseActivity implements
 ContinueQuestionFragment.OnFragmentInteractionListener{
 
     private AppController app;
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

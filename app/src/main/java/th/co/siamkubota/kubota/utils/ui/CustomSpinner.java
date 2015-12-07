@@ -27,6 +27,7 @@ public class CustomSpinner extends Spinner implements DialogInterface.OnClickLis
     private String prompt;
 
     private CustomSpinnerAdapter adapter;
+    private CustomSpinnerDialog dialog;
 
     public CustomSpinner(Context context, AttributeSet attrs)
     {
@@ -49,7 +50,7 @@ public class CustomSpinner extends Spinner implements DialogInterface.OnClickLis
 
             adapter = (CustomSpinnerAdapter)((SelectNoneSpinnerAdapter)getAdapter()).getAdapter();
 
-            CustomSpinnerDialog dialog = new CustomSpinnerDialog(mContext,  adapter, this, R.style.FullHeightDialog);
+            dialog = new CustomSpinnerDialog(mContext,  adapter, this, R.style.FullHeightDialog);
             //dialog.setDialogTitle(mContext.getResources().getString((R.string.my_dialog_text)));
             dialog.setDialogTitle(this.prompt);
             dialog.setOnItemSelectedListener(this);
@@ -68,6 +69,22 @@ public class CustomSpinner extends Spinner implements DialogInterface.OnClickLis
     @Override
     public void onItemSelected(String itemValue) {
 
+    }
+
+    @Override
+    public String getPrompt() {
+        return prompt;
+    }
+
+
+    @Override
+    public void setPrompt(CharSequence prompt) {
+        super.setPrompt(prompt);
+
+        this.prompt = prompt.toString();
+        if(dialog != null){
+            dialog.setDialogTitle(this.prompt);
+        }
     }
 }
 

@@ -12,12 +12,18 @@ public class Photo implements Parcelable{
     private String title;
     private String path;
     private Date date;
+    private String description;
 
     public Photo(String title) {
         this.title = title;
         this.date = new Date();
     }
 
+    public Photo(String title, String description) {
+        this.title = title;
+        this.date = new Date();
+        this.description = description;
+    }
 
     public String getTitle() {
         return title;
@@ -43,7 +49,16 @@ public class Photo implements Parcelable{
         this.date = date;
     }
 
-    /////////////////////////////////////////////////////////////////////////////// implement parcelable
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
+/////////////////////////////////////////////////////////////////////////////// implement parcelable
 
 
     @Override
@@ -55,12 +70,14 @@ public class Photo implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.title);
         dest.writeString(this.path);
+        dest.writeString(this.description);
         dest.writeLong(date != null ? date.getTime() : -1);
     }
 
     protected Photo(Parcel in) {
         this.title = in.readString();
         this.path = in.readString();
+        this.description = in.readString();
         long tmpDate = in.readLong();
         this.date = tmpDate == -1 ? null : new Date(tmpDate);
     }

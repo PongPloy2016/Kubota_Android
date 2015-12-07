@@ -2,9 +2,11 @@ package th.co.siamkubota.kubota.utils.function;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,6 +27,11 @@ public class Converter {
         );
 
         return px;
+    }
+
+    public static float pixelsToSp(Context context, float px) {
+        float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
+        return px/scaledDensity;
     }
 
     public static float pxTosp(Context context, int px){
@@ -75,4 +82,58 @@ public class Converter {
 
         return dateString;
     }
+
+    public static String DateToString(Date date, String stringFormat,Locale locale ){
+
+        String dateString = null;
+        SimpleDateFormat dateformat = new SimpleDateFormat(stringFormat, locale);
+        dateString = dateformat.format(date);
+        System.out.println("Current Date Time : " + dateString);
+
+        return dateString;
+    }
+
+    public static String DateThai(Date date)
+    {
+        String Months[] = {
+                "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.",
+                "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.",
+                "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."};
+
+        //DateFormat df = new SimpleDateFormat(format);
+
+        int year=0,month=0,day=0,hours=0,min=0;
+
+        //Date date = df.parse(strDate);
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+
+        year = c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+        day = c.get(Calendar.DATE);
+        hours = c.get(Calendar.HOUR_OF_DAY);
+        min = c.get(Calendar.MINUTE);
+
+
+        return String.format("%s %s %s %02d.%02d น.", day,Months[month],String.valueOf(year+543).substring(2), hours, min);
+    }
+
+    public static Date dateTimeISO(Date date){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.HOUR, 7);
+        return calendar.getTime();
+    }
+
+    public static byte[] bitmapToByteArray(Bitmap bitmap){
+
+        //Convert to byte array
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        return  byteArray;
+    }
+
 }

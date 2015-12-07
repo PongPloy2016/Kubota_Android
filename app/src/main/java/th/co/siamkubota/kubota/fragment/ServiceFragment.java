@@ -76,6 +76,7 @@ public class ServiceFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
@@ -83,6 +84,9 @@ public class ServiceFragment extends Fragment implements
 
         mTitle = getActivity().getResources().getStringArray(R.array.stage_title);
         Numboftabs = mTitle.length;
+
+        adapter = new ViewPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), mTitle,
+                Numboftabs, ServiceFragment.this);
     }
 
     @Override
@@ -91,6 +95,14 @@ public class ServiceFragment extends Fragment implements
         // Inflate the layout for this fragment
         //View v = View.inflate(getActivity(), R.layout.tab_product, null);
         View v = inflater.inflate(R.layout.fragment_service, container, false);
+
+        return v;
+    }
+
+
+    @Override
+    public void onViewCreated(View v, Bundle savedInstanceState) {
+
         textStepTitle = (TextView) v.findViewById(R.id.textStepTitle);
         step1Button = (ImageButton) v.findViewById(R.id.step1Button);
         step2Button = (ImageButton) v.findViewById(R.id.step2Button);
@@ -111,14 +123,21 @@ public class ServiceFragment extends Fragment implements
         previousButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
 
+        pager.setAdapter(adapter);
+        pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
+
+    }
+
+/*    @Override
+    public void onResume() {
+        super.onResume();
+
         adapter = new ViewPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), mTitle,
                 Numboftabs, ServiceFragment.this);
         pager.setAdapter(adapter);
         pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
 
-
-        return v;
-    }
+    }*/
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

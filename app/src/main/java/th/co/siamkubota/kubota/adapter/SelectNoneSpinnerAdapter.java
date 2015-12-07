@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
+
+import th.co.siamkubota.kubota.R;
 
 
 /**
@@ -21,6 +24,8 @@ public class SelectNoneSpinnerAdapter implements SpinnerAdapter, ListAdapter {
     protected int nothingSelectedLayout;
     protected int nothingSelectedDropdownLayout;
     protected LayoutInflater layoutInflater;
+    protected TextView promptTextView;
+    protected String promptText;
 
     /**
      * Use this constructor to have NO 'Select One...' item, instead use
@@ -32,9 +37,9 @@ public class SelectNoneSpinnerAdapter implements SpinnerAdapter, ListAdapter {
      */
     public SelectNoneSpinnerAdapter(
             SpinnerAdapter spinnerAdapter,
-            int nothingSelectedLayout, Context context) {
+            int nothingSelectedLayout, Context context, String prompt) {
 
-        this(spinnerAdapter, nothingSelectedLayout, -1, context);
+        this(spinnerAdapter, nothingSelectedLayout, -1, context, prompt);
     }
 
     /**
@@ -50,12 +55,14 @@ public class SelectNoneSpinnerAdapter implements SpinnerAdapter, ListAdapter {
      * @param context
      */
     public SelectNoneSpinnerAdapter(SpinnerAdapter spinnerAdapter,
-                                         int nothingSelectedLayout, int nothingSelectedDropdownLayout, Context context) {
+                                         int nothingSelectedLayout, int nothingSelectedDropdownLayout, Context context, String prompt) {
         this.adapter = spinnerAdapter;
         this.context = context;
         this.nothingSelectedLayout = nothingSelectedLayout;
         this.nothingSelectedDropdownLayout = nothingSelectedDropdownLayout;
         layoutInflater = LayoutInflater.from(context);
+        this.promptText = prompt;
+
     }
 
     @Override
@@ -76,7 +83,16 @@ public class SelectNoneSpinnerAdapter implements SpinnerAdapter, ListAdapter {
      * @return
      */
     protected View getNothingSelectedView(ViewGroup parent) {
-        return layoutInflater.inflate(nothingSelectedLayout, parent, false);
+        View view = layoutInflater.inflate(nothingSelectedLayout, parent, false);
+
+        if(this.promptText != null){
+            promptTextView = (TextView) view.findViewById(R.id.textView);
+            if(promptTextView != null){
+                promptTextView.setText(promptText);
+            }
+        }
+
+        return view;
     }
 
     @Override
@@ -166,5 +182,13 @@ public class SelectNoneSpinnerAdapter implements SpinnerAdapter, ListAdapter {
 
     public void setAdapter(SpinnerAdapter adapter) {
         this.adapter = adapter;
+    }
+
+    public String getPromptText() {
+        return promptText;
+    }
+
+    public void setPromptText(String promptText) {
+        this.promptText = promptText;
     }
 }

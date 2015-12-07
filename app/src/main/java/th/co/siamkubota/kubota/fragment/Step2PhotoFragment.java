@@ -79,9 +79,20 @@ PhotoPageFragment.OnFragmentInteractionListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         if (getArguments() != null) {
             //title = getArguments().getString(ARG_PARAM_TITLE);
         }
+
+        photos = new ArrayList<Photo>();
+
+        photos.add(new Photo(getString(R.string.service_image_1_engine_number), "K12345678"));
+        photos.add(new Photo(getString(R.string.service_image_2_working_hours)));
+        photos.add(new Photo(getString(R.string.service_image_3_machine)));
+        photos.add(new Photo(getString(R.string.service_image_4_customer_with_machine)));
+
+        adapter = new PhotoPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), photos , Step2PhotoFragment.this);
+        pageChangeListener = new CustomOnPageChangeListener();
     }
 
     @Override
@@ -90,6 +101,13 @@ PhotoPageFragment.OnFragmentInteractionListener{
         // Inflate the layout for this fragment
         //View v = View.inflate(getActivity(), R.layout.tab_product, null);
         View v = inflater.inflate(R.layout.fragment_step2_photo, container, false);
+
+        return v;
+    }
+
+    @Override
+    public void onViewCreated(View v, Bundle savedInstanceState) {
+        //super.onViewCreated(view, savedInstanceState);
 
         button1 = (Button) v.findViewById(R.id.button1);
         button2 = (Button) v.findViewById(R.id.button2);
@@ -108,36 +126,28 @@ PhotoPageFragment.OnFragmentInteractionListener{
         previousButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
 
-        photos = new ArrayList<Photo>();
 
-        photos.add(new Photo(getString(R.string.service_image_1_engine_number)));
-        photos.add(new Photo(getString(R.string.service_image_2_working_hours)));
-        photos.add(new Photo(getString(R.string.service_image_3_machine)));
-        photos.add(new Photo(getString(R.string.service_image_4_customer_with_machine)));
-
-        adapter = new PhotoPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), photos , Step2PhotoFragment.this);
         pager.setAdapter(adapter);
-        pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
+        pager.addOnPageChangeListener(pageChangeListener);
 
         pager.setCurrentItem(0);
 
-        return v;
+        setSelectPhoto();
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        setSelectPhoto();
-        /*
-        if(adapter == null){
-            adapter = new PhotoPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), photos , Step2PhotoFragment.this);
-        }
 
-        pager.setAdapter(adapter);
-        pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
-        //pager.setCurrentItem(pageChangeListener.getCurrentPage(),true);
-        */
+        /*pager.setAdapter(adapter);
+        pager.addOnPageChangeListener(pageChangeListener);
+
+        pager.setCurrentItem(0);
+
+        setSelectPhoto();*/
+
 
     }
 
@@ -205,11 +215,21 @@ PhotoPageFragment.OnFragmentInteractionListener{
         }else if(v == previousButton){
             int currentPage = pageChangeListener.getCurrentPage();
             --currentPage;
-            pager.setCurrentItem(currentPage = (currentPage >= 0 ? currentPage : 0));
+
+            if(currentPage < 0){
+                currentPage = adapter.getCount() -1;
+            }
+            pager.setCurrentItem(currentPage);
+
+
         }else if(v == nextButton){
             int currentPage = pageChangeListener.getCurrentPage();
             ++currentPage;
-            pager.setCurrentItem(currentPage = (currentPage < adapter.getCount() ? currentPage : (adapter.getCount() - 1)));
+
+            if(currentPage > adapter.getCount() -1){
+                currentPage = 0;
+            }
+            pager.setCurrentItem(currentPage);
         }
     }
 

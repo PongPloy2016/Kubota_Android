@@ -2,6 +2,7 @@ package th.co.siamkubota.kubota.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,10 +10,19 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.joooonho.SelectableRoundedImageView;
+
+import java.io.File;
+
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.activity.SignaturePadActivity;
+import th.co.siamkubota.kubota.model.Photo;
+import th.co.siamkubota.kubota.utils.function.Converter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,10 +36,17 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
 
     private static final String ARG_PARAM_TITLE = "title";
 
-    private ImageView imageCustomerSignature;
-    private TextView textStepTitle;
+    private SelectableRoundedImageView imageCustomerSignature;
+    private SelectableRoundedImageView imageTechnicianSignature;
+    private EditText editTextCustomerSignDate;
+    private EditText editTextTechnicianSignDate;
+    private LinearLayout signatureCustomerHintLayout;
+    private LinearLayout signatureTechnicianHintLayout;
 
     private String title;
+    private Photo imageCustomer;
+    private Photo imageTechnician;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -63,6 +80,7 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         if (getArguments() != null) {
             title = getArguments().getString(ARG_PARAM_TITLE);
         }
@@ -73,17 +91,37 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //View v = View.inflate(getActivity(), R.layout.tab_product, null);
         View v = inflater.inflate(R.layout.fragment_step3_sign, container, false);
 
-        imageCustomerSignature = (ImageView) v.findViewById(R.id.imageCustomerSignature);
-        imageCustomerSignature.setOnClickListener(this);
-
-
-        //mListener.onFragmentPresent(this, title);
-
-
         return v;
+    }
+
+
+    @Override
+    public void onViewCreated(View v, Bundle savedInstanceState) {
+
+        imageCustomerSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageCustomerSignature);
+        imageTechnicianSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageTechnicianSignature);
+        editTextCustomerSignDate = (EditText) v.findViewById(R.id.editTextCustomerSignDate);
+        editTextTechnicianSignDate = (EditText) v.findViewById(R.id.editTextTechnicianSignDate);
+        signatureCustomerHintLayout = (LinearLayout) v.findViewById(R.id.signatureCustomerHintLayout);
+        signatureTechnicianHintLayout = (LinearLayout) v.findViewById(R.id.signatureTechnicianHintLayout);
+
+        imageCustomerSignature.setOnClickListener(this);
+        imageTechnicianSignature.setOnClickListener(this);
+
+        if(imageCustomer != null && imageCustomer.getPath() != null && !imageCustomer.getPath().isEmpty()){
+            imageCustomerSignature.setImageURI(Uri.fromFile(new File(imageCustomer.getPath())));
+            editTextCustomerSignDate.setText(Converter.DateToString(imageCustomer.getDate(),"dd/MM/yyyy"));
+            signatureCustomerHintLayout.setVisibility(View.GONE);
+        }
+
+        if(imageTechnician != null && imageTechnician.getPath() != null && !imageTechnician.getPath().isEmpty()){
+            imageTechnicianSignature.setImageURI(Uri.fromFile(new File(imageTechnician.getPath())));
+            editTextTechnicianSignDate.setText(Converter.DateToString(imageTechnician.getDate(),"dd/MM/yyyy"));
+            signatureTechnicianHintLayout.setVisibility(View.GONE);
+        }
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -132,8 +170,73 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
 
-        if(v == imageCustomerSignature){
-            mListener.onInvokeSignPad();
+        if(v == imageCustomerSignature || v == imageTechnicianSignature ){
+            //mListener.onInvokeSignPad();
+            int requestCode = 0;
+            Bundle bundle = new Bundle();
+
+            if(v == imageCustomerSignature){
+
+                requestCode = 0;
+                if(imageCustomer == null){
+                    imageCustomer = new Photo(getString(R.string.sign_pad_customer_signature));
+                }
+
+                if(imageCustomer != null && imageCustomer.getPath() != null && !imageCustomer.getPath().isEmpty()){
+                    bundle.putString(SignaturePadActivity.KEY_SIGNATURE_IMAGE_PATH, imageCustomer.getPath());
+                }
+                bundle.putString(SignaturePadActivity.KEY_TITLE, imageCustomer.getTitle());
+
+            }else if(v == imageTechnicianSignature){
+                requestCode = 1;
+
+                if(imageTechnician == null){
+                    imageTechnician = new Photo(getString(R.string.sign_pad_technician_signature));
+                }
+
+                if(imageTechnician != null && imageTechnician.getPath() != null && !imageTechnician.getPath().isEmpty()){
+                    bundle.putString(SignaturePadActivity.KEY_SIGNATURE_IMAGE_PATH, imageTechnician.getPath());
+                }
+                bundle.putString(SignaturePadActivity.KEY_TITLE, imageTechnician.getTitle());
+            }
+
+
+            Intent intent = new Intent(getActivity(), SignaturePadActivity.class);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, requestCode);
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == Activity.RESULT_OK){
+
+            Bundle bundle = data.getExtras();
+
+            String imagePath = bundle.getString("imagePath");
+            String dateInfo = bundle.getString("takenDate");
+            //imageView.setTag(R.id.imagePath, imagePath);
+
+            if(requestCode == 0){
+
+                imageCustomer.setPath(imagePath);
+                imageCustomer.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
+                imageCustomerSignature.setImageURI(Uri.fromFile(new File(imageCustomer.getPath())));
+                //imageView.setVisibility(View.VISIBLE);
+                editTextCustomerSignDate.setText(dateInfo);
+                signatureCustomerHintLayout.setVisibility(View.GONE);
+
+            }else if(requestCode == 1){
+                imageTechnician.setPath(imagePath);
+                imageTechnician.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
+                imageTechnicianSignature.setImageURI(Uri.fromFile(new File(imageTechnician.getPath())));
+                //imageView.setVisibility(View.VISIBLE);
+                editTextTechnicianSignDate.setText(dateInfo);
+                signatureTechnicianHintLayout.setVisibility(View.GONE);
+            }
 
         }
     }

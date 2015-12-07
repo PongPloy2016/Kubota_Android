@@ -1,8 +1,11 @@
 package th.co.siamkubota.kubota.utils.function;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -26,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 /**
  * Created by atthapok on 03/10/2558.
@@ -53,13 +57,18 @@ public class ImageFile {
             return null;
         }
 
-        String dateString = intf.getAttribute(ExifInterface.TAG_DATETIME);
-        /* Do your date/time stuff here */
-        Log.d("Dated : ", dateString); //Dispaly dateString. You can do/use it your own way
-//2015:09:21 16:58:04
-        Date date = Converter.StringToDate(dateString, "yyyy:MM:dd HH:mm:ss");
 
-        return date;
+        String dateString = intf.getAttribute(ExifInterface.TAG_DATETIME);
+
+        if(dateString != null){
+/* Do your date/time stuff here */
+            Log.d("Dated : ", dateString); //Dispaly dateString. You can do/use it your own way
+//2015:09:21 16:58:04
+            Date date = Converter.StringToDate(dateString, "yyyy:MM:dd HH:mm:ss");
+            return date;
+        }
+
+        return null;
     }
 
     public static void CopyExifData(String oldImagePath, String imagePath){
@@ -114,7 +123,7 @@ public class ImageFile {
 
         if(origWidth > destWidth){
             // picture is wider than we want it, we calculate its target height
-            int destHeight = origHeight/( origWidth / destWidth ) ;
+            int destHeight = (int)((float)origHeight/( (float)origWidth / (float) destWidth )) ;
             // we create an scaled bitmap so it reduces the image, not just trim it
             Bitmap resized = Bitmap.createScaledBitmap(bitmap, destWidth, destHeight, false);
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
@@ -298,7 +307,7 @@ public class ImageFile {
     private int dpToPx(Context context, int dp)
     {
         float density = context.getResources().getDisplayMetrics().density;
-        return Math.round((float) dp * density);
+        return Math.round((float)dp * density);
     }
 
     public static String saveBitmapToPath(Context mContext,Bitmap bm, String name){
@@ -360,25 +369,89 @@ public class ImageFile {
         }).start();
     }
 
-    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int pixels) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
-                .getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
+    public static void renderTextOnImage(Bitmap originalBitmap, String text) {
+        File myDir=new File("/sdcard/saved_images");
+        myDir.mkdirs();
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        String fname = "Image-"+ n +".jpg";
+        File file = new File (myDir, fname);
+        if (file.exists ()) file.delete ();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
 
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
-        final float roundPx = pixels;
+            // NEWLY ADDED CODE STARTS HERE [
+            Canvas canvas = new Canvas(originalBitmap);
 
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+            Paint paint = new Paint();
+            paint.setColor(Color.WHITE); // Text Color
+            paint.setStrokeWidth(12); // Text Size
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER)); // Text Overlapping Pattern
+            // some more settings...
 
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
+            canvas.drawBitmap(originalBitmap, 0, 0, paint);
+            canvas.drawText(text, 10, 10, paint);
+            // NEWLY ADDED CODE ENDS HERE ]
 
-        return output;
+            originalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Bitmap drawTextToBitmap(Context gContext,
+                                          Bitmap bitmap,
+                                          String gText) {
+        Resources resources = gContext.getResources();
+        float scale = resources.getDisplayMetrics().density;
+//        Bitmap bitmap =
+//                BitmapFactory.decodeResource(resources, gResId);
+
+        android.graphics.Bitmap.Config bitmapConfig =
+                bitmap.getConfig();
+        // set default bitmap config if none
+        if(bitmapConfig == null) {
+            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+        // resource bitmaps are imutable,
+        // so we need to convert it to mutable one
+        bitmap = bitmap.copy(bitmapConfig, true);
+
+        Canvas canvas = new Canvas(bitmap);
+        // new antialised Paint
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        // text color - #3D3D3D
+        paint.setColor(Color.rgb(61, 61, 61));
+        // text size in pixels
+        //paint.setTextSize((int) (14 * scale));
+        paint.setTextSize(Converter.pixelsToSp(gContext,Converter.dpTopx(gContext, 30)));
+        paint.setFakeBoldText(true);
+        // text shadow
+        paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
+
+        // draw text to the Canvas center
+        Rect bounds = new Rect();
+        paint.getTextBounds(gText, 0, gText.length(), bounds);
+//        int x = (bitmap.getWidth() - bounds.width())/2;
+//        int y = (bitmap.getHeight() + bounds.height())/2;
+        int x = (bitmap.getWidth() - bounds.width())/2;
+        int y = (bitmap.getHeight() - 20 );
+
+
+        canvas.drawText(gText, x, y, paint);
+
+        return bitmap;
+    }
+
+    public static Bitmap bitmapFromFilePath(String path){
+        File image = new File(path);
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
+        //bitmap = Bitmap.createScaledBitmap(bitmap,parent.getWidth(),parent.getHeight(),true);
+
+        return bitmap;
     }
 }

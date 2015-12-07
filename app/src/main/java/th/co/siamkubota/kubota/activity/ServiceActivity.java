@@ -18,14 +18,10 @@ import th.co.siamkubota.kubota.fragment.SignaturePadFragment;
 import th.co.siamkubota.kubota.fragment.UnfinishTaskFragment;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class ServiceActivity extends AppCompatActivity implements ServiceFragment.OnFragmentInteractionListener{
+public class ServiceActivity extends BaseActivity implements ServiceFragment.OnFragmentInteractionListener{
 
     private AppController app;
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

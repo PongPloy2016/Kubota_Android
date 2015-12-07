@@ -14,16 +14,12 @@ import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class MainActivity extends AppCompatActivity  implements
+public class MainActivity extends BaseActivity  implements
         View.OnClickListener{
 
     private Button enterBtn;
 
     private AppController app;
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
 
 
     @Override

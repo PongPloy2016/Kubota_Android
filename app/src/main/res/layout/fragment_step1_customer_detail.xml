@@ -59,7 +59,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:src="@drawable/product_icon"
                 style="@style/ImageIconStyle"/>
 
-            <Spinner
+            <th.co.siamkubota.kubota.utils.ui.CustomSpinner
                 android:id="@+id/spinnerProduct"
                 android:prompt="@string/service_hint_product"
                 style="@style/SpinnerStyle"/>
@@ -73,7 +73,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:src="@drawable/serial_icon"
                 style="@style/ImageIconStyle"/>
 
-            <Spinner
+            <th.co.siamkubota.kubota.utils.ui.CustomSpinner
                 android:id="@+id/spinnerModel"
                 android:prompt="@string/service_hint_model"
                 style="@style/SpinnerStyle"/>
@@ -81,7 +81,19 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
         </LinearLayout>
 
         <LinearLayout
-            style="@style/LinearLayoutSpinner">
+            android:id="@+id/layoutOtherModel"
+            style="@style/LinearLayoutTextView"
+            android:visibility="gone">
+            <ImageView
+                style="@style/ImageIconStyle"/>
+            <EditText
+                android:id="@+id/textviewOtherModel"
+                android:hint="@string/service_hint_other"
+                style="@style/EditTextStyle"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/LinearLayoutTextView">
             <ImageView
                 android:src="@drawable/jobcode_icon"
                 style="@style/ImageIconStyle"/>
@@ -138,7 +150,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
 
 
         <LinearLayout
-            style="@style/LinearLayoutSpinner">
+            style="@style/LinearLayoutTextView">
             <ImageView
                 android:src="@drawable/name_icon"
                 style="@style/ImageIconStyle"/>
@@ -149,7 +161,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
         </LinearLayout>
 
         <LinearLayout
-            style="@style/LinearLayoutSpinner">
+            style="@style/LinearLayoutTextView">
             <ImageView
                 android:src="@drawable/tel_icon"
                 style="@style/ImageIconStyle"/>
@@ -161,7 +173,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
         </LinearLayout>
 
         <LinearLayout
-            style="@style/LinearLayoutSpinner">
+            style="@style/LinearLayoutTextView">
             <ImageView
                 android:src="@drawable/tel_icon"
                 style="@style/ImageIconStyle"/>
@@ -173,7 +185,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
         </LinearLayout>
 
         <LinearLayout
-            style="@style/LinearLayoutSpinner">
+            style="@style/LinearLayoutTextView">
             <ImageView
                 android:src="@drawable/product_icon"
                 style="@style/ImageIconStyle"/>
@@ -184,7 +196,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
         </LinearLayout>
 
         <LinearLayout
-            style="@style/LinearLayoutSpinner">
+            style="@style/LinearLayoutTextView">
             <ImageView
                 android:src="@drawable/serial_icon"
                 style="@style/ImageIconStyle"/>
@@ -195,7 +207,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
         </LinearLayout>
 
         <LinearLayout
-            style="@style/LinearLayoutSpinner">
+            style="@style/LinearLayoutTextView">
             <ImageView
                 android:src="@drawable/times_icon"
                 style="@style/ImageIconStyle"/>
@@ -212,7 +224,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             android:orientation="horizontal">
 
             <LinearLayout
-                style="@style/LinearLayoutSpinner"
+                style="@style/LinearLayoutTextView"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/rectangle_left_round_corner_white_gray_border">

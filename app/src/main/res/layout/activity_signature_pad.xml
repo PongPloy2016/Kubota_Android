@@ -1,0 +1,93 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
+    tools:context="th.co.siamkubota.kubota.fragment.SignaturePadFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@color/white">
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_alignBottom="@+id/signature_pad"
+                android:layout_marginBottom="100dp"
+                android:background="@color/light_gray_divider"/>
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="18dp"
+                android:textColor="@color/light_gray"
+                android:text="@string/sign_pad_customer_signature"
+                android:layout_alignBottom="@+id/signature_pad"
+                android:layout_marginBottom="60dp"/>
+
+            <com.github.gcacace.signaturepad.views.SignaturePad
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/signature_pad"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                app:penColor="@android:color/black"
+                android:layout_centerInParent="true"
+                />
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/navigationControleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/clearButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginRight="5dp"
+            android:textSize="15dp"
+            android:text="@string/sign_pad_clear_button"
+            android:textColor="@color/button_white_text_selector"
+            android:background="@drawable/button_white_border_selector"
+           ></Button>
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginLeft="5dp"
+            android:textSize="15dp"
+            android:text="@string/sign_pad_save_button"
+            android:textColor="@color/white"
+            android:background="@drawable/button_orange_selector"></Button>
+
+    </LinearLayout>
+
+</LinearLayout>
