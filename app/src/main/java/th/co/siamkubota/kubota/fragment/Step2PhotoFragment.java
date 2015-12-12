@@ -2,11 +2,13 @@ package th.co.siamkubota.kubota.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
@@ -20,10 +22,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.adapter.PhotoPagerAdapter;
+import th.co.siamkubota.kubota.adapter.PhotoViewPagerAdapter;
 import th.co.siamkubota.kubota.model.Photo;
 import th.co.siamkubota.kubota.utils.function.ImageFile;
 
@@ -45,12 +50,17 @@ PhotoPageFragment.OnFragmentInteractionListener{
     private Button button1, button2, button3, button4;
     private ImageButton previousButton, nextButton;
     private PhotoPagerAdapter adapter;
+    //private PhotoViewPagerAdapter adapter;
 
     private CustomOnPageChangeListener pageChangeListener;
 
     private OnFragmentInteractionListener mListener;
 
     private ArrayList<Photo> photos;
+
+    private FragmentManager mRetainedChildFragmentManager;
+
+    private boolean dataComplete = false;
 
     //////////////////////////////////////////////////////////////////// getter setter
 
@@ -60,6 +70,14 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
     public void setmListener(OnFragmentInteractionListener mListener) {
         this.mListener = mListener;
+    }
+
+    public boolean isDataComplete() {
+        return dataComplete;
+    }
+
+    public void setDataComplete(boolean dataComplete) {
+        this.dataComplete = dataComplete;
     }
 
     //////////////////////////////////////////////////////////////////// constructor
@@ -79,21 +97,35 @@ PhotoPageFragment.OnFragmentInteractionListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        //setRetainInstance(true);
         if (getArguments() != null) {
             //title = getArguments().getString(ARG_PARAM_TITLE);
         }
 
         photos = new ArrayList<Photo>();
 
-        photos.add(new Photo(getString(R.string.service_image_1_engine_number), "K12345678"));
-        photos.add(new Photo(getString(R.string.service_image_2_working_hours)));
-        photos.add(new Photo(getString(R.string.service_image_3_machine)));
-        photos.add(new Photo(getString(R.string.service_image_4_customer_with_machine)));
+        photos.add(new Photo(1,getString(R.string.service_image_1_engine_number), "K12345678"));
+        photos.add(new Photo(2,getString(R.string.service_image_2_working_hours)));
+        photos.add(new Photo(3,getString(R.string.service_image_3_machine)));
+        photos.add(new Photo(4,getString(R.string.service_image_4_customer_with_machine)));
 
-        adapter = new PhotoPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), photos , Step2PhotoFragment.this);
+        //adapter = new PhotoPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), photos , Step2PhotoFragment.this);
+        FragmentManager cfManager = getChildFragmentManager();
+        adapter = new PhotoPagerAdapter(getActivity(), cfManager, photos , Step2PhotoFragment.this);
         pageChangeListener = new CustomOnPageChangeListener();
     }
+
+   /* @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        // Note that we are passing childFragmentManager, not FragmentManager
+        //adapter = new PhotoViewPagerAdapter(getResources(), getChildFragmentManager());
+        FragmentManager cfManager = getChildFragmentManager();
+        adapter = new PhotoViewPagerAdapter(getActivity(), cfManager, photos , Step2PhotoFragment.this);
+
+        pager.setAdapter(adapter);
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,6 +160,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
 
         pager.setAdapter(adapter);
+        pager.setOffscreenPageLimit(4);
         pager.addOnPageChangeListener(pageChangeListener);
 
         pager.setCurrentItem(0);
@@ -152,7 +185,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
     }
 
     public void setSelectPhoto(){
-        pager.requestLayout();
+        //pager.requestLayout();
         pager.setCurrentItem(pageChangeListener.getCurrentPage());
     }
 
@@ -174,6 +207,23 @@ PhotoPageFragment.OnFragmentInteractionListener{
 //            throw new ClassCastException(activity.toString()
 //                    + " must implement OnFragmentInteractionListener");
 //        }
+
+     /*   if (mRetainedChildFragmentManager != null) {
+            //restore the last retained child fragment manager to the new
+            //created fragment
+            try {
+                Field childFMField = Fragment.class.getDeclaredField("mChildFragmentManager");
+                childFMField.setAccessible(true);
+                childFMField.set(this, mRetainedChildFragmentManager);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        } else {
+            mRetainedChildFragmentManager = getChildFragmentManager();
+        }*/
+
     }
 
 
@@ -182,6 +232,19 @@ PhotoPageFragment.OnFragmentInteractionListener{
         super.onDetach();
        // mListener = null;
     }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        List<Fragment> fragments = getChildFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -195,7 +258,8 @@ PhotoPageFragment.OnFragmentInteractionListener{
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentPresent(Fragment fragment, String title);
+        //public void onFragmentPresent(Fragment fragment, String title);
+        public void onFragmentDataComplete(Fragment fragment, boolean complete);
     }
 
 
@@ -253,9 +317,9 @@ PhotoPageFragment.OnFragmentInteractionListener{
             currentPage = position;
 
             if(position == 0){
-                previousButton.setEnabled(false);
+                //previousButton.setEnabled(false);
             }else{
-                previousButton.setEnabled(true);
+                //previousButton.setEnabled(true);
             }
 
             button1.setTextColor(ContextCompat.getColor(getActivity(),R.color.button_text_gray_selector));

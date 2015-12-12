@@ -87,7 +87,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             <ImageView
                 style="@style/ImageIconStyle"/>
             <EditText
-                android:id="@+id/textviewOtherModel"
+                android:id="@+id/editTextOtherModel"
                 android:hint="@string/service_hint_other"
                 style="@style/EditTextStyle"/>
         </LinearLayout>
@@ -98,7 +98,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:src="@drawable/jobcode_icon"
                 style="@style/ImageIconStyle"/>
             <EditText
-                android:id="@+id/textviewJobId"
+                android:id="@+id/editTextJobId"
                 android:hint="@string/service_hint_job_id"
                 style="@style/EditTextStyle"/>
         </LinearLayout>
@@ -117,6 +117,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             android:layout_marginBottom="10dp"/>
 
         <RadioGroup
+            android:id="@+id/radioGroupUserType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -155,7 +156,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:src="@drawable/name_icon"
                 style="@style/ImageIconStyle"/>
             <EditText
-                android:id="@+id/textviewName"
+                android:id="@+id/editTextName"
                 android:hint="@string/service_hint_name"
                 style="@style/EditTextStyle"/>
         </LinearLayout>
@@ -166,7 +167,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:src="@drawable/tel_icon"
                 style="@style/ImageIconStyle"/>
             <EditText
-                android:id="@+id/textviewTel1"
+                android:id="@+id/editTextTel1"
                 android:hint="@string/service_hint_tel_1"
                 style="@style/EditTextStyle"
                 android:inputType="phone"/>
@@ -178,7 +179,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:src="@drawable/tel_icon"
                 style="@style/ImageIconStyle"/>
             <EditText
-                android:id="@+id/textviewTel2"
+                android:id="@+id/editTextTel2"
                 android:hint="@string/service_hint_tel_2"
                 style="@style/EditTextStyle"
                 android:inputType="phone"/>
@@ -190,7 +191,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:src="@drawable/product_icon"
                 style="@style/ImageIconStyle"/>
             <EditText
-                android:id="@+id/textviewMachineNumber"
+                android:id="@+id/editTextMachineNumber"
                 android:hint="@string/service_hint_machine_number"
                 style="@style/EditTextStyle"/>
         </LinearLayout>
@@ -201,7 +202,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:src="@drawable/serial_icon"
                 style="@style/ImageIconStyle"/>
             <EditText
-                android:id="@+id/textviewEngineNumber"
+                android:id="@+id/editTextEngineNumber"
                 android:hint="@string/service_hint_engine_number"
                 style="@style/EditTextStyle"/>
         </LinearLayout>
@@ -212,7 +213,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:src="@drawable/times_icon"
                 style="@style/ImageIconStyle"/>
             <EditText
-                android:id="@+id/textviewWorkHours"
+                android:id="@+id/editTextWorkHours"
                 android:hint="@string/service_hint_working_hours"
                 style="@style/EditTextStyle"
                 android:inputType="numberDecimal"/>
@@ -233,7 +234,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                     android:src="@drawable/address_icon"
                     style="@style/ImageIconStyle"/>
                 <EditText
-                    android:id="@+id/textviewAddress"
+                    android:id="@+id/editTextAddress"
                     android:hint="@string/service_hint_addrss"
                     style="@style/EditTextStyle"
                     android:layout_weight="1"/>

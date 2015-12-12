@@ -4,11 +4,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,9 +19,14 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.activity.ResultActivity;
 import th.co.siamkubota.kubota.adapter.ViewPagerAdapter;
 import th.co.siamkubota.kubota.app.AppController;
+import th.co.siamkubota.kubota.utils.function.Ui;
+import th.co.siamkubota.kubota.utils.ui.NoneScrollableViewPager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,7 +54,9 @@ public class ServiceFragment extends Fragment implements
     private String[] mTitle;
     private OnFragmentInteractionListener mListener;
     private AppController app;
-    private ViewPager pager;
+
+    private LinearLayout rootLayout;
+    private NoneScrollableViewPager pager;
     private ViewPagerAdapter adapter;
     private TextView textStepTitle;
     private ImageButton step1Button, step2Button, step3Button, step4Button;
@@ -85,7 +95,11 @@ public class ServiceFragment extends Fragment implements
         mTitle = getActivity().getResources().getStringArray(R.array.stage_title);
         Numboftabs = mTitle.length;
 
-        adapter = new ViewPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), mTitle,
+
+        /*adapter = new ViewPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), mTitle,
+                Numboftabs, ServiceFragment.this);*/
+        FragmentManager cfManager = getChildFragmentManager();
+        adapter = new ViewPagerAdapter(getActivity(), cfManager, mTitle,
                 Numboftabs, ServiceFragment.this);
     }
 
@@ -103,28 +117,34 @@ public class ServiceFragment extends Fragment implements
     @Override
     public void onViewCreated(View v, Bundle savedInstanceState) {
 
+        rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
         textStepTitle = (TextView) v.findViewById(R.id.textStepTitle);
         step1Button = (ImageButton) v.findViewById(R.id.step1Button);
         step2Button = (ImageButton) v.findViewById(R.id.step2Button);
         step3Button = (ImageButton) v.findViewById(R.id.step3Button);
         step4Button = (ImageButton) v.findViewById(R.id.step4Button);
-        pager = (ViewPager) v.findViewById(R.id.pager);
+        pager = (NoneScrollableViewPager) v.findViewById(R.id.pager);
 
         previousButton = (Button) v.findViewById(R.id.previousButton);
         nextButton = (Button) v.findViewById(R.id.nextButton);
         navigationControleLayout = (LinearLayout) v.findViewById(R.id.navigationControleLayout);
 
 
-        step1Button.setOnClickListener(this);
-        step2Button.setOnClickListener(this);
-        step3Button.setOnClickListener(this);
-        step4Button.setOnClickListener(this);
+//        step1Button.setOnClickListener(this);
+//        step2Button.setOnClickListener(this);
+//        step3Button.setOnClickListener(this);
+//        step4Button.setOnClickListener(this);
 
         previousButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
+        nextButton.setEnabled(false);
 
         pager.setAdapter(adapter);
+        pager.setOffscreenPageLimit(4);
         pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
+        pager.setPagingEnabled(false);
+
+        Ui.setupUI(getActivity(), rootLayout);
 
     }
 
@@ -212,6 +232,18 @@ public class ServiceFragment extends Fragment implements
     }
 
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        List<Fragment> fragments = getChildFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
+
+
     ///////////////////////////////////////////////////////////////////// implement method
 
 
@@ -238,30 +270,54 @@ public class ServiceFragment extends Fragment implements
 
 
     @Override
-    public void onFragmentPresent(Fragment fragment, String title) {
-
-        //textStepTitle.setText(title);
+    public void onFragmentDataComplete(Fragment fragment, boolean complete) {
 
         if(fragment instanceof Step1CustomerDetailFragment){
-
+            if(complete){
+                step1Button.setImageResource(R.drawable.stage_done);
+                nextButton.setEnabled(true);
+            }else{
+                step1Button.setImageResource(R.drawable.stage_step_active);
+                nextButton.setEnabled(false);
+            }
         }else if(fragment instanceof Step2PhotoFragment){
-
+            if(complete){
+                step2Button.setImageResource(R.drawable.stage_done);
+            }else{
+                step2Button.setImageResource(R.drawable.stage_step_active);
+            }
         }else if(fragment instanceof Step3SignFragment){
-
+            if(complete){
+                step3Button.setImageResource(R.drawable.stage_done);
+            }else{
+                step3Button.setImageResource(R.drawable.stage_step_active);
+            }
         }else if(fragment instanceof Step4ConfirmFragment){
-
+            if(complete){
+                step4Button.setImageResource(R.drawable.stage_done);
+            }else{
+                step4Button.setImageResource(R.drawable.stage_step_inactive);
+                pager.setCurrentItem((pageChangeListener.getCurrentPage() - 1));
+            }
         }
     }
 
     @Override
-    public void onConfirmFragmentCancel() {
-        pager.setCurrentItem((pageChangeListener.getCurrentPage() -1));
+    public void onConfirmSubmit(Fragment fragment, boolean complete) {
+        if(complete){
+            Intent intent = new Intent(getActivity(), ResultActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+
+        }else{
+            pager.setCurrentItem((pageChangeListener.getCurrentPage() - 1));
+        }
     }
 
-    @Override
-    public void onInvokeSignPad() {
-        mListener.onRelayInvokeSignPad();
-    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
     /**
      * Get the current view position from the ViewPager by
@@ -276,13 +332,13 @@ public class ServiceFragment extends Fragment implements
             setStepTitle(mTitle[position]);
             currentPage = position;
 
-            if(position == 0){
+           /* if(position == 0){
                 previousButton.setEnabled(false);
             }else{
                 previousButton.setEnabled(true);
-            }
+            }*/
 
-            if(position == 3){
+           /* if(position == 3){
                 //hideBottomBar();
                 navigationControleLayout.setVisibility(View.GONE);
             }else{
@@ -290,6 +346,91 @@ public class ServiceFragment extends Fragment implements
                     //showBottomBar();
                     navigationControleLayout.setVisibility(View.VISIBLE);
                 }
+            }*/
+            Step1CustomerDetailFragment step1;
+            Step2PhotoFragment step2;
+            Step3SignFragment step3;
+            Step4ConfirmFragment step4;
+
+
+            switch (position){
+                case 0:
+                    previousButton.setEnabled(false);
+
+                    if(navigationControleLayout.getVisibility() == View.GONE){
+                        navigationControleLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    step1 = (Step1CustomerDetailFragment)adapter.getItem(position);
+                    if(!step1.isDataComplete()){
+                        step1Button.setImageResource(R.drawable.stage_step_active);
+                    }
+
+                    step2 = (Step2PhotoFragment)adapter.getItem(position + 1);
+                    if(!step2.isDataComplete()){
+                        nextButton.setEnabled(false);
+                    }else{
+                        nextButton.setEnabled(true);
+                    }
+
+                    break;
+                case 1:
+                    previousButton.setEnabled(true);
+                    nextButton.setEnabled(false);
+                    if(navigationControleLayout.getVisibility() == View.GONE){
+                        navigationControleLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    step2 = (Step2PhotoFragment)adapter.getItem(position);
+
+                    if(!step2.isDataComplete()){
+                        step2Button.setImageResource(R.drawable.stage_step_active);
+                    }
+
+                    step3 = (Step3SignFragment)adapter.getItem(position + 1);
+                    if(!step3.isDataComplete()){
+                        nextButton.setEnabled(false);
+                    }else{
+                        nextButton.setEnabled(true);
+                    }
+
+                    break;
+                case 2:
+                    previousButton.setEnabled(true);
+                    nextButton.setEnabled(false);
+                    if(navigationControleLayout.getVisibility() == View.GONE){
+                        navigationControleLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    step3 = (Step3SignFragment)adapter.getItem(position);
+                    if(!step3.isDataComplete()){
+                        step3Button.setImageResource(R.drawable.stage_step_active);
+                    }
+
+                    step4 = (Step4ConfirmFragment)adapter.getItem(position +1);
+                    if(!step4.isDataComplete()){
+                        nextButton.setEnabled(false);
+                    }else{
+                        nextButton.setEnabled(true);
+                    }
+
+                    break;
+                case 3:
+                default:
+                    previousButton.setEnabled(true);
+                    nextButton.setEnabled(false);
+
+                    navigationControleLayout.setVisibility(View.GONE);
+
+                    step4 = (Step4ConfirmFragment)adapter.getItem(position);
+                    step4.setDataComplete(true);
+                    if(!step4.isDataComplete()){
+                        step4Button.setImageResource(R.drawable.stage_step_active);
+                    }else{
+                        step4Button.setImageResource(R.drawable.stage_done);
+                    }
+
+                    break;
             }
         }
 

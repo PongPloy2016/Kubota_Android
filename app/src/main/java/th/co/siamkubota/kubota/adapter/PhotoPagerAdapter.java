@@ -72,7 +72,7 @@ public class PhotoPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return datalist.size();
+        return photoPageFragments.size();
     }
 
     @Override

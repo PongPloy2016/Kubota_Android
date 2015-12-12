@@ -13,16 +13,28 @@ public class Photo implements Parcelable{
     private String path;
     private Date date;
     private String description;
+    private int id;
+    private boolean complete;
 
-    public Photo(String title) {
+    public Photo(int id,String title) {
+        this.id = id;
         this.title = title;
         this.date = new Date();
     }
 
-    public Photo(String title, String description) {
+    public Photo(int id, String title, String description) {
+        this.id = id;
         this.title = title;
         this.date = new Date();
         this.description = description;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -68,6 +80,7 @@ public class Photo implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
         dest.writeString(this.title);
         dest.writeString(this.path);
         dest.writeString(this.description);
@@ -75,6 +88,7 @@ public class Photo implements Parcelable{
     }
 
     protected Photo(Parcel in) {
+        this.id = in.readInt();
         this.title = in.readString();
         this.path = in.readString();
         this.description = in.readString();

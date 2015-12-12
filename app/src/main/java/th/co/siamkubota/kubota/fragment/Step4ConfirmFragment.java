@@ -32,6 +32,7 @@ View.OnClickListener{
     private Button cancelButton;
 
     private String title;
+    private boolean dataComplete = false;
 
     private OnFragmentInteractionListener mListener;
 
@@ -44,6 +45,14 @@ View.OnClickListener{
 
     public void setmListener(OnFragmentInteractionListener mListener) {
         this.mListener = mListener;
+    }
+
+    public boolean isDataComplete() {
+        return dataComplete;
+    }
+
+    public void setDataComplete(boolean dataComplete) {
+        this.dataComplete = dataComplete;
     }
 
     //////////////////////////////////////////////////////////////////// constructor
@@ -82,8 +91,6 @@ View.OnClickListener{
         confirmButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
 
-
-        //mListener.onFragmentPresent(this, title);
 
         return v;
     }
@@ -128,7 +135,9 @@ View.OnClickListener{
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         //public void onFragmentPresent(Fragment fragment, String title);
-        public void onConfirmFragmentCancel();
+        //public void onConfirmFragmentCancel();
+        public void onFragmentDataComplete(Fragment fragment, boolean complete);
+        public void onConfirmSubmit(Fragment fragment, boolean complete);
     }
 
     ////////////////////////////////////////////////////////////// implement method
@@ -138,12 +147,13 @@ View.OnClickListener{
     public void onClick(View v) {
         if(v == confirmButton){
 
-            Intent intent = new Intent(getActivity(), ResultActivity.class);
-            startActivity(intent);
-            getActivity().finish();
+            mListener.onConfirmSubmit(this, true);
 
         }else{
-            mListener.onConfirmFragmentCancel();
+            //mListener.onConfirmFragmentCancel();
+            //mListener.onConfirmSubmit(this, false);
+            dataComplete = false;
+            mListener.onFragmentDataComplete(this,dataComplete);
         }
     }
 }

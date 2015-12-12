@@ -8,16 +8,22 @@ public class Config {
     // Mockup Swagger
     //public static final String host = "http://192.168.0.52:8080";
     // Test
-    //public static final String host = "http://192.168.0.86:3000";
+    public static final String host = "http://kubota.dhamadah.com";
     // Production
-    public static final String host = "http://49.231.24.111:3000";
+    //public static final String host = "http://49.231.24.111:3000";
 
 
     //test mockup data
-    //public static final String base = "https://rss.ais.co.th/mobileappdep/GreenSpot/datamockup/";
-    public static final String base =  host + "/api/";
+    public static final String base =  host + "/public/api/";
     //public static final String base = "http://192.168.0.84:8080/api/";
-    public static final String mediaService = base + "media/";
+    //public static final String mediaService = base + "media/";
+
+    //http://kubota.dhamadah.com/public/api/login
+    //http://kubota.dhamadah.com/public/api/submit-task-mobile
+
+    /*Post data
+    http://kubota.dhamadah.com/public/exampleform/submit-task-mobile
+    ส่งชื่อ parameter ชื่อว่า form_data ซึ่งค่าของ form_data คือ json string ตาม URL ตัวอย่าง json string ด้านบน*/
 
 
 }

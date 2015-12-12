@@ -46,6 +46,7 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
     private String title;
     private Photo imageCustomer;
     private Photo imageTechnician;
+    private boolean dataComplete = false;
 
 
     private OnFragmentInteractionListener mListener;
@@ -59,6 +60,14 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
 
     public void setmListener(OnFragmentInteractionListener mListener) {
         this.mListener = mListener;
+    }
+
+    public boolean isDataComplete() {
+        return dataComplete;
+    }
+
+    public void setDataComplete(boolean dataComplete) {
+        this.dataComplete = dataComplete;
     }
 
     //////////////////////////////////////////////////////////////////// constructor
@@ -80,7 +89,7 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        //setRetainInstance(true);
         if (getArguments() != null) {
             title = getArguments().getString(ARG_PARAM_TITLE);
         }
@@ -164,7 +173,8 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         //public void onFragmentPresent(Fragment fragment, String title);
-        public void onInvokeSignPad();
+        //public void onInvokeSignPad();
+        public void onFragmentDataComplete(Fragment fragment, boolean complete);
     }
 
     @Override
@@ -177,10 +187,11 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
 
             if(v == imageCustomerSignature){
 
-                requestCode = 0;
+
                 if(imageCustomer == null){
-                    imageCustomer = new Photo(getString(R.string.sign_pad_customer_signature));
+                    imageCustomer = new Photo(5,getString(R.string.sign_pad_customer_signature));
                 }
+                requestCode = imageCustomer.getId();
 
                 if(imageCustomer != null && imageCustomer.getPath() != null && !imageCustomer.getPath().isEmpty()){
                     bundle.putString(SignaturePadActivity.KEY_SIGNATURE_IMAGE_PATH, imageCustomer.getPath());
@@ -188,11 +199,13 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
                 bundle.putString(SignaturePadActivity.KEY_TITLE, imageCustomer.getTitle());
 
             }else if(v == imageTechnicianSignature){
-                requestCode = 1;
+                //requestCode = 1;
 
                 if(imageTechnician == null){
-                    imageTechnician = new Photo(getString(R.string.sign_pad_technician_signature));
+                    imageTechnician = new Photo(6,getString(R.string.sign_pad_technician_signature));
                 }
+
+                requestCode = imageTechnician.getId();
 
                 if(imageTechnician != null && imageTechnician.getPath() != null && !imageTechnician.getPath().isEmpty()){
                     bundle.putString(SignaturePadActivity.KEY_SIGNATURE_IMAGE_PATH, imageTechnician.getPath());
@@ -203,7 +216,8 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
 
             Intent intent = new Intent(getActivity(), SignaturePadActivity.class);
             intent.putExtras(bundle);
-            startActivityForResult(intent, requestCode);
+            //startActivityForResult(intent, requestCode);
+            getActivity().startActivityForResult(intent, requestCode);
         }
 
     }
@@ -220,7 +234,7 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
             String dateInfo = bundle.getString("takenDate");
             //imageView.setTag(R.id.imagePath, imagePath);
 
-            if(requestCode == 0){
+            if(imageCustomer != null && requestCode == imageCustomer.getId()){
 
                 imageCustomer.setPath(imagePath);
                 imageCustomer.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
@@ -229,7 +243,7 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
                 editTextCustomerSignDate.setText(dateInfo);
                 signatureCustomerHintLayout.setVisibility(View.GONE);
 
-            }else if(requestCode == 1){
+            }else if(imageTechnician != null && requestCode == imageTechnician.getId()){
                 imageTechnician.setPath(imagePath);
                 imageTechnician.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
                 imageTechnicianSignature.setImageURI(Uri.fromFile(new File(imageTechnician.getPath())));

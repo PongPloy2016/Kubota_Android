@@ -78,8 +78,14 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            data = getArguments().getParcelable(ARG_PARAM_DATA);
+        //setRetainInstance(true);
+
+        if(savedInstanceState != null && savedInstanceState.containsKey(ARG_PARAM_DATA)){
+            data = savedInstanceState.getParcelable(ARG_PARAM_DATA);
+        }else{
+            if (getArguments() != null) {
+                data = getArguments().getParcelable(ARG_PARAM_DATA);
+            }
         }
 
     }
@@ -89,6 +95,10 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_page_photo, container, false);
+
+        if(savedInstanceState != null && savedInstanceState.containsKey(ARG_PARAM_DATA)) {
+            data = savedInstanceState.getParcelable(ARG_PARAM_DATA);
+        }
 
         return v;
     }
@@ -108,19 +118,29 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
         imageView.setOnClickListener(this);
         imageZoomButton.setOnClickListener(this);
 
+        if(savedInstanceState != null && savedInstanceState.containsKey(ARG_PARAM_DATA)) {
+            data = savedInstanceState.getParcelable(ARG_PARAM_DATA);
+        }
 
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         if(data.getPath() != null && !data.getPath().isEmpty()){
             imageView.setImageURI(Uri.fromFile(new File(this.data.getPath())));
             imageView.setVisibility(View.VISIBLE);
 
             textDate.setText(Converter.DateToString(this.data.getDate(),"dd/MM/yyyy"));
         }
+
+    }
+
+   /* @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(ARG_PARAM_DATA, data);
+    }*/
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -162,7 +182,8 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
                 bundle.putString(CameraTakeActivity.KEY_RENDER_TEXT, data.getDescription());
             }
             intent.putExtras(bundle);
-            startActivityForResult(intent, 1);
+            //getParentFragment().startActivityForResult(intent, data.getId());
+            getActivity().startActivityForResult(intent, data.getId());
 
         }else if(v == imageZoomButton){
 
@@ -183,7 +204,7 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == Activity.RESULT_OK){
+        if(resultCode == Activity.RESULT_OK && requestCode == this.data.getId()){
 
             Bundle bundle = data.getExtras();
 
@@ -198,16 +219,6 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
             imageView.setVisibility(View.VISIBLE);
 
             textDate.setText(dateInfo);
-
-           /* Bitmap bitmap = ((BitmapDrawable)holder.imageView.getDrawable()).getBitmap();
-            final int bitmapHeight = bitmap.getHeight();
-            final int bitmapWidth = bitmap.getWidth();
-            if (bitmapHeight > bitmapWidth){
-                ImageFile.scaleImage(holder.imageView, holder.imageView.getMaxWidth());
-            }
-            parent.requestLayout();
-            imageView.setTag(R.id.imagePath, item.getImageObj().getPath());*/
-
 
         }
     }

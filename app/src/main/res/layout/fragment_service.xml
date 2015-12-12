@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:ignore="MissingPrefix">
+    tools:ignore="MissingPrefix"
+    android:id="@+id/rootLayout">
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -63,7 +64,7 @@
                         android:layout_height="18dp"
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
-                        android:src="@drawable/stage_done"
+                        android:src="@drawable/stage_step_active"
                         android:background="@android:color/transparent"
                         android:layout_weight="1"
                         />
@@ -74,7 +75,7 @@
                         android:layout_height="18dp"
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
-                        android:src="@drawable/stage_step_active"
+                        android:src="@drawable/stage_step_inactive"
                         android:background="@android:color/transparent"
                         android:layout_weight="1"
                         />
@@ -107,16 +108,15 @@
 
 
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
-            android:paddingTop="0dp"
-            android:paddingBottom="0dp"
-            />
+        <!--<android.support.v4.view.ViewPager-->
+            <!--android:id="@+id/pager"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:paddingLeft="0dp"-->
+            <!--android:paddingRight="0dp"-->
+            <!--android:paddingTop="0dp"-->
+            <!--android:paddingBottom="0dp"/>        -->
 
         <!--<com.viewpagerindicator.IconPageIndicator-->
             <!--android:id="@+id/indicator"-->
@@ -124,6 +124,17 @@
             <!--android:layout_width="match_parent"-->
             <!--android:layout_marginBottom="20dp"-->
             <!--/>-->
+
+        <th.co.siamkubota.kubota.utils.ui.NoneScrollableViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"/>
+
         <LinearLayout
             android:id="@+id/navigationControleLayout"
             android:layout_width="match_parent"
