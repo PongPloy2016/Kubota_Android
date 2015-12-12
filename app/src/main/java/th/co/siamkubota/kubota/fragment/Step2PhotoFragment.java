@@ -27,10 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.activity.ImageViewActivity;
 import th.co.siamkubota.kubota.adapter.PhotoPagerAdapter;
 import th.co.siamkubota.kubota.adapter.PhotoViewPagerAdapter;
 import th.co.siamkubota.kubota.model.Photo;
+import th.co.siamkubota.kubota.utils.function.Copier;
 import th.co.siamkubota.kubota.utils.function.ImageFile;
+import th.co.siamkubota.kubota.utils.function.Validate;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -173,15 +176,6 @@ PhotoPageFragment.OnFragmentInteractionListener{
     public void onResume() {
         super.onResume();
 
-
-        /*pager.setAdapter(adapter);
-        pager.addOnPageChangeListener(pageChangeListener);
-
-        pager.setCurrentItem(0);
-
-        setSelectPhoto();*/
-
-
     }
 
     public void setSelectPhoto(){
@@ -265,7 +259,6 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
     //////////////////////////////////////////////////////////// implement method
 
-
     @Override
     public void onClick(View v) {
         if(v == button1){
@@ -299,8 +292,36 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
 
     @Override
-    public void onFragmentPresent(Fragment fragment, String title) {
+    public void onPhotoTaken(Fragment fragment, Photo data) {
+        for(Photo photo : photos){
+            if(photo.getId() == data.getId()){
+                Copier.copy(data, photo);
+                break;
+            }
+        }
 
+        validateInput();
+    }
+
+    @Override
+    public void onPhotoView(Fragment fragment, Photo data) {
+
+        ArrayList<Photo> images = new ArrayList<>();
+
+        for(Photo photo : photos){
+            if(photo.isComplete()){
+                images.add(photo);
+            }
+        }
+
+        int item = images.indexOf(data);
+
+        Intent intent = new Intent(getActivity(), ImageViewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(ImageViewActivity.KEY_IMAGE_LIST, images);
+        bundle.putInt(ImageViewActivity.KEY_SELECT_ITEM, item);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     /**
@@ -352,10 +373,22 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
         }
 
-
-
         public final int getCurrentPage() {
             return currentPage;
         }
+    }
+
+    private void validateInput(){
+
+        for(Photo photo : photos){
+            if(!photo.isComplete()){
+                dataComplete = false;
+                mListener.onFragmentDataComplete(this, dataComplete);
+                return;
+            }
+        }
+
+        dataComplete = true;
+        mListener.onFragmentDataComplete(this, dataComplete);
     }
 }

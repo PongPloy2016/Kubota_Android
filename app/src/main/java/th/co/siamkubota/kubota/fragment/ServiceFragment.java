@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -148,16 +150,6 @@ public class ServiceFragment extends Fragment implements
 
     }
 
-/*    @Override
-    public void onResume() {
-        super.onResume();
-
-        adapter = new ViewPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), mTitle,
-                Numboftabs, ServiceFragment.this);
-        pager.setAdapter(adapter);
-        pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
-
-    }*/
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -268,9 +260,28 @@ public class ServiceFragment extends Fragment implements
         }
     }
 
+    private void showToastComplete(){
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_data_complete_layout,
+                (ViewGroup) getActivity().findViewById(R.id.toast_layout_root));
+        Toast toast = new Toast(getActivity());
+        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 480);
+        toast.setDuration(Toast.LENGTH_SHORT);
+
+        //TextView  textView = (TextView) layout.findViewById(R.id.textView1);
+        //textView.setText(getString(R.string.sign_pad_not_complete));
+
+        toast.setView(layout);
+        toast.show();
+    }
+
 
     @Override
     public void onFragmentDataComplete(Fragment fragment, boolean complete) {
+
+        if(complete){
+            showToastComplete();
+        }
 
         if(fragment instanceof Step1CustomerDetailFragment){
             if(complete){
@@ -283,20 +294,25 @@ public class ServiceFragment extends Fragment implements
         }else if(fragment instanceof Step2PhotoFragment){
             if(complete){
                 step2Button.setImageResource(R.drawable.stage_done);
+                nextButton.setEnabled(true);
             }else{
                 step2Button.setImageResource(R.drawable.stage_step_active);
+                nextButton.setEnabled(false);
             }
         }else if(fragment instanceof Step3SignFragment){
             if(complete){
                 step3Button.setImageResource(R.drawable.stage_done);
+                nextButton.setEnabled(true);
             }else{
                 step3Button.setImageResource(R.drawable.stage_step_active);
+                nextButton.setEnabled(false);
             }
         }else if(fragment instanceof Step4ConfirmFragment){
             if(complete){
                 step4Button.setImageResource(R.drawable.stage_done);
+                nextButton.setEnabled(true);
             }else{
-                step4Button.setImageResource(R.drawable.stage_step_inactive);
+                step4Button.setImageResource(R.drawable.stage_step_active);
                 pager.setCurrentItem((pageChangeListener.getCurrentPage() - 1));
             }
         }
@@ -318,7 +334,6 @@ public class ServiceFragment extends Fragment implements
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
     /**
      * Get the current view position from the ViewPager by
      * extending SimpleOnPageChangeListener class and adding your method
@@ -332,21 +347,6 @@ public class ServiceFragment extends Fragment implements
             setStepTitle(mTitle[position]);
             currentPage = position;
 
-           /* if(position == 0){
-                previousButton.setEnabled(false);
-            }else{
-                previousButton.setEnabled(true);
-            }*/
-
-           /* if(position == 3){
-                //hideBottomBar();
-                navigationControleLayout.setVisibility(View.GONE);
-            }else{
-                if(navigationControleLayout.getVisibility() == View.GONE){
-                    //showBottomBar();
-                    navigationControleLayout.setVisibility(View.VISIBLE);
-                }
-            }*/
             Step1CustomerDetailFragment step1;
             Step2PhotoFragment step2;
             Step3SignFragment step3;
@@ -364,13 +364,13 @@ public class ServiceFragment extends Fragment implements
                     step1 = (Step1CustomerDetailFragment)adapter.getItem(position);
                     if(!step1.isDataComplete()){
                         step1Button.setImageResource(R.drawable.stage_step_active);
+                    }else{
+                        nextButton.setEnabled(true);
                     }
 
                     step2 = (Step2PhotoFragment)adapter.getItem(position + 1);
                     if(!step2.isDataComplete()){
-                        nextButton.setEnabled(false);
-                    }else{
-                        nextButton.setEnabled(true);
+                        step2Button.setImageResource(R.drawable.stage_step_inactive);
                     }
 
                     break;
@@ -382,16 +382,15 @@ public class ServiceFragment extends Fragment implements
                     }
 
                     step2 = (Step2PhotoFragment)adapter.getItem(position);
-
                     if(!step2.isDataComplete()){
                         step2Button.setImageResource(R.drawable.stage_step_active);
+                    }else{
+                        nextButton.setEnabled(true);
                     }
 
                     step3 = (Step3SignFragment)adapter.getItem(position + 1);
                     if(!step3.isDataComplete()){
-                        nextButton.setEnabled(false);
-                    }else{
-                        nextButton.setEnabled(true);
+                        step3Button.setImageResource(R.drawable.stage_step_inactive);
                     }
 
                     break;
@@ -405,13 +404,13 @@ public class ServiceFragment extends Fragment implements
                     step3 = (Step3SignFragment)adapter.getItem(position);
                     if(!step3.isDataComplete()){
                         step3Button.setImageResource(R.drawable.stage_step_active);
+                    }else{
+                        nextButton.setEnabled(true);
                     }
 
                     step4 = (Step4ConfirmFragment)adapter.getItem(position +1);
                     if(!step4.isDataComplete()){
-                        nextButton.setEnabled(false);
-                    }else{
-                        nextButton.setEnabled(true);
+                        step4Button.setImageResource(R.drawable.stage_step_inactive);
                     }
 
                     break;
@@ -423,18 +422,12 @@ public class ServiceFragment extends Fragment implements
                     navigationControleLayout.setVisibility(View.GONE);
 
                     step4 = (Step4ConfirmFragment)adapter.getItem(position);
-                    step4.setDataComplete(true);
-                    if(!step4.isDataComplete()){
-                        step4Button.setImageResource(R.drawable.stage_step_active);
-                    }else{
-                        step4Button.setImageResource(R.drawable.stage_done);
-                    }
+                    //step4.setDataComplete(true);
+                    step4Button.setImageResource(R.drawable.stage_step_active);
 
                     break;
             }
         }
-
-
 
         public final int getCurrentPage() {
             return currentPage;

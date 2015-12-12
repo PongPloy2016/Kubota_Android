@@ -188,13 +188,15 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
         }else if(v == imageZoomButton){
 
             if(data != null && data.getPath() != null && !data.getPath().isEmpty()){
-                Intent intent = new Intent(getActivity(), ImageViewActivity.class);
+               /* Intent intent = new Intent(getActivity(), ImageViewActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(ImageViewActivity.KEY_IMAGE_PATH, data.getPath());
                 bundle.putString(ImageViewActivity.KEY_IMAGE_TITLE, data.getTitle());
 
                 intent.putExtras(bundle);
-                startActivity(intent);
+                startActivity(intent);*/
+
+                mListener.onPhotoView(this, data);
             }
         }
 
@@ -220,6 +222,9 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
 
             textDate.setText(dateInfo);
 
+            this.data.setComplete(true);
+            mListener.onPhotoTaken(this, this.data);
+
         }
     }
 
@@ -235,7 +240,8 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentPresent(Fragment fragment, String title);
+        public void onPhotoTaken(Fragment fragment, Photo data);
+        public void onPhotoView(Fragment fragment, Photo data);
     }
 
 }

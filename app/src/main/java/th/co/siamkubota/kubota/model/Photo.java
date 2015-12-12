@@ -69,11 +69,19 @@ public class Photo implements Parcelable{
         this.description = description;
     }
 
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete(boolean complete) {
+        this.complete = complete;
+    }
+
 
 /////////////////////////////////////////////////////////////////////////////// implement parcelable
 
 
-    @Override
+   /* @Override
     public int describeContents() {
         return 0;
     }
@@ -94,6 +102,42 @@ public class Photo implements Parcelable{
         this.description = in.readString();
         long tmpDate = in.readLong();
         this.date = tmpDate == -1 ? null : new Date(tmpDate);
+    }
+
+    public static final Creator<Photo> CREATOR = new Creator<Photo>() {
+        public Photo createFromParcel(Parcel source) {
+            return new Photo(source);
+        }
+
+        public Photo[] newArray(int size) {
+            return new Photo[size];
+        }
+    };*/
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.title);
+        dest.writeString(this.path);
+        dest.writeLong(date != null ? date.getTime() : -1);
+        dest.writeString(this.description);
+        dest.writeInt(this.id);
+        dest.writeByte(complete ? (byte) 1 : (byte) 0);
+    }
+
+    protected Photo(Parcel in) {
+        this.title = in.readString();
+        this.path = in.readString();
+        long tmpDate = in.readLong();
+        this.date = tmpDate == -1 ? null : new Date(tmpDate);
+        this.description = in.readString();
+        this.id = in.readInt();
+        this.complete = in.readByte() != 0;
     }
 
     public static final Creator<Photo> CREATOR = new Creator<Photo>() {

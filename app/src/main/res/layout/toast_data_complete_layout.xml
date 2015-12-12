@@ -15,12 +15,13 @@
         android1:id="@+id/textView1"
         android1:layout_width="wrap_content"
         android1:layout_height="wrap_content"
-        android1:text="This is custom Toast message"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android1:text="@string/service_toast_complete"
+        android:textStyle="bold"
+        android:textSize="15dp"
         android:textColor="@color/white"
-        android:textSize="18dp"/>
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"/>
 
 </LinearLayout>

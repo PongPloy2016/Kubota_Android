@@ -1,10 +1,16 @@
 package th.co.siamkubota.kubota.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.os.ResultReceiver;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -19,9 +25,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.adapter.CustomSpinnerAdapter;
 import th.co.siamkubota.kubota.adapter.SelectNoneSpinnerAdapter;
+import th.co.siamkubota.kubota.service.FetchAddressIntentService;
 import th.co.siamkubota.kubota.utils.function.Converter;
 import th.co.siamkubota.kubota.utils.function.Ui;
 import th.co.siamkubota.kubota.utils.function.Validate;
@@ -38,7 +49,9 @@ import th.co.siamkubota.kubota.utils.ui.CustomSpinnerDialog;
  */
 public class Step1CustomerDetailFragment extends Fragment implements
         AdapterView.OnItemSelectedListener,
-        RadioGroup.OnCheckedChangeListener{
+        RadioGroup.OnCheckedChangeListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private static final String ARG_PARAM_TITLE = "title";
 
@@ -71,6 +84,11 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     private RadioGroup radioGroupUserType;
 
+    protected Location mLastLocation;
+    private AddressResultReceiver mResultReceiver;
+    private String mAddressOutput;
+    private boolean mAddressRequested;
+    private GoogleApiClient mGoogleApiClient;
 
     private String title;
     private boolean dataComplete = false;
@@ -217,10 +235,11 @@ public class Step1CustomerDetailFragment extends Fragment implements
     }
 
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-           // mListener.onFragmentInteraction(uri);
-        }
+    protected void startIntentService() {
+        Intent intent = new Intent(getActivity(), FetchAddressIntentService.class);
+        intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, mLastLocation);
+        getActivity().startService(intent);
     }
 
     @Override
@@ -379,55 +398,98 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
             if(!text.isEmpty() && view != null){
 
-      /*          int pos = 0;
-                String[] arr = view.getTag().toString().split(":");
-                if(arr.length == 2){
-                    pos = Integer.parseInt(arr[1]);
-                }
 
-                if(view.getTag().toString().startsWith("datePickerEditTextAtPos")){
-
-                    if(data.get(pos).getDate() != null && !data.get(pos).getDate().equals(Converter.DateToString(Converter.StringToDate(text, "dd/MM/yyyy"), "yyyy-MM-dd"))){
-                        ((OOSCheckActivity) mContext).setDataChange(true);
-                    }else if(data.get(pos).getDate() == null){
-                        ((OOSCheckActivity) mContext).setDataChange(true);
-                    }
-                    data.get(pos).setDate(Converter.DateToString(Converter.StringToDate(text, "dd/MM/yyyy"), "yyyy-MM-dd"));
-
-                    view.setTag(R.id.datePicker, null);
-
-                    view = null;
-
-
-                }else if(view.getTag().toString().startsWith("qtyEditTextAtPos")){
-
-                    if(data.get(pos).getAmount() != null && !data.get(pos).getAmount().equals(text)){
-                        //data.get(pos).setAmount(text);
-                        ((OOSCheckActivity) mContext).setDataChange(true);
-                    }else if(data.get(pos).getAmount() == null){
-                        //data.get(pos).setAmount(text);
-                        ((OOSCheckActivity) mContext).setDataChange(true);
-                    }
-
-                    data.get(pos).setAmount(text);
-                }
-*/
-                validateInput();
             }
+
+            validateInput();
         }
     }
 
     private void validateInput(){
-        //validate edittext
-        //validate spinner
-        //validate radio group
 
         View view = Validate.inputValidate(rootLayout);
         if(view != null ){
+            dataComplete = false;
+            mListener.onFragmentDataComplete(this, dataComplete);
             return;
         }
 
         dataComplete = true;
         mListener.onFragmentDataComplete(this, dataComplete);
+    }
+
+    ////////////////////////////////////////////////////////////// get address
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        // Gets the best and most recent location currently available,
+        // which may be null in rare cases when a location is not available.
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+
+        if (mLastLocation != null) {
+            // Determine whether a Geocoder is available.
+            if (!Geocoder.isPresent()) {
+                Toast.makeText(getActivity(), R.string.no_geocoder_available,
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            if (mAddressRequested) {
+                startIntentService();
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    private void displayAddressOutput(){
+
+    }
+
+    public void fetchAddressButtonHandler(View view) {
+        // Only start the service to fetch the address if GoogleApiClient is
+        // connected.
+        if (mGoogleApiClient.isConnected() && mLastLocation != null) {
+            startIntentService();
+        }
+        // If GoogleApiClient isn't connected, process the user's request by
+        // setting mAddressRequested to true. Later, when GoogleApiClient connects,
+        // launch the service to fetch the address. As far as the user is
+        // concerned, pressing the Fetch Address button
+        // immediately kicks off the process of getting the address.
+        mAddressRequested = true;
+        //updateUIWidgets();
+    }
+
+    @SuppressLint("ParcelCreator")
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            // Display the address string
+            // or an error message sent from the intent service.
+            mAddressOutput = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
+            displayAddressOutput();
+
+            // Show a toast message if an address was found.
+            if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
+                //showToast(getString(R.string.address_found));
+                Toast.makeText(getActivity(),getString(R.string.address_found), Toast.LENGTH_LONG ).show();
+            }
+
+        }
     }
 }

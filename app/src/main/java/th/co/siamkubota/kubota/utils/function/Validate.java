@@ -2,6 +2,7 @@ package th.co.siamkubota.kubota.utils.function;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -85,7 +86,7 @@ public class Validate {
 
     public static View inputValidate(View view){
 
-        if(view.getVisibility() == View.VISIBLE && (view instanceof EditText || view instanceof RadioGroup || view instanceof Spinner)) {
+        if(view.getVisibility() == View.VISIBLE && (view instanceof EditText || view instanceof RadioGroup || view instanceof Spinner || view instanceof CheckBox)) {
 
             if(view instanceof EditText ) {
                 EditText editText = (EditText) view;
@@ -106,6 +107,11 @@ public class Validate {
 
                 if(spinner.getSelectedItem() == null){
                     return spinner;
+                }
+            }else if(view instanceof CheckBox){
+                CheckBox checkBox = (CheckBox) view;
+                if(!checkBox.isChecked()){
+                    return checkBox;
                 }
             }
 

@@ -155,7 +155,12 @@
 
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/enter</item>
-        <item name="android:windowExitAnimation">@anim/exit</item>
+        <item name="android:windowExitAnimation">@anim/pop_exit</item>
+    </style>
+
+    <style name="buttonOrangeStyle">
+        <item name="android:textColor">@color/button_text_orange_selector</item>
+        <item name="android:background">@drawable/button_orange_selector</item>
     </style>
 
 

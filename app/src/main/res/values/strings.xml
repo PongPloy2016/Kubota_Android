@@ -67,8 +67,17 @@
     <string name="service_hint_customer_name">ชื่อลูกค้า</string>
     <string name="service_hint_technician_name">ชื่อผู้ให้บริการ</string>
 
-
     <string name="service_confirm_text">ระบบจะส่งข้อมูลหลังจากกดปุ่มยืนยัน กรุณาตรวจสอบ ข้อมูลและการเชื่อมต่ออินเตอร์เน็ตของท่าน หากไม่ สามารถเชื่อมต่ออินเตอร์เน็ตได้ ระบบจะทำการบันทึก ข้อมูลอัตโนมัติ และส่งเข้าระบบอีกครั้ง เมื่อมีการเชื่อมต่อ</string>
+    <string name="service_toast_complete">complete</string>
+
+    <string name="service_not_available">service not available</string>
+    <string name="invalid_lat_long_used">invalid lat long used</string>
+    <string name="no_address_found">no address found</string>
+    <string name="no_geocoder_available">no geocoder available</string>
+    <string name="address_found">address found</string>
+
+
+
 
     <!-- Popup -->
     <string name="service_popup_success_title">สำเร็จ!!</string>

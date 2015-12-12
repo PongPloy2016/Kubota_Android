@@ -7,9 +7,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +27,7 @@ import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.activity.SignaturePadActivity;
 import th.co.siamkubota.kubota.model.Photo;
 import th.co.siamkubota.kubota.utils.function.Converter;
+import th.co.siamkubota.kubota.utils.function.Validate;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,16 +37,23 @@ import th.co.siamkubota.kubota.utils.function.Converter;
  * Use the {@link Step3SignFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Step3SignFragment extends Fragment implements View.OnClickListener{
+public class Step3SignFragment extends Fragment implements
+        View.OnClickListener,
+        CompoundButton.OnCheckedChangeListener{
 
     private static final String ARG_PARAM_TITLE = "title";
 
+    private LinearLayout rootLayout;
     private SelectableRoundedImageView imageCustomerSignature;
     private SelectableRoundedImageView imageTechnicianSignature;
     private EditText editTextCustomerSignDate;
     private EditText editTextTechnicianSignDate;
+    private EditText editTextCustomerName;
+    private EditText editTextTechnicianName;
     private LinearLayout signatureCustomerHintLayout;
     private LinearLayout signatureTechnicianHintLayout;
+    private CheckBox checkBoxUserAccept;
+    private CheckBox checkBoxTecnicianAccept;
 
     private String title;
     private Photo imageCustomer;
@@ -109,15 +121,18 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onViewCreated(View v, Bundle savedInstanceState) {
 
+        rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
         imageCustomerSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageCustomerSignature);
         imageTechnicianSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageTechnicianSignature);
         editTextCustomerSignDate = (EditText) v.findViewById(R.id.editTextCustomerSignDate);
         editTextTechnicianSignDate = (EditText) v.findViewById(R.id.editTextTechnicianSignDate);
+        editTextCustomerName = (EditText) v.findViewById(R.id.editTextCustomerName);
+        editTextTechnicianName = (EditText) v.findViewById(R.id.editTextTechnicianName);
         signatureCustomerHintLayout = (LinearLayout) v.findViewById(R.id.signatureCustomerHintLayout);
         signatureTechnicianHintLayout = (LinearLayout) v.findViewById(R.id.signatureTechnicianHintLayout);
+        checkBoxUserAccept = (CheckBox) v.findViewById(R.id.checkBoxUserAccept);
+        checkBoxTecnicianAccept = (CheckBox) v.findViewById(R.id.checkBoxTecnicianAccept);
 
-        imageCustomerSignature.setOnClickListener(this);
-        imageTechnicianSignature.setOnClickListener(this);
 
         if(imageCustomer != null && imageCustomer.getPath() != null && !imageCustomer.getPath().isEmpty()){
             imageCustomerSignature.setImageURI(Uri.fromFile(new File(imageCustomer.getPath())));
@@ -131,6 +146,22 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
             signatureTechnicianHintLayout.setVisibility(View.GONE);
         }
 
+        setDataChangeListener();
+
+    }
+
+    private void setDataChangeListener(){
+
+        imageCustomerSignature.setOnClickListener(this);
+        imageTechnicianSignature.setOnClickListener(this);
+
+        editTextCustomerSignDate.addTextChangedListener(new GenericTextWatcher(editTextCustomerSignDate));
+        editTextTechnicianSignDate.addTextChangedListener(new GenericTextWatcher(editTextTechnicianSignDate));
+        editTextCustomerName.addTextChangedListener(new GenericTextWatcher(editTextCustomerName));
+        editTextTechnicianName.addTextChangedListener(new GenericTextWatcher(editTextTechnicianName));
+
+        checkBoxUserAccept.setOnCheckedChangeListener(this);
+        checkBoxTecnicianAccept.setOnCheckedChangeListener(this);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -176,6 +207,9 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
         //public void onInvokeSignPad();
         public void onFragmentDataComplete(Fragment fragment, boolean complete);
     }
+
+
+    /////////////////////////////////////////////////////////////////////// implement method
 
     @Override
     public void onClick(View v) {
@@ -223,6 +257,19 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(buttonView == checkBoxUserAccept){
+
+        }else if(buttonView == checkBoxTecnicianAccept){
+
+        }
+
+        validateInput();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -243,6 +290,9 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
                 editTextCustomerSignDate.setText(dateInfo);
                 signatureCustomerHintLayout.setVisibility(View.GONE);
 
+                imageCustomer.setComplete(true);
+                validateInput();
+
             }else if(imageTechnician != null && requestCode == imageTechnician.getId()){
                 imageTechnician.setPath(imagePath);
                 imageTechnician.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
@@ -250,8 +300,67 @@ public class Step3SignFragment extends Fragment implements View.OnClickListener{
                 //imageView.setVisibility(View.VISIBLE);
                 editTextTechnicianSignDate.setText(dateInfo);
                 signatureTechnicianHintLayout.setVisibility(View.GONE);
+
+                imageTechnician.setComplete(true);
+                validateInput();
             }
 
         }
+    }
+
+
+    /////////////////////////////////////////////////////////// TextWatcher
+
+    private class GenericTextWatcher implements TextWatcher {
+
+        private View view;
+        private GenericTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public View getView() {
+            return view;
+        }
+
+        public void setView(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+        public void afterTextChanged(Editable editable) {
+
+            String text = editable.toString();
+            //save the value for the given tag :
+
+            if(!text.isEmpty() && view != null){
+
+
+            }
+
+            validateInput();
+        }
+    }
+
+
+    private void validateInput(){
+
+        if((imageCustomer == null || (imageCustomer != null && !imageCustomer.isComplete())) ||
+                (imageTechnician == null || (imageTechnician != null && !imageTechnician.isComplete())) ){
+            dataComplete = false;
+            mListener.onFragmentDataComplete(this, dataComplete);
+            return;
+        }
+
+        View view = Validate.inputValidate(rootLayout);
+        if(view != null ){
+            dataComplete = false;
+            mListener.onFragmentDataComplete(this, dataComplete);
+            return;
+        }
+
+        dataComplete = true;
+        mListener.onFragmentDataComplete(this, dataComplete);
     }
 }

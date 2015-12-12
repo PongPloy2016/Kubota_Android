@@ -166,8 +166,10 @@
                 android:layout_marginLeft="5dp"
                 android:textSize="15dp"
                 android:text="@string/service_button_next"
-                android:textColor="@color/white"
-                android:background="@drawable/button_orange_selector"></Button>
+                style="@style/buttonOrangeStyle"
+                android:textColor="@color/button_text_orange_selector"
+                android:background="@drawable/button_orange_selector"
+                android:enabled="false"></Button>
 
         </LinearLayout>
 

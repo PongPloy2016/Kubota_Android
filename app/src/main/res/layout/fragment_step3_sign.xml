@@ -5,6 +5,7 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:background="@color/background"
+    android:id="@+id/rootLayout"
     tools:context="th.co.siamkubota.kubota.fragment.Step3SignFragment">
 
     <TextView
@@ -65,15 +66,6 @@
                     android:text="@string/service_hint_signature"/>
             </LinearLayout>
 
-            <!--<ImageView-->
-                <!--android:id="@+id/imageCustomerSignature"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="100dp"-->
-                <!--android:layout_centerInParent="true"-->
-                <!--android:scaleType="fitCenter"-->
-                <!--android:adjustViewBounds="true"-->
-                <!--android:clickable="true"-->
-                <!--/>-->
 
             <com.joooonho.SelectableRoundedImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -95,7 +87,6 @@
                 android:visibility="visible"
                 android:layout_margin="1dp"/>
 
-
         </RelativeLayout>
 
 
@@ -112,7 +103,7 @@
                     android:src="@drawable/signature_type_icon"
                     style="@style/ImageIconStyle"/>
                 <EditText
-                    android:id="@+id/textviewCustomerName"
+                    android:id="@+id/editTextCustomerName"
                     android:hint="@string/service_hint_customer_name"
                     style="@style/EditTextStyle"/>
             </LinearLayout>
@@ -191,15 +182,6 @@
                     android:text="@string/service_hint_signature"/>
             </LinearLayout>
 
-            <!--<ImageView-->
-                <!--android:id="@+id/imageTechnicianSignature"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="100dp"-->
-                <!--android:layout_centerInParent="true"-->
-                <!--android:scaleType="fitCenter"-->
-                <!--android:adjustViewBounds="true"-->
-                <!--android:clickable="true"-->
-                <!--/>-->
 
             <com.joooonho.SelectableRoundedImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -236,7 +218,7 @@
                     android:src="@drawable/signature_type_icon"
                     style="@style/ImageIconStyle"/>
                 <EditText
-                    android:id="@+id/textviewTechnicianName"
+                    android:id="@+id/editTextTechnicianName"
                     android:hint="@string/service_hint_technician_name"
                     style="@style/EditTextStyle"/>
             </LinearLayout>
