@@ -151,12 +151,6 @@ public class ServiceFragment extends Fragment implements
     }
 
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-           // mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -188,7 +182,8 @@ public class ServiceFragment extends Fragment implements
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         //public void onFragmentInteraction(Uri uri);
-        public void onRelayInvokeSignPad();
+//        public void onRelayInvokeSignPad();
+//        public void onRelayRequestAddress(Fragment fragment);
     }
 
     public void setStepTitle(String title){
@@ -259,6 +254,8 @@ public class ServiceFragment extends Fragment implements
             pager.setCurrentItem(currentPage = (currentPage < adapter.getCount() ? currentPage : (adapter.getCount() - 1)));
         }
     }
+
+
 
     private void showToastComplete(){
         LayoutInflater inflater = getActivity().getLayoutInflater();

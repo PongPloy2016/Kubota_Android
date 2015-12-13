@@ -1,39 +1,62 @@
 package th.co.siamkubota.kubota.fragment;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.os.ResultReceiver;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.internal.Command;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
+
+import java.util.Locale;
 
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.adapter.CustomSpinnerAdapter;
 import th.co.siamkubota.kubota.adapter.SelectNoneSpinnerAdapter;
+import th.co.siamkubota.kubota.service.Constants;
 import th.co.siamkubota.kubota.service.FetchAddressIntentService;
+import th.co.siamkubota.kubota.service.GeocodeAddressIntentService;
 import th.co.siamkubota.kubota.utils.function.Converter;
+import th.co.siamkubota.kubota.utils.function.LocationService;
+import th.co.siamkubota.kubota.utils.function.Network;
 import th.co.siamkubota.kubota.utils.function.Ui;
 import th.co.siamkubota.kubota.utils.function.Validate;
 import th.co.siamkubota.kubota.utils.ui.CustomSpinner;
@@ -48,10 +71,14 @@ import th.co.siamkubota.kubota.utils.ui.CustomSpinnerDialog;
  * create an instance of this fragment.
  */
 public class Step1CustomerDetailFragment extends Fragment implements
+        View.OnClickListener,
         AdapterView.OnItemSelectedListener,
         RadioGroup.OnCheckedChangeListener,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        com.google.android.gms.location.LocationListener {
+
+    private static final String TAG = Step1CustomerDetailFragment.class.getSimpleName();
 
     private static final String ARG_PARAM_TITLE = "title";
 
@@ -82,13 +109,44 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private EditText editTextWorkHours;
     private EditText editTextAddress;
 
+    private ImageButton locationButton;
+
     private RadioGroup radioGroupUserType;
 
-    protected Location mLastLocation;
+    //protected Location mLastLocation;
     private AddressResultReceiver mResultReceiver;
     private String mAddressOutput;
     private boolean mAddressRequested;
+    //private GoogleApiClient mGoogleApiClient;
+
+    //protected Location mCurrentLocation;
+
+
+    //private AddressResultReceiver mResultReceiver;
+    boolean fetchAddress;
+    int fetchType = Constants.USE_ADDRESS_LOCATION;
+
+    private String latitudeText = "13.968278";
+    private String longitudeText = "100.633676";
+
+
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
+
+    private Location mLastLocation;
+
+    // Google client to interact with Google API
     private GoogleApiClient mGoogleApiClient;
+
+    // boolean flag to toggle periodic location updates
+    private boolean mRequestingLocationUpdates = false;
+
+    private LocationRequest mLocationRequest;
+
+    // Location updates intervals in sec
+    private static int UPDATE_INTERVAL = 10000; // 10 sec
+    private static int FATEST_INTERVAL = 5000; // 5 sec
+    private static int DISPLACEMENT = 10; // 10 meters
+
 
     private String title;
     private boolean dataComplete = false;
@@ -167,6 +225,16 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
                 getActivity(), getString(R.string.service_hint_model));
 
+        mResultReceiver = new AddressResultReceiver(null);
+
+
+        // First we need to check availability of play services
+        if (checkPlayServices()) {
+            // Building the GoogleApi client
+            buildGoogleApiClient();
+            createLocationRequest();
+        }
+
     }
 
     @Override
@@ -200,6 +268,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextWorkHours = (EditText) v.findViewById(R.id.editTextWorkHours);
         editTextAddress = (EditText) v.findViewById(R.id.editTextAddress);
 
+        locationButton = (ImageButton) v.findViewById(R.id.locationButton);
+
         radioGroupUserType = (RadioGroup) v.findViewById(R.id.radioGroupUserType);
 
         spinnerJobType.setAdapter(selectNoneJobTypeSpinnerAdapter);
@@ -215,7 +285,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     }
 
-    private void setDataChangeListener(){
+    private void setDataChangeListener() {
 
         spinnerJobType.setOnItemSelectedListener(this);
         spinnerProduct.setOnItemSelectedListener(this);
@@ -231,14 +301,48 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextWorkHours.addTextChangedListener(new GenericTextWatcher(editTextWorkHours));
         editTextAddress.addTextChangedListener(new GenericTextWatcher(editTextAddress));
 
+        locationButton.setOnClickListener(this);
+
         radioGroupUserType.setOnCheckedChangeListener(this);
     }
 
 
     protected void startIntentService() {
-        Intent intent = new Intent(getActivity(), FetchAddressIntentService.class);
-        intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, mResultReceiver);
-        intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, mLastLocation);
+
+        Intent intent = new Intent(getActivity(), GeocodeAddressIntentService.class);
+        intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(Constants.FETCH_TYPE_EXTRA, fetchType);
+
+
+        if (fetchType == Constants.USE_ADDRESS_NAME) {
+            String addressText = "";
+            if (addressText.length() == 0) {
+                Toast.makeText(getActivity(), "Please enter an address name", Toast.LENGTH_LONG).show();
+                return;
+            }
+            intent.putExtra(Constants.LOCATION_NAME_DATA_EXTRA, addressText);
+        } else {
+           /* if(latitudeText.length() == 0 || longitudeText.length() == 0) {
+                Toast.makeText(getActivity(),
+                        "Please enter both latitude and longitude",
+                        Toast.LENGTH_LONG).show();
+                return;
+            }*/
+
+            if (mLastLocation == null) {
+                return;
+            }
+            /*intent.putExtra(Constants.LOCATION_LATITUDE_DATA_EXTRA,
+                    Double.parseDouble(latitudeText));
+            intent.putExtra(Constants.LOCATION_LONGITUDE_DATA_EXTRA,
+                    Double.parseDouble(longitudeText));
+*/
+            intent.putExtra(Constants.LOCATION_LATITUDE_DATA_EXTRA,
+                    mLastLocation.getLatitude());
+            intent.putExtra(Constants.LOCATION_LONGITUDE_DATA_EXTRA,
+                    mLastLocation.getLongitude());
+        }
+
         getActivity().startService(intent);
     }
 
@@ -261,6 +365,50 @@ public class Step1CustomerDetailFragment extends Fragment implements
         //mListener = null;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+       /* if (checkLocationServiceEnable(getActivity())) {
+            if (mGoogleApiClient != null) {
+                mGoogleApiClient.connect();
+            }
+        }*/
+
+        if (checkLocationServiceEnable(getActivity())) {
+            getCurrentLocation();
+        }
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (waitGPSSetting) {
+
+            waitGPSSetting = false;
+
+            if (checkLocationServiceEnable(getActivity())) {
+                getCurrentLocation();
+            }
+
+        }
+
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
+            startLocationUpdates();
+        }
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -276,19 +424,62 @@ public class Step1CustomerDetailFragment extends Fragment implements
         //public void onFragmentInteraction(Uri uri);
         //public void onFragmentPresent(Fragment fragment, String title);
         public void onFragmentDataComplete(Fragment fragment, boolean complete);
+        //public void onRequestAddress();
 
+    }
+
+    public void setResultAddress(String address) {
+        editTextAddress.setText(address);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////  implement method
+
+
+    @Override
+    public void onClick(View v) {
+        if (v == locationButton) {
+
+            /*if(!checkLocationServiceEnable(getActivity())){
+                //popupLocationSetting();
+                mAddressRequested = true;
+
+            }else{
+                if (mGoogleApiClient.isConnected() && mLastLocation != null) {
+                    startIntentService();
+                }else{
+                    mAddressRequested = true;
+                }
+            }*/
+
+           /* if (!EnableGPSIfPossible()) {
+                if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && mLastLocation != null) {
+                    startIntentService();
+                } else {
+                    mAddressRequested = true;
+                }
+            }*/
+
+            if (!EnableGPSIfPossible()) {
+                if ( mLastLocation != null) {
+                    startIntentService();
+                } else {
+                    mAddressRequested = true;
+                    getCurrentLocation();
+                }
+            }
+        }
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        if(parent == spinnerJobType){
+        if (parent == spinnerJobType) {
 
-        }else if(parent == spinnerProduct){
+        } else if (parent == spinnerProduct) {
 
-                //int tmppos = position - 1;
+            //int tmppos = position - 1;
 
-            switch(position){
+            switch (position) {
                 case 0:
                     modelDataList = new String[]{getString(R.string.service_hint_model)};
                     break;
@@ -307,12 +498,12 @@ public class Step1CustomerDetailFragment extends Fragment implements
                     break;
             }
 
-            if(position != 0){
-                spinnerModel.setPrompt(productDataList[position -1]);
+            if (position != 0) {
+                spinnerModel.setPrompt(productDataList[position - 1]);
                 //selectNoneModelSpinnerAdapter.setPromptText(productDataList[position - 1]);
                 spinnerModel.setEnabled(true);
                 spinnerModel.invalidate();
-            }else{
+            } else {
                 spinnerModel.setPrompt(getString(R.string.service_hint_model));
                 selectNoneModelSpinnerAdapter.setPromptText(getString(R.string.service_hint_model));
                 spinnerModel.setEnabled(false);
@@ -325,23 +516,23 @@ public class Step1CustomerDetailFragment extends Fragment implements
             spinnerModel.invalidate();
 
 
-        }else if(parent == spinnerModel){
-            if(position == selectNoneModelSpinnerAdapter.getCount() -1){
+        } else if (parent == spinnerModel) {
+            if (position == selectNoneModelSpinnerAdapter.getCount() - 1) {
                 //layoutOtherModel.setVisibility(View.VISIBLE);
                 editTextOtherModel.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 //layoutOtherModel.setVisibility(View.GONE);
                 editTextOtherModel.setVisibility(View.GONE);
             }
         }
 
-        if(view != null){
+        if (view != null) {
 
             LinearLayout rootLayout = (LinearLayout) view.findViewById(R.id.rootLayout);
             TextView textViewDialog = (TextView) view.findViewById(R.id.textView);
             textViewDialog.setTextSize(Converter.pxTosp(getActivity(), Converter.dpTopx(getActivity(), 15)));
 
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)textViewDialog.getLayoutParams();
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textViewDialog.getLayoutParams();
             int left = Converter.dpTopx(getActivity(), 10);
             int top = Converter.dpTopx(getActivity(), 5);
             params.setMargins(left, top, 0, top);
@@ -365,7 +556,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        if(group == radioGroupUserType){
+        if (group == radioGroupUserType) {
 
         }
         validateInput();
@@ -376,6 +567,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private class GenericTextWatcher implements TextWatcher {
 
         private View view;
+
         private GenericTextWatcher(View view) {
             this.view = view;
         }
@@ -388,15 +580,18 @@ public class Step1CustomerDetailFragment extends Fragment implements
             this.view = view;
         }
 
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
 
         public void afterTextChanged(Editable editable) {
 
             String text = editable.toString();
             //save the value for the given tag :
 
-            if(!text.isEmpty() && view != null){
+            if (!text.isEmpty() && view != null) {
 
 
             }
@@ -405,10 +600,10 @@ public class Step1CustomerDetailFragment extends Fragment implements
         }
     }
 
-    private void validateInput(){
+    private void validateInput() {
 
         View view = Validate.inputValidate(rootLayout);
-        if(view != null ){
+        if (view != null) {
             dataComplete = false;
             mListener.onFragmentDataComplete(this, dataComplete);
             return;
@@ -420,76 +615,315 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     ////////////////////////////////////////////////////////////// get address
 
+    private void getCurrentLocation() {
+
+        if (checkPlayServices()) {
+
+            if (mGoogleApiClient != null) {
+                mGoogleApiClient.connect();
+            }
+
+        } else {
+            locMgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    0, 0, locLsnr);
+        }
+
+
+
+    }
+
+    private LocationManager locMgr;
+    private LocationListener locLsnr = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+//            double myLat = location.getLatitude();
+//            double myLon = location.getLongitude();
+            mLastLocation = location;
+
+            if (mLastLocation != null && mAddressRequested) {
+
+                mAddressRequested = false;
+                // Determine whether a Geocoder is available.
+                if (!Geocoder.isPresent()) {
+                    /*Toast.makeText(getActivity(), R.string.no_geocoder_available,
+                            Toast.LENGTH_LONG).show();*/
+                    return;
+                }
+                startIntentService();
+
+            }
+
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            switch( status ) {
+                case LocationProvider.AVAILABLE:
+                    //Toast.makeText(CheckinActivity.this, "LocationProvider.AVAILABLE", Toast.LENGTH_LONG);
+                    break;
+                case LocationProvider.OUT_OF_SERVICE:
+                    //Toast.makeText(CheckinActivity.this, "LocationProvider.OUT_OF_SERVICE", Toast.LENGTH_LONG);
+                    break;
+                case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                    //Toast.makeText(CheckinActivity.this, "LocationProvider.TEMPORARILY_UNAVAILABLE", Toast.LENGTH_LONG);
+                    break;
+            }
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
+
+
     @Override
     public void onConnected(Bundle connectionHint) {
+
+        displayLocation();
+
+    }
+
+    private void displayLocation() {
+
+        if (mRequestingLocationUpdates) {
+            startLocationUpdates();
+        }
         // Gets the best and most recent location currently available,
         // which may be null in rare cases when a location is not available.
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
 
-        if (mLastLocation != null) {
+        if (mLastLocation != null && mAddressRequested) {
             // Determine whether a Geocoder is available.
             if (!Geocoder.isPresent()) {
-                Toast.makeText(getActivity(), R.string.no_geocoder_available,
-                        Toast.LENGTH_LONG).show();
+                /*Toast.makeText(getActivity(), R.string.no_geocoder_available,
+                        Toast.LENGTH_LONG).show();*/
                 return;
             }
 
-            if (mAddressRequested) {
-                startIntentService();
-            }
+            startIntentService();
+
         }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = "
+                + connectionResult.getErrorCode());
     }
 
-    private void displayAddressOutput(){
 
+    @Override
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
     }
 
-    public void fetchAddressButtonHandler(View view) {
-        // Only start the service to fetch the address if GoogleApiClient is
-        // connected.
-        if (mGoogleApiClient.isConnected() && mLastLocation != null) {
-            startIntentService();
-        }
-        // If GoogleApiClient isn't connected, process the user's request by
-        // setting mAddressRequested to true. Later, when GoogleApiClient connects,
-        // launch the service to fetch the address. As far as the user is
-        // concerned, pressing the Fetch Address button
-        // immediately kicks off the process of getting the address.
-        mAddressRequested = true;
-        //updateUIWidgets();
-    }
 
-    @SuppressLint("ParcelCreator")
     class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
             super(handler);
         }
 
         @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
+        protected void onReceiveResult(int resultCode, final Bundle resultData) {
+            if (resultCode == Constants.SUCCESS_RESULT) {
+                final Address address = resultData.getParcelable(Constants.RESULT_ADDRESS);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                       /* progressBar.setVisibility(View.GONE);
+                        infoText.setVisibility(View.VISIBLE);
+                        infoText.setText("Latitude: " + address.getLatitude() + "\n" +
+                                "Longitude: " + address.getLongitude() + "\n" +
+                                "Address: " + resultData.getString(Constants.RESULT_DATA_KEY));*/
+                        mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+                        //((ServiceFragment) requestAddressFragment).setResultAddress(mAddressOutput);
+                        editTextAddress.setText(mAddressOutput);
 
-            // Display the address string
-            // or an error message sent from the intent service.
-            mAddressOutput = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
-            displayAddressOutput();
+                        mAddressRequested = false;
+                    }
+                });
 
-            // Show a toast message if an address was found.
-            if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
-                //showToast(getString(R.string.address_found));
-                Toast.makeText(getActivity(),getString(R.string.address_found), Toast.LENGTH_LONG ).show();
+
+
             }
+            else {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                       /* progressBar.setVisibility(View.GONE);
+                        infoText.setVisibility(View.VISIBLE);
+                        infoText.setText(resultData.getString(Constants.RESULT_DATA_KEY));*/
+                        Log.d("ADDRESS", "Address not found");
+                    }
+                });
 
+
+            }
         }
     }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this);
+    }
+
+
+    protected void stopLocationUpdates() {
+        if(mGoogleApiClient != null && mGoogleApiClient.isConnected()){
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient, this);
+        }
+    }
+
+    /**
+     * Creating google api client object
+     * */
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API).build();
+    }
+
+    /**
+     * Method to verify google play services on the device
+     * */
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(getActivity());
+        if (resultCode != ConnectionResult.SUCCESS) {
+           // alert error dialog update play service *******
+           /* if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+
+                Locale locale = new Locale("th", "TH");
+                Locale.setDefault(locale);
+
+                GooglePlayServicesUtil.getErrorDialog(resultCode, getActivity(),
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Toast.makeText(getActivity(),
+                        "This device is not supported.", Toast.LENGTH_LONG)
+                        .show();
+                //finish();
+            }*/
+            return false;
+        }
+        return true;
+    }
+
+    //////////////////////////////////////////////////////////////////// enable GPS
+
+    public interface ICommand {
+        void execute();
+    }
+
+    public class CancelCommand implements ICommand
+    {
+        protected Activity m_activity;
+
+        public CancelCommand(Activity activity)
+        {
+            m_activity = activity;
+        }
+
+        public void execute()
+        {
+            alert.dismiss();
+            //start asyncronous operation here
+        }
+    }
+
+    public static class CommandWrapper implements DialogInterface.OnClickListener {
+        private ICommand command;
+        public CommandWrapper(ICommand command) {
+            this.command = command;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+            command.execute();
+        }
+    }
+
+    private boolean checkLocationServiceEnable(Context mContext){
+        boolean gps_enabled = LocationService.isGPSEnabled(mContext);
+        boolean network_enabled = Network.isNetworkEnabled(mContext);
+
+        return (gps_enabled && network_enabled);
+
+    }
+
+
+    public class EnableGpsCommand extends CancelCommand
+    {
+        public EnableGpsCommand( Activity activity) {
+            super(activity);
+        }
+
+        public void execute()
+        {
+            // take the user to the phone gps settings and then start the asyncronous logic.
+            m_activity.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            waitGPSSetting = true;
+            super.execute();
+        }
+    }
+
+    private boolean EnableGPSIfPossible()
+    {
+        final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            buildAlertMessageNoGps();
+            mAddressRequested = true;
+            return true;
+        }
+        return false;
+    }
+
+   private boolean waitGPSSetting;
+    private  AlertDialog alert;
+    private  void buildAlertMessageNoGps()
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(getString(R.string.service_setting_gps))
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.service_button_ok), new CommandWrapper(new EnableGpsCommand(getActivity())))
+                .setNegativeButton(getString(R.string.service_button_cancel), new CommandWrapper(new CancelCommand(getActivity())));
+
+        alert = builder.create();
+        alert.show();
+    }
+
 }

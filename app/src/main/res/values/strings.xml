@@ -75,6 +75,9 @@
     <string name="no_address_found">no address found</string>
     <string name="no_geocoder_available">no geocoder available</string>
     <string name="address_found">address found</string>
+    <string name="service_setting_gps">การเข้าถึงตำแหน่ง GPS ของคุณถูกปิดอยู่ กรุณาเปิดการเข้าถึงตำแหน่ง</string>
+
+    <!-- "Yout GPS seems to be disabled, do you want to enable it?"-->
 
 
 

@@ -79,6 +79,9 @@ public class FetchAddressIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
+        Locale locale = new Locale("th", "TH");
+        Locale.setDefault(locale);
+
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
 
         String errorMessage = "";
