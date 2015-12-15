@@ -22,6 +22,7 @@ import th.co.siamkubota.kubota.adapter.QuestionPagerAdapter;
 import th.co.siamkubota.kubota.adapter.ViewPagerAdapter;
 import th.co.siamkubota.kubota.app.AppController;
 import th.co.siamkubota.kubota.model.Question;
+import th.co.siamkubota.kubota.utils.ui.NoneScrollableViewPager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,12 +34,12 @@ import th.co.siamkubota.kubota.model.Question;
  */
 public class QuestionnairFragment extends Fragment implements
         View.OnClickListener,
-SubmitQuestionFragment.OnFragmentInteractionListener{
+QuestionItemFragment.OnFragmentInteractionListener{
 
 
     private OnFragmentInteractionListener mListener;
     private AppController app;
-    private ViewPager pager;
+    private NoneScrollableViewPager pager;
     private QuestionPagerAdapter adapter;
     private CustomOnPageChangeListener pageChangeListener;
 
@@ -75,7 +76,8 @@ SubmitQuestionFragment.OnFragmentInteractionListener{
         //View v = View.inflate(getActivity(), R.layout.tab_product, null);
         View v = inflater.inflate(R.layout.fragment_questionnair, container, false);
 
-        pager = (ViewPager) v.findViewById(R.id.pager);
+        pager = (NoneScrollableViewPager) v.findViewById(R.id.pager);
+
 
         datalist = new ArrayList<Question>();
 
@@ -87,6 +89,7 @@ SubmitQuestionFragment.OnFragmentInteractionListener{
         adapter = new QuestionPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), datalist, QuestionnairFragment.this);
         pager.setAdapter(adapter);
         pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
+        pager.setPagingEnabled(false);
 
 
         return v;
@@ -140,7 +143,7 @@ SubmitQuestionFragment.OnFragmentInteractionListener{
 
     }
 
-    @Override
+  /*  @Override
     public void onConfirmSubmitQuestion(boolean result) {
         if(result){
             // alert finish dialog
@@ -155,6 +158,23 @@ SubmitQuestionFragment.OnFragmentInteractionListener{
 
             alert.show(getActivity().getSupportFragmentManager(), "finish");
 
+        }
+    }*/
+
+    @Override
+    public void onChoiceSelected(Fragment fragment, Question question) {
+        if(fragment == adapter.getItem(adapter.getCount()-1)){
+            FinishDialogFragment alert = new FinishDialogFragment();
+            alert.setmListener(new FinishDialogFragment.onActionListener() {
+                @Override
+                public void onFinishDialog() {
+                    getActivity().finish();
+                }
+            });
+
+            alert.show(getActivity().getSupportFragmentManager(), "finish");
+        }else{
+            pager.setCurrentItem(pageChangeListener.getCurrentPage() +1);
         }
     }
 

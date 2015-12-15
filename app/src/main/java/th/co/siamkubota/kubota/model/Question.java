@@ -9,6 +9,7 @@ import android.os.Parcelable;
 public class Question implements Parcelable {
     private String title;
     private String detail;
+    private  boolean answer;
 
     public Question(String title) {
         this.title = title;
@@ -30,7 +31,16 @@ public class Question implements Parcelable {
         this.detail = detail;
     }
 
-    ///////////////////////////////////////////////////////////// implement parcelable
+    public boolean isAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(boolean answer) {
+        this.answer = answer;
+    }
+
+
+///////////////////////////////////////////////////////////// implement parcelable
 
 
     @Override
@@ -42,11 +52,13 @@ public class Question implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.title);
         dest.writeString(this.detail);
+        dest.writeByte(answer ? (byte) 1 : (byte) 0);
     }
 
     protected Question(Parcel in) {
         this.title = in.readString();
         this.detail = in.readString();
+        this.answer = in.readByte() != 0;
     }
 
     public static final Creator<Question> CREATOR = new Creator<Question>() {

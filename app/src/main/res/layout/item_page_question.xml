@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/dark_gray"
         android:textSize="15dp"
-        android:text="@string/service_confirm_text"
+        android:text="คุณคิดว่าการบริการดีหรือไม่"
         android:id="@+id/detailText"/>
 
     <LinearLayout
@@ -57,5 +57,26 @@
             android:background="@drawable/button_white_border_selector"></Button>
 
     </LinearLayout>
+
+    <!--<RadioGroup-->
+        <!--android:id="@+id/choicesGroup"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:orientation="vertical"-->
+        <!--android:gravity="center">-->
+       <!--<RadioButton-->
+           <!--android:id="@+id/yes"-->
+           <!--android:layout_width="220dp"-->
+           <!--android:layout_height="wrap_content"-->
+           <!--android:button="@layout/button_blue_question"/>-->
+        <!--<RadioButton-->
+            <!--android:id="@+id/no"-->
+            <!--android:layout_width="220dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:button="@layout/button_white_question"/>-->
+
+    <!--</RadioGroup>-->
+
 
 </LinearLayout>

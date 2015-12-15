@@ -37,14 +37,14 @@ public class QuestionPagerAdapter extends FragmentStatePagerAdapter {
 
         for(Question item : datalist){
             QuestionItemFragment fragment = QuestionItemFragment.newInstance(item);
-            //fragment.setmListener((QuestionItemFragment.OnFragmentInteractionListener) listener);
+            fragment.setmListener((QuestionItemFragment.OnFragmentInteractionListener) listener);
             questionItemFragments.add(fragment);
         }
 
-        SubmitQuestionFragment submitFragment = SubmitQuestionFragment.newInstance();
-        submitFragment.setmListener((SubmitQuestionFragment.OnFragmentInteractionListener) listener);
-
-        questionItemFragments.add(submitFragment);
+//        SubmitQuestionFragment submitFragment = SubmitQuestionFragment.newInstance();
+//        submitFragment.setmListener((SubmitQuestionFragment.OnFragmentInteractionListener) listener);
+//
+//        questionItemFragments.add(submitFragment);
 
     }
 

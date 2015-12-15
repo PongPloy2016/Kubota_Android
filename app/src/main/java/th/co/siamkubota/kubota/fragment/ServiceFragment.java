@@ -144,7 +144,7 @@ public class ServiceFragment extends Fragment implements
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(4);
         pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
-        pager.setPagingEnabled(false);
+        pager.setPagingEnabled(true);
 
         Ui.setupUI(getActivity(), rootLayout);
 

@@ -1,6 +1,7 @@
 package th.co.siamkubota.kubota.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,7 +25,7 @@ import th.co.siamkubota.kubota.model.Question;
  * Use the {@link QuestionItemFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QuestionItemFragment extends Fragment {
+public class QuestionItemFragment extends Fragment implements View.OnClickListener {
 
     private static final String ARG_PARAM_DATA = "data";
 
@@ -32,6 +33,8 @@ public class QuestionItemFragment extends Fragment {
 
     private LinearLayout rootLayout;
     private TextView titleTextView;
+    private Button yesButton;
+    private Button noButton;
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,8 +82,13 @@ public class QuestionItemFragment extends Fragment {
 
         rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
         titleTextView = (TextView) v.findViewById(R.id.titleTextView);
+        yesButton = (Button) v.findViewById(R.id.yesButton);
+        noButton = (Button) v.findViewById(R.id.noButton);
+
         titleTextView.setText(data.getTitle());
 
+        yesButton.setOnClickListener(this);
+        noButton.setOnClickListener(this);
 
         return v;
     }
@@ -130,7 +138,20 @@ public class QuestionItemFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentPresent(Fragment fragment, String title);
+        //public void onFragmentPresent(Fragment fragment, String title);
+        public void onChoiceSelected(Fragment fragment, Question question);
     }
 
+    @Override
+    public void onClick(View v) {
+        boolean answer = false;
+        if(v == yesButton){
+            data.setAnswer(true);
+        }else if(v == noButton){
+            data.setAnswer(false);
+        }
+
+        mListener.onChoiceSelected(this, data);
+
+    }
 }
