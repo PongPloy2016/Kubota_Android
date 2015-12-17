@@ -27,6 +27,8 @@ public class MainActivity extends BaseActivity  implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getWindow().setBackgroundDrawableResource(R.drawable.login_bg);
+
         enterBtn = (Button) findViewById(R.id.enterBtn);
         enterBtn.setOnClickListener(this);
 
