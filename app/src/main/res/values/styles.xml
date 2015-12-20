@@ -10,6 +10,11 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
 
+    </style>
+
+    <style name="AppThemeImageBackground" parent="@style/AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@drawable/login_bg</item>
 
     </style>
 
@@ -39,6 +44,8 @@
         <!--<item name="android:padding">5dp</item>-->
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
         <item name="android:background">@drawable/rectangle_round_corner_white_gray_border</item>
         <item name="android:gravity">center</item>
     </style>
@@ -162,6 +169,19 @@
     <style name="buttonOrangeStyle">
         <item name="android:textColor">@color/button_text_orange_selector</item>
         <item name="android:background">@drawable/button_orange_selector</item>
+    </style>
+
+    <style name="textViewAstericStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">-3dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:tag">*</item>
     </style>
 
 

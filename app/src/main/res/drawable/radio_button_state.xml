@@ -3,7 +3,7 @@
     <item
         android:state_checked="false"
         android:drawable="@drawable/bullet_inactive"
-        android:paddingRight="5dp"/>
+        android:paddingRight="5dp" />
     <item
         android:state_checked="true"
         android:drawable="@drawable/bullet_active"

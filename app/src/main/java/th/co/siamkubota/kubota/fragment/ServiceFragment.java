@@ -17,7 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,7 +63,9 @@ public class ServiceFragment extends Fragment implements
     private NoneScrollableViewPager pager;
     private ViewPagerAdapter adapter;
     private TextView textStepTitle;
+    private RelativeLayout backStep1, backStep2, backStep3, backStep4;
     private ImageButton step1Button, step2Button, step3Button, step4Button;
+    private ImageView divStep1, divStep2, divStep3, divStep4;
     private Button previousButton, nextButton;
     private LinearLayout navigationControleLayout;
     private int Numboftabs;
@@ -121,10 +125,17 @@ public class ServiceFragment extends Fragment implements
 
         rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
         textStepTitle = (TextView) v.findViewById(R.id.textStepTitle);
+        backStep1 = (RelativeLayout) v.findViewById(R.id.backStep1);
+        backStep2 = (RelativeLayout) v.findViewById(R.id.backStep2);
+        backStep3 = (RelativeLayout) v.findViewById(R.id.backStep3);
+        backStep4 = (RelativeLayout) v.findViewById(R.id.backStep4);
         step1Button = (ImageButton) v.findViewById(R.id.step1Button);
         step2Button = (ImageButton) v.findViewById(R.id.step2Button);
         step3Button = (ImageButton) v.findViewById(R.id.step3Button);
         step4Button = (ImageButton) v.findViewById(R.id.step4Button);
+        divStep1 = (ImageView) v.findViewById(R.id.divStep1);
+        divStep2 = (ImageView) v.findViewById(R.id.divStep2);
+        divStep3 = (ImageView) v.findViewById(R.id.divStep3);
         pager = (NoneScrollableViewPager) v.findViewById(R.id.pager);
 
         previousButton = (Button) v.findViewById(R.id.previousButton);
@@ -282,34 +293,48 @@ public class ServiceFragment extends Fragment implements
 
         if(fragment instanceof Step1CustomerDetailFragment){
             if(complete){
-                step1Button.setImageResource(R.drawable.stage_done);
+                backStep1.setBackgroundResource(R.drawable.rectangle_left_round_corner_orange);
+                divStep1.setImageResource(R.drawable.edge_orage);
+                step1Button.setImageResource(R.drawable.white_number01);
                 nextButton.setEnabled(true);
             }else{
-                step1Button.setImageResource(R.drawable.stage_step_active);
+                backStep1.setBackgroundResource(R.drawable.rectangle_left_round_corner_white);
+                divStep1.setImageResource(R.drawable.edge_white);
+                step1Button.setImageResource(R.drawable.deepgrey_number01);
                 nextButton.setEnabled(false);
             }
         }else if(fragment instanceof Step2PhotoFragment){
             if(complete){
-                step2Button.setImageResource(R.drawable.stage_done);
+                backStep2.setBackgroundResource(R.color.orange_stage);
+                divStep2.setImageResource(R.drawable.edge_orage);
+                step2Button.setImageResource(R.drawable.white_number02);
                 nextButton.setEnabled(true);
             }else{
-                step2Button.setImageResource(R.drawable.stage_step_active);
+                backStep2.setBackgroundResource(R.color.white);
+                divStep2.setImageResource(R.drawable.edge_white);
+                step2Button.setImageResource(R.drawable.deepgrey_number02);
                 nextButton.setEnabled(false);
             }
         }else if(fragment instanceof Step3SignFragment){
             if(complete){
-                step3Button.setImageResource(R.drawable.stage_done);
+                backStep3.setBackgroundResource(R.color.orange_stage);
+                divStep3.setImageResource(R.drawable.edge_orage);
+                step3Button.setImageResource(R.drawable.white_number03);
                 nextButton.setEnabled(true);
             }else{
-                step3Button.setImageResource(R.drawable.stage_step_active);
+                backStep3.setBackgroundResource(R.color.white);
+                divStep3.setImageResource(R.drawable.edge_white);
+                step3Button.setImageResource(R.drawable.deepgrey_number03);
                 nextButton.setEnabled(false);
             }
         }else if(fragment instanceof Step4ConfirmFragment){
             if(complete){
-                step4Button.setImageResource(R.drawable.stage_done);
+                //backStep4.setBackgroundResource(R.drawable.rectangle_right_round_corner_orange);
+                step4Button.setImageResource(R.drawable.white_number04);
                 nextButton.setEnabled(true);
             }else{
-                step4Button.setImageResource(R.drawable.stage_step_active);
+                backStep4.setBackgroundResource(R.drawable.rectangle_right_round_corner_white);
+                step4Button.setImageResource(R.drawable.deepgrey_number04);
                 pager.setCurrentItem((pageChangeListener.getCurrentPage() - 1));
             }
         }
@@ -360,14 +385,18 @@ public class ServiceFragment extends Fragment implements
 
                     step1 = (Step1CustomerDetailFragment)adapter.getItem(position);
                     if(!step1.isDataComplete()){
-                        step1Button.setImageResource(R.drawable.stage_step_active);
+                        backStep1.setBackgroundResource(R.drawable.rectangle_left_round_corner_white);
+                        divStep1.setImageResource(R.drawable.edge_white);
+                        step1Button.setImageResource(R.drawable.deepgrey_number01);
                     }else{
                         nextButton.setEnabled(true);
                     }
 
                     step2 = (Step2PhotoFragment)adapter.getItem(position + 1);
                     if(!step2.isDataComplete()){
-                        step2Button.setImageResource(R.drawable.stage_step_inactive);
+                        backStep2.setBackgroundResource(R.color.light_gray_stage);
+                        divStep2.setImageResource(R.drawable.edge_grey);
+                        step2Button.setImageResource(R.drawable.lightgrey_number02);
                     }
 
                     break;
@@ -380,14 +409,18 @@ public class ServiceFragment extends Fragment implements
 
                     step2 = (Step2PhotoFragment)adapter.getItem(position);
                     if(!step2.isDataComplete()){
-                        step2Button.setImageResource(R.drawable.stage_step_active);
+                        backStep2.setBackgroundResource(R.color.white);
+                        divStep2.setImageResource(R.drawable.edge_white);
+                        step2Button.setImageResource(R.drawable.deepgrey_number02);
                     }else{
                         nextButton.setEnabled(true);
                     }
 
                     step3 = (Step3SignFragment)adapter.getItem(position + 1);
                     if(!step3.isDataComplete()){
-                        step3Button.setImageResource(R.drawable.stage_step_inactive);
+                        backStep3.setBackgroundResource(R.color.light_gray_stage);
+                        divStep3.setImageResource(R.drawable.edge_grey);
+                        step3Button.setImageResource(R.drawable.lightgrey_number03);
                     }
 
                     break;
@@ -400,14 +433,17 @@ public class ServiceFragment extends Fragment implements
 
                     step3 = (Step3SignFragment)adapter.getItem(position);
                     if(!step3.isDataComplete()){
-                        step3Button.setImageResource(R.drawable.stage_step_active);
+                        backStep3.setBackgroundResource(R.color.white);
+                        divStep3.setImageResource(R.drawable.edge_white);
+                        step3Button.setImageResource(R.drawable.deepgrey_number03);
                     }else{
                         nextButton.setEnabled(true);
                     }
 
                     step4 = (Step4ConfirmFragment)adapter.getItem(position +1);
                     if(!step4.isDataComplete()){
-                        step4Button.setImageResource(R.drawable.stage_step_inactive);
+                        backStep4.setBackgroundResource(R.drawable.rectangle_right_round_corner_gray);
+                        step4Button.setImageResource(R.drawable.lightgrey_number04);
                     }
 
                     break;
@@ -420,7 +456,8 @@ public class ServiceFragment extends Fragment implements
 
                     step4 = (Step4ConfirmFragment)adapter.getItem(position);
                     //step4.setDataComplete(true);
-                    step4Button.setImageResource(R.drawable.stage_step_active);
+                    backStep4.setBackgroundResource(R.drawable.rectangle_right_round_corner_white);
+                    step4Button.setImageResource(R.drawable.deepgrey_number04);
 
                     break;
             }

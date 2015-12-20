@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="0dp"
     android:gravity="center"
-    android:background="@drawable/login_bg"
+    android:background="@android:color/transparent"
     tools:ignore="MissingPrefix"
     android:id="@+id/rootLayout">
     <LinearLayout

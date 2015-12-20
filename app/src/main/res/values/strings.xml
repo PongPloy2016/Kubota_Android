@@ -4,6 +4,8 @@
 
     <!-- Main -->
     <string name="main_enter_store_button">เข้าระบบร้าน</string>
+    <string name="main_button_yes">ใช่</string>
+    <string name="main_button_no">ไม่ใช่</string>
 
 
     <!-- Login -->
@@ -52,7 +54,8 @@
     <string name="service_hint_machine_number">หมายเลขรถ</string>
     <string name="service_hint_engine_number">หมายเลขเครื่อง</string>
     <string name="service_hint_working_hours">ชั่วโมงการทำงาน</string>
-    <string name="service_hint_addrss">ที่อยู่</string>
+    <string name="service_hint_addrss_service">ที่อยู่จุดบริการ</string>
+    <string name="service_hint_addrss_customer">ที่อยู่ลูกค้า</string>
 
     <string name="service_image_1_engine_number">หมายเลขเครื่อง</string>
     <string name="service_image_2_working_hours">ชั่วโมงการทำงาน</string>
@@ -76,6 +79,7 @@
     <string name="no_geocoder_available">no geocoder available</string>
     <string name="address_found">address found</string>
     <string name="service_setting_gps">การเข้าถึงตำแหน่ง GPS ของคุณถูกปิดอยู่ กรุณาเปิดการเข้าถึงตำแหน่ง</string>
+    <string name="service_leave_confirm_message">คุณต้องการออกจากระบบหรือไม่</string>
 
     <!-- "Yout GPS seems to be disabled, do you want to enable it?"-->
 

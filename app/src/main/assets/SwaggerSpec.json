@@ -1,52 +1,36 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Green Spot APIs for mobile  client",
-    "version": "1.0.0",
-    "description": "This is a Green Spot APIs for mobile  client.",
-    "contact": {
-      "email": "xxxx@ais.co.th"
-    }
+    "title": "Kubota API",
+    "description": "Check and sync",
+    "version": "1.0.0"
   },
-  "consumes": [
-    "application/x-www-form-urlencoded"
+  "host": "188.166.220.115",
+  "schemes": [
+    "http"
   ],
+  "basePath": "/kubota/public/api",
   "produces": [
     "application/json"
   ],
-  "host": "192.168.0.55:3000",
-  "basePath": "/api",
-  "schemes": [
-    "http",
-    "https"
-  ],
   "paths": {
-    "/user/login": {
+    "/login": {
       "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Login",
-        "description": "Login",
-        "operationId": "logIn",
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "summary": "login",
+        "description": "login",
+        "operationId": "login",
         "parameters": [
           {
             "name": "username",
             "in": "formData",
-            "description": "The user name for login",
+            "description": "username.",
             "required": true,
             "type": "string"
           },
           {
             "name": "password",
             "in": "formData",
-            "description": "The password for login in clear text",
+            "description": "password.",
             "required": true,
             "type": "string",
             "format": "password"
@@ -54,742 +38,90 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/UserLoginResponse"
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        }
-      }
-    },
-    "/user/logout": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Logout",
-        "description": "Logout",
-        "operationId": "logOut",
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        }
-      }
-    },
-    "/user/authen": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Authen",
-        "description": "Check Token",
-        "operationId": "authenUser",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/UserAuthenResponse"
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        }
-      }
-    },
-    "/user/findbyid": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Find user by id",
-        "description": "Find user by id",
-        "operationId": "findUserById",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/UserLoginResponse"
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        }
-      }
-    },
-    "/user/checkin": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Checkin",
-        "description": "Checkin",
-        "operationId": "checkIn",
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "storeId",
-            "in": "formData",
-            "description": "store id",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "checkInLat",
-            "in": "formData",
-            "description": "check-in latitude",
-            "required": true,
-            "type": "number",
-            "format": "double"
-          },
-          {
-            "name": "checkInLng",
-            "in": "formData",
-            "description": "check-in longitude",
-            "required": true,
-            "type": "number",
-            "format": "double"
-          },
-          {
-            "name": "checkInLocation",
-            "in": "formData",
-            "description": "check-in in location",
-            "required": true,
-            "type": "boolean"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/CheckinResponse"
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/CheckinResponse"
-            }
-          }
-        }
-      }
-    },
-    "/user/checkout": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Checkout",
-        "description": "Checkout",
-        "operationId": "checkOut",
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "transId",
-            "in": "formData",
-            "description": "transaction id return from checkin",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "checkOutLat",
-            "in": "formData",
-            "description": "check-out latitude",
-            "required": true,
-            "type": "number",
-            "format": "double"
-          },
-          {
-            "name": "checkOutLng",
-            "in": "formData",
-            "description": "check-out longitude",
-            "required": true,
-            "type": "number",
-            "format": "double"
-          },
-          {
-            "name": "checkOutLocation",
-            "in": "formData",
-            "description": "check-out in location",
-            "required": true,
-            "type": "boolean"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        }
-      }
-    },
-    "/user/update": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Update user",
-        "description": "Update user",
-        "operationId": "updateUser",
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "userId",
-            "in": "formData",
-            "description": "userId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "username",
-            "in": "formData",
-            "description": "username",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "formData",
-            "description": "password",
-            "required": true,
-            "type": "string",
-            "format": "password"
-          },
-          {
-            "name": "firstname",
-            "in": "formData",
-            "description": "firstname",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "lastname",
-            "in": "formData",
-            "description": "lastname",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "shortname",
-            "in": "formData",
-            "description": "shortname",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "issuperuser",
-            "in": "formData",
-            "description": "issuperuser",
-            "required": true,
-            "type": "boolean"
-          },
-          {
-            "name": "status",
-            "in": "formData",
-            "description": "status",
-            "required": true,
-            "type": "boolean"
-          },
-          {
-            "name": "email",
-            "in": "formData",
-            "description": "email",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "phone_number",
-            "in": "formData",
-            "description": "phone_number",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "address",
-            "in": "formData",
-            "description": "address",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "position",
-            "in": "formData",
-            "description": "position",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "groupRoleId",
-            "in": "formData",
-            "description": "groupRoleId",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "active",
-            "in": "formData",
-            "description": "active",
-            "required": true,
-            "type": "boolean"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        }
-      }
-    },
-    "/news": {
-      "get": {
-        "x-swagger-router-controller": "News",
-        "tags": [
-          "News"
-        ],
-        "summary": "News list",
-        "description": "Get news list",
-        "operationId": "getNewsList",
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/NewsListResponse"
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        }
-      }
-    },
-    "/news/newsbyuser": {
-      "post": {
-        "x-swagger-router-controller": "News",
-        "tags": [
-          "News"
-        ],
-        "summary": "News by user",
-        "description": "Get news by user",
-        "operationId": "getNewsByUser",
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/NewsListResponse"
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        }
-      }
-    },
-    "/readnews": {
-      "post": {
-        "tags": [
-          "News"
-        ],
-        "summary": "Read news",
-        "description": "Read news in inbox",
-        "operationId": "readNews",
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "news_id",
-            "in": "formData",
-            "description": "News id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ReadNewsResponse"
-            }
-          },
-          "default": {
-            "description": "Default responses",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        }
-      }
-    },
-    "/help": {
-      "get": {
-        "x-swagger-router-controller": "Help",
-        "tags": [
-          "Help"
-        ],
-        "summary": "Get user manual",
-        "description": "Get user manual",
-        "operationId": "getHelp",
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/HelpResponse"
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        }
-      }
-    },
-    "/store/storebyuser": {
-      "post": {
-        "x-swagger-router-controller": "Store",
-        "tags": [
-          "Store"
-        ],
-        "summary": "Get store by user",
-        "description": "Get store by user",
-        "operationId": "getStoreByUser",
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/StoreListResponse"
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        }
-      }
-    },
-    "/store/detail": {
-      "post": {
-        "x-swagger-router-controller": "Store",
-        "tags": [
-          "Store"
-        ],
-        "summary": "Get store detail",
-        "description": "Get store detail",
-        "operationId": "getStoreDetail",
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "id",
-            "in": "formData",
-            "description": "store id",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/StoreDetailResponse"
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        }
-      }
-    },
-    "/transaction/save": {
-      "post": {
-        "x-swagger-router-controller": "Transaction",
-        "tags": [
-          "Transaction"
-        ],
-        "summary": "Submit transaction",
-        "description": "Submit transaction",
-        "operationId": "submitTransaction",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Transaction object",
-            "required": true,
+            "description": "login response",
             "schema": {
               "type": "object",
-              "$ref": "#/definitions/_Transaction"
+              "$ref": "#/definitions/LoginResponse"
             }
-          }
-        ],
-        "responses": {
+          },
           "default": {
             "description": "Unexpected error",
             "schema": {
-              "$ref": "#/definitions/ApiResponse"
+              "$ref": "#/definitions/Response"
             }
           }
         }
       }
     },
-    "/media/uploadfile": {
+    "/upload-multiple": {
       "post": {
-        "tags": [
-          "Media"
-        ],
-        "summary": "Upload file",
-        "description": "Upload file",
-        "operationId": "uploadFile",
+        "summary": "upload multiple image.",
+        "description": "upload multiple image.",
         "consumes": [
-          "multipart/form-data"
+          "multipart/form-data",
+          "application/x-www-form-urlencoded"
         ],
-        "produces": [
-          "application/json"
-        ],
+        "operationId": "uploadMultiple",
         "parameters": [
           {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "file",
+            "name": "images",
             "in": "formData",
-            "description": "file to upload",
+            "description": "username.",
             "required": true,
             "type": "file"
-          },
-          {
-            "name": "path",
-            "in": "formData",
-            "description": "path to store file",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "dateInfo",
-            "in": "formData",
-            "description": "file create date",
-            "required": true,
-            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "login response",
             "schema": {
-              "$ref": "#/definitions/UploadFileResponse"
+              "type": "object",
+              "$ref": "#/definitions/UploadResponse"
             }
           },
           "default": {
             "description": "Unexpected error",
             "schema": {
-              "$ref": "#/definitions/ApiResponse"
+              "$ref": "#/definitions/Response"
             }
           }
         }
       }
     },
-    "/setting": {
-      "get": {
-        "x-swagger-router-controller": "Setting",
-        "tags": [
-          "Setting"
+    "/submit-task-mobile": {
+      "post": {
+        "summary": "submit form.",
+        "description": "submit form.",
+        "consumes": [
+          "application/json"
         ],
-        "summary": "Get app setting value",
-        "description": "Get app setting value",
-        "operationId": "getAppSetting",
+        "operationId": "submitTask",
         "parameters": [
           {
-            "name": "x-access-token",
-            "in": "header",
+            "name": "taskList",
+            "in": "body",
+            "description": "body data.",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Task"
+              }
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "login response",
             "schema": {
-              "$ref": "#/definitions/SettingResponse"
+              "type": "object",
+              "$ref": "#/definitions/Response"
             }
           },
           "default": {
             "description": "Unexpected error",
             "schema": {
-              "$ref": "#/definitions/ApiResponse"
+              "$ref": "#/definitions/Response"
             }
           }
         }
@@ -797,1183 +129,210 @@
     }
   },
   "definitions": {
-    "ApiResponse": {
-      "type": "object",
-      "discriminator": "response",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "error": {
-          "type": "string"
-        }
-      }
-    },
-    "UserLoginResponse": {
+    "Response": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "error": {
-          "type": "string"
-        },
-        "read": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "unread": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "user": {
-          "type": "object",
-          "$ref": "#/definitions/_User"
-        }
-      }
-    },
-    "UserAuthenResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "error": {
-          "type": "string"
-        },
-        "auth": {
-          "type": "boolean"
-        },
-        "read": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "unread": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "user": {
-          "type": "object",
-          "$ref": "#/definitions/_User"
-        }
-      }
-    },
-    "_User": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "idcard": {
-          "type": "string"
-        },
-        "firstname": {
-          "type": "string"
-        },
-        "lastname": {
-          "type": "string"
-        },
-        "shortname": {
-          "type": "string"
-        },
-        "issuperuser": {
-          "type": "boolean"
-        },
-        "status": {
-          "type": "boolean"
-        },
-        "email": {
-          "type": "string"
-        },
-        "phone_number": {
-          "type": "string"
-        },
-        "address": {
-          "type": "string"
-        },
-        "position": {
-          "type": "string"
-        },
-        "groupRole": {
-          "type": "string"
-        },
-        "active": {
-          "type": "boolean"
-        },
-        "createBy": {
-          "type": "string"
-        },
-        "created": {
+        "result": {
           "type": "string",
-          "format": "date-time"
+          "description": "success|error"
         },
-        "photo": {
-          "type": "string"
-        },
-        "token": {
-          "type": "string"
+        "message": {
+          "type": "string",
+          "description": "Success or error message."
         }
       }
     },
-    "ReadNewsResponse": {
+    "LoginResponse": {
       "type": "object",
       "properties": {
-        "success": {
-          "type": "boolean"
+        "result": {
+          "type": "string",
+          "description": "success|error"
         },
-        "error": {
-          "type": "string"
+        "message": {
+          "type": "string",
+          "description": "Success or error message."
         },
-        "read": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "unread": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "data": {
+        "parameter": {
           "type": "object",
-          "$ref": "#/definitions/_ReadNews"
+          "description": "shop and form data.",
+          "$ref": "#/definitions/LoginData"
         }
       }
     },
-    "_ReadNews": {
+    "LoginData": {
       "type": "object",
       "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "news_id": {
-          "type": "string"
-        },
         "user_id": {
-          "type": "string"
-        },
-        "createBy": {
-          "type": "string"
-        },
-        "updateBy": {
-          "type": "string"
-        },
-        "updateDate": {
           "type": "string",
-          "format": "date-time"
+          "description": "user id."
         },
-        "status": {
-          "type": "boolean"
-        },
-        "createDate": {
+        "shop_id": {
           "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "NewsListResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
+          "description": "shop id."
         },
-        "error": {
-          "type": "string"
+        "shop_name": {
+          "type": "string",
+          "description": "shop name."
         },
-        "total": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "read": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "unread": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "data": {
+        "questions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/_News"
+            "$ref": "#/definitions/Question"
           }
         }
       }
     },
-    "_News": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "image": {
-          "type": "object",
-          "$ref": "#/definitions/_Media"
-        },
-        "startDateTime": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "endDateTime": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "createBy": {
-          "type": "string"
-        },
-        "updateBy": {
-          "type": "string"
-        },
-        "updateDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "status": {
-          "type": "boolean"
-        },
-        "createDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "read": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "_Media": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "path": {
-          "type": "string"
-        },
-        "pathServer": {
-          "type": "string"
-        },
-        "thumbnailUrl": {
-          "type": "string"
-        },
-        "thumbnailPathServer": {
-          "type": "string"
-        },
-        "created": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "dateInfo": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "UploadFileResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "error": {
-          "type": "string"
-        },
-        "media": {
-          "type": "object",
-          "$ref": "#/definitions/_Media"
-        }
-      }
-    },
-    "HelpResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "error": {
-          "type": "string"
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_Help"
-          }
-        }
-      }
-    },
-    "_Help": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "priority": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "image": {
-          "type": "object",
-          "$ref": "#/definitions/_Media"
-        },
-        "createBy": {
-          "type": "string"
-        },
-        "updateBy": {
-          "type": "string"
-        },
-        "updateDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "status": {
-          "type": "boolean"
-        },
-        "createDate": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "SettingResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "error": {
-          "type": "string"
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_Setting"
-          }
-        }
-      }
-    },
-    "_Setting": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "imageDefault": {
-          "type": "object",
-          "$ref": "#/definitions/_Media"
-        },
-        "checkinDistance": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "checkProductPOGDateStart": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "checkProductPOGDateEnd": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "checkProductMustHaveDateStart": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "checkProductMustHaveDateEnd": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "updateDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "appconfig_version": {
-          "type": "string"
-        },
-        "appconfig_build": {
-          "type": "string"
-        },
-        "appconfig_download_url": {
-          "type": "string"
-        },
-        "createDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "checkProductMustHaveStatus": {
-          "type": "boolean"
-        },
-        "checkProductPOGStatus": {
-          "type": "boolean"
-        },
-        "checkinStatus": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "CheckinResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "error": {
-          "type": "string"
-        },
-        "transId": {
-          "type": "string"
-        }
-      }
-    },
-    "_Store": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "updateDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "storeId": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "sale_at": {
-          "type": "string"
-        },
-        "brand": {
-          "type": "object",
-          "$ref": "#/definitions/_Brand"
-        },
-        "storeCategory": {
-          "type": "object",
-          "$ref": "#/definitions/_StoreCategory"
-        },
-        "region": {
-          "type": "string"
-        },
-        "province": {
-          "type": "string"
-        },
-        "amphur": {
-          "type": "string"
-        },
-        "district": {
-          "type": "string"
-        },
-        "lat": {
-          "type": "number",
-          "format": "double"
-        },
-        "lng": {
-          "type": "number",
-          "format": "double"
-        },
-        "createDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "tel": {
-          "type": "string"
-        },
-        "status": {
-          "type": "boolean"
-        },
-        "checkIn": {
-          "type": "boolean"
-        },
-        "submitFlag": {
-          "type": "boolean"
-        },
-        "checkInLocation": {
-          "type": "boolean"
-        },
-        "stockPatternPOG": {
-          "type": "string"
-        },
-        "transId": {
-          "type": "string"
-        }
-      }
-    },
-    "_Brand": {
-      "type": "object",
-      "properties": {
-        "name_en": {
-          "type": "string"
-        },
-        "name_th": {
-          "type": "string"
-        },
-        "image": {
-          "type": "string"
-        }
-      }
-    },
-    "_StoreCategory": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "StoreListResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "error": {
-          "type": "string"
-        },
-        "total": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "checkInNow": {
-          "type": "string"
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_Store"
-          }
-        }
-      }
-    },
-    "StoreDetailResponse": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "error": {
-          "type": "string"
-        },
-        "data": {
-          "type": "object",
-          "$ref": "#/definitions/_StoreDetail"
-        }
-      }
-    },
-    "_StoreDetail": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean"
-        },
-        "error": {
-          "type": "string"
-        },
-        "store": {
-          "$ref": "#/definitions/_Store"
-        },
-        "product": {
-          "type": "object",
-          "$ref": "#/definitions/_ProductInfo"
-        },
-        "promotion": {
-          "type": "object",
-          "$ref": "#/definitions/_PromotionInfo"
-        }
-      }
-    },
-    "_ProductInfo": {
-      "type": "object",
-      "properties": {
-        "productPOG": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_ProductPOG"
-          }
-        },
-        "productSpecialShelf": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_ProductSpecialShelf"
-          }
-        },
-        "productMustHave": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_ProductMustHave"
-          }
-        },
-        "productNotCompleteTotal": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "_ProductPOG": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "meterial2": {
-          "type": "string"
-        },
-        "meterial3": {
-          "type": "string"
-        },
-        "meterial4": {
-          "type": "string"
-        },
-        "isOurProduct": {
-          "type": "boolean"
-        },
-        "sku": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_SKU"
-          }
-        }
-      }
-    },
-    "_TxProductPOG": {
-      "type": "object",
-      "properties": {
-        "sku": {
-          "type": "string"
-        },
-        "outOfStock": {
-          "type": "boolean"
-        },
-        "almostOOS": {
-          "type": "boolean"
-        },
-        "almostExpire": {
-          "type": "boolean"
-        },
-        "price": {
-          "type": "string"
-        },
-        "stockSystem": {
-          "type": "string"
-        },
-        "stockActual": {
-          "type": "string"
-        },
-        "stockDiff": {
-          "type": "string"
-        },
-        "productExpire": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_ExpireItem"
-          }
-        }
-      }
-    },
-    "_SKU": {
-      "type": "object",
-      "properties": {
-        "skuObj": {
-          "type": "object",
-          "$ref": "#/definitions/_SKUObj"
-        },
-        "outOfStock_flag": {
-          "type": "boolean"
-        },
-        "almostOOS_flag": {
-          "type": "boolean"
-        },
-        "almostExpire_flag": {
-          "type": "boolean"
-        },
-        "stockSystem_flag": {
-          "type": "boolean"
-        },
-        "stockActual_flag": {
-          "type": "boolean"
-        },
-        "price_flag": {
-          "type": "boolean"
-        },
-        "sku": {
-          "type": "string"
-        },
-        "outOfStock": {
-          "type": "boolean"
-        },
-        "almostOOS": {
-          "type": "boolean"
-        },
-        "almostExpire": {
-          "type": "boolean"
-        },
-        "price": {
-          "type": "string"
-        },
-        "stockSystem": {
-          "type": "string"
-        },
-        "stockActual": {
-          "type": "string"
-        },
-        "stockDiff": {
-          "type": "string"
-        },
-        "productExpire": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_ExpireItem"
-          }
-        }
-      }
-    },
-    "_SKUObj": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "descriptionTH": {
-          "type": "string"
-        },
-        "descriptionEN": {
-          "type": "string"
-        },
-        "itemCode": {
-          "type": "string"
-        },
-        "image": {
-          "type": "object",
-          "$ref": "#/definitions/_Media"
-        },
-        "name1": {
-          "type": "string"
-        },
-        "status": {
-          "type": "boolean"
-        },
-        "price_flag": {
-          "type": "boolean"
-        }
-      }
-    },
-    "_ExpireItem": {
-      "type": "object",
-      "properties": {
-        "date": {
-          "type": "string"
-        },
-        "amount": {
-          "type": "string"
-        }
-      }
-    },
-    "_SpecialSKU": {
-      "type": "object",
-      "properties": {
-        "sku": {
-          "type": "string"
-        },
-        "available": {
-          "type": "boolean"
-        },
-        "skuObj": {
-          "type": "object",
-          "$ref": "#/definitions/_SKUObj"
-        }
-      }
-    },
-    "_TxProductSpecialShelf": {
-      "type": "object",
-      "properties": {
-        "stockPattern": {
-          "type": "string"
-        },
-        "patternSKU": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_TxProductAvailable"
-          }
-        }
-      }
-    },
-    "_StockPattern": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "status": {
-          "type": "boolean"
-        }
-      }
-    },
-    "_ProductSpecialShelf": {
-      "type": "object",
-      "properties": {
-        "stockPattern": {
-          "type": "string"
-        },
-        "stockPatternObj": {
-          "type": "object",
-          "$ref": "#/definitions/_StockPattern"
-        },
-        "location": {
-          "type": "string"
-        },
-        "patternSKU": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_SpecialSKU"
-          }
-        }
-      }
-    },
-    "_TxProductAvailable": {
-      "type": "object",
-      "properties": {
-        "sku": {
-          "type": "string"
-        },
-        "available": {
-          "type": "boolean"
-        }
-      }
-    },
-    "_ProductMustHave": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "meterial2": {
-          "type": "string"
-        },
-        "meterial3": {
-          "type": "string"
-        },
-        "meterial4": {
-          "type": "string"
-        },
-        "isOurProduct": {
-          "type": "boolean"
-        },
-        "sku": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_SpecialSKU"
-          }
-        }
-      }
-    },
-    "_PromotionInfo": {
-      "type": "object",
-      "properties": {
-        "promotionlist": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_Promotion"
-          }
-        },
-        "promotionNotCompleteTotal": {
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
-    "_Promotion": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "themeName": {
-          "type": "string"
-        },
-        "createDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "createBy": {
-          "type": "string"
-        },
-        "updateDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "updateBy": {
-          "type": "string"
-        },
-        "startDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "endDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "promotionCountStock": {
-          "type": "object",
-          "$ref": "#/definitions/_PromotionCountStock"
-        },
-        "promotionOnTime": {
-          "type": "object",
-          "$ref": "#/definitions/_PromotionOntime"
-        }
-      }
-    },
-    "_PromotionItemGroup": {
+    "Question": {
       "type": "object",
       "properties": {
         "title": {
-          "type": "string"
+          "type": "string",
+          "description": "question title."
         },
-        "productSKU": {
+        "choices": {
           "type": "array",
+          "description": "question choices.",
           "items": {
-            "$ref": "#/definitions/_PromotionItem"
+            "type": "string"
           }
         }
       }
     },
-    "_PromotionItem": {
+    "UploadResponse": {
       "type": "object",
       "properties": {
-        "sku": {
-          "type": "string"
+        "result": {
+          "type": "string",
+          "description": "success|error"
         },
-        "skuObj": {
-          "type": "object",
-          "$ref": "#/definitions/_SKU"
+        "message": {
+          "type": "string",
+          "description": "Success or error message."
         },
-        "product": {
-          "type": "string"
-        },
-        "count": {
-          "type": "string"
-        },
-        "image": {
-          "type": "object",
-          "$ref": "#/definitions/_Media"
+        "parameter": {
+          "type": "array",
+          "description": "images path.",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
-    "_PromotionCountStock": {
+    "Task": {
       "type": "object",
       "properties": {
-        "_id": {
-          "type": "string"
+        "taskInfo": {
+          "type": "object",
+          "$ref": "#/definitions/TaskInfo"
         },
-        "name": {
-          "type": "string"
+        "taskImages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Image"
+          }
         },
-        "themeName": {
-          "type": "string"
+        "signature": {
+          "type": "object",
+          "$ref": "#/definitions/Signature"
         },
-        "status": {
+        "answers": {
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          }
+        },
+        "complete": {
           "type": "boolean"
-        },
-        "promotion": {
-          "type": "string"
-        },
-        "productInfo": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_PromotionItemGroup"
-          }
         }
       }
     },
-    "_TxPromotionItem": {
+    "TaskInfo": {
       "type": "object",
       "properties": {
-        "sku": {
+        "engineerID": {
+          "type": "string"
+        },
+        "taskType": {
           "type": "string"
         },
         "product": {
           "type": "string"
         },
-        "count": {
+        "carModel": {
           "type": "string"
         },
-        "image": {
+        "carModelOther": {
+          "type": "string"
+        },
+        "taskCode": {
+          "type": "string"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "tel1": {
+          "type": "string"
+        },
+        "tel2": {
+          "type": "string"
+        },
+        "carNo": {
+          "type": "string"
+        },
+        "engineNo": {
+          "type": "string"
+        },
+        "usageHours": {
+          "type": "string"
+        },
+        "serviceAddress": {
+          "type": "string"
+        },
+        "customerAddress": {
           "type": "string"
         }
       }
     },
-    "_PromotionOntime": {
+    "Image": {
       "type": "object",
       "properties": {
-        "promotion": {
+        "image": {
           "type": "string"
         },
-        "reason": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_Reason"
-          }
+        "captured_at": {
+          "type": "string",
+          "format": "date"
         },
-        "stock": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_OntimeItem"
-          }
+        "imagePath": {
+          "type": "string"
         }
       }
     },
-    "_OntimeItem": {
+    "Signature": {
       "type": "object",
       "properties": {
-        "location": {
+        "customerSignature": {
           "type": "string"
         },
-        "available": {
-          "type": "boolean"
+        "customerSignedDate": {
+          "type": "string",
+          "format": "date"
         },
-        "reason": {
+        "engineerSignature": {
           "type": "string"
         },
-        "image": {
+        "engineerSignedDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "customerSignatureImage": {
           "type": "object",
-          "$ref": "#/definitions/_Media"
-        }
-      }
-    },
-    "_TxOntimeItem": {
-      "type": "object",
-      "properties": {
-        "location": {
-          "type": "string"
+          "$ref": "#/definitions/Image"
         },
-        "available": {
-          "type": "boolean"
-        },
-        "reason": {
-          "type": "string"
-        },
-        "image": {
-          "type": "string"
-        }
-      }
-    },
-    "_Reason": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "status": {
-          "type": "boolean"
-        }
-      }
-    },
-    "_TxPromotionCountStock": {
-      "type": "object",
-      "properties": {
-        "promotion": {
-          "type": "string"
-        },
-        "productInfo": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_TxPromotionItemGroup"
-          }
-        }
-      }
-    },
-    "_TxPromotionItemGroup": {
-      "type": "object",
-      "properties": {
-        "title": {
-          "type": "string"
-        },
-        "productSKU": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_TxPromotionItem"
-          }
-        }
-      }
-    },
-    "_TxPromotionOntime": {
-      "type": "object",
-      "properties": {
-        "promotion": {
-          "type": "string"
-        },
-        "stock": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_TxOntimeItem"
-          }
-        }
-      }
-    },
-    "_Transaction": {
-      "type": "object",
-      "properties": {
-        "transId": {
-          "type": "string"
-        },
-        "stockPatternPOG": {
-          "type": "string"
-        },
-        "productPOG": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_TxProductPOG"
-          }
-        },
-        "productSpecialShelf": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_TxProductSpecialShelf"
-          }
-        },
-        "productMustHave": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_TxProductAvailable"
-          }
-        },
-        "promotionCountStock": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_TxPromotionCountStock"
-          }
-        },
-        "promotionOnTime": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/_TxPromotionOntime"
-          }
+        "engineerSignatureImage": {
+          "type": "object",
+          "$ref": "#/definitions/Image"
         }
       }
     }

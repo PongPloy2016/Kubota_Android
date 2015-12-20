@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -30,6 +31,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import th.co.siamkubota.kubota.R;
@@ -107,7 +110,18 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private EditText editTextMachineNumber;
     private EditText editTextEngineNumber;
     private EditText editTextWorkHours;
-    private EditText editTextAddress;
+    private EditText editTextServiceAddress;
+    private EditText editTextCustomerAddress;
+
+    private TextView requireOtherModel;
+    private TextView requireJobId;
+    private TextView requireName;
+    private TextView requireTel1;
+    private TextView requireMachineNumber;
+    private TextView requireEngineNumber;
+    private TextView requireWorkHours;
+    private TextView requireServiceAddress;
+    private TextView requireCustomerAddress;
 
     private ImageButton locationButton;
 
@@ -139,8 +153,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     // boolean flag to toggle periodic location updates
     private boolean mRequestingLocationUpdates = false;
-
     private LocationRequest mLocationRequest;
+    private boolean waitGPSSetting;
+    private  AlertDialog alert;
 
     // Location updates intervals in sec
     private static int UPDATE_INTERVAL = 10000; // 10 sec
@@ -266,11 +281,26 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextMachineNumber = (EditText) v.findViewById(R.id.editTextMachineNumber);
         editTextEngineNumber = (EditText) v.findViewById(R.id.editTextEngineNumber);
         editTextWorkHours = (EditText) v.findViewById(R.id.editTextWorkHours);
-        editTextAddress = (EditText) v.findViewById(R.id.editTextAddress);
+        editTextServiceAddress = (EditText) v.findViewById(R.id.editTextServiceAddress);
+        editTextCustomerAddress = (EditText) v.findViewById(R.id.editTextCustomerAddress);
+
+        requireOtherModel = (TextView) v.findViewById(R.id.editTextOtherModel);
+        requireJobId = (TextView) v.findViewById(R.id.editTextJobId);
+        requireName = (TextView) v.findViewById(R.id.editTextName);
+        requireTel1 = (TextView) v.findViewById(R.id.editTextTel1);
+        requireMachineNumber = (TextView) v.findViewById(R.id.editTextMachineNumber);
+        requireEngineNumber = (TextView) v.findViewById(R.id.editTextEngineNumber);
+        requireWorkHours = (TextView) v.findViewById(R.id.editTextWorkHours);
+        requireServiceAddress = (TextView) v.findViewById(R.id.editTextServiceAddress);
+        requireCustomerAddress = (TextView) v.findViewById(R.id.editTextCustomerAddress);
 
         locationButton = (ImageButton) v.findViewById(R.id.locationButton);
 
         radioGroupUserType = (RadioGroup) v.findViewById(R.id.radioGroupUserType);
+        RadioButton radioButton1 =  (RadioButton) v.findViewById(R.id.radioButton1);
+        RadioButton radioButton2 =  (RadioButton) v.findViewById(R.id.radioButton2);
+
+        radioButton1.getCompoundDrawables()[0].setBounds(0, 0, 10, 10);
 
         spinnerJobType.setAdapter(selectNoneJobTypeSpinnerAdapter);
         spinnerProduct.setAdapter(selectNoneProductSpinnerAdapter);
@@ -299,7 +329,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextMachineNumber.addTextChangedListener(new GenericTextWatcher(editTextMachineNumber));
         editTextEngineNumber.addTextChangedListener(new GenericTextWatcher(editTextEngineNumber));
         editTextWorkHours.addTextChangedListener(new GenericTextWatcher(editTextWorkHours));
-        editTextAddress.addTextChangedListener(new GenericTextWatcher(editTextAddress));
+        editTextServiceAddress.addTextChangedListener(new GenericTextWatcher(editTextServiceAddress));
+        editTextCustomerAddress.addTextChangedListener(new GenericTextWatcher(editTextCustomerAddress));
 
         locationButton.setOnClickListener(this);
 
@@ -429,7 +460,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
     }
 
     public void setResultAddress(String address) {
-        editTextAddress.setText(address);
+        editTextServiceAddress.setText(address);
     }
 
     ///////////////////////////////////////////////////////////////////////////////  implement method
@@ -518,10 +549,10 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         } else if (parent == spinnerModel) {
             if (position == selectNoneModelSpinnerAdapter.getCount() - 1) {
-                //layoutOtherModel.setVisibility(View.VISIBLE);
+                layoutOtherModel.setVisibility(View.VISIBLE);
                 editTextOtherModel.setVisibility(View.VISIBLE);
             } else {
-                //layoutOtherModel.setVisibility(View.GONE);
+                layoutOtherModel.setVisibility(View.GONE);
                 editTextOtherModel.setVisibility(View.GONE);
             }
         }
@@ -531,6 +562,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             LinearLayout rootLayout = (LinearLayout) view.findViewById(R.id.rootLayout);
             TextView textViewDialog = (TextView) view.findViewById(R.id.textView);
             textViewDialog.setTextSize(Converter.pxTosp(getActivity(), Converter.dpTopx(getActivity(), 15)));
+            textViewDialog.setTextColor(ContextCompat.getColor(getActivity(),R.color.dark_gray));
 
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textViewDialog.getLayoutParams();
             int left = Converter.dpTopx(getActivity(), 10);
@@ -593,7 +625,29 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
             if (!text.isEmpty() && view != null) {
 
+                LinearLayout parent = (LinearLayout)this.view.getParent();
+                /*ArrayList<View> requires = new ArrayList<View>();
+                parent.findViewsWithText(requires,"*",View.FIND_VIEWS_WITH_TEXT);
+                for (View v : requires){
+                    v.setVisibility(View.GONE);
+                }*/
+                View required = parent.findViewWithTag("*");
+                if(required != null){
+                    required.setVisibility(View.GONE);
+                }
 
+
+            }else{
+                LinearLayout parent = (LinearLayout)this.view.getParent();
+               /* ArrayList<View> requires = new ArrayList<View>();
+                parent.findViewsWithText(requires,"*",View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                for (View v : requires){
+                    v.setVisibility(View.VISIBLE);
+                }*/
+                View required = parent.findViewWithTag("*");
+                if(required != null){
+                    required.setVisibility(View.VISIBLE);
+                }
             }
 
             validateInput();
@@ -602,7 +656,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     private void validateInput() {
 
-        View view = Validate.inputValidate(rootLayout);
+        View view = Validate.inputValidate(rootLayout, "required");
         if (view != null) {
             dataComplete = false;
             mListener.onFragmentDataComplete(this, dataComplete);
@@ -761,7 +815,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
                                 "Address: " + resultData.getString(Constants.RESULT_DATA_KEY));*/
                         mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
                         //((ServiceFragment) requestAddressFragment).setResultAddress(mAddressOutput);
-                        editTextAddress.setText(mAddressOutput);
+                        editTextServiceAddress.setText(mAddressOutput);
 
                         mAddressRequested = false;
                     }
@@ -912,8 +966,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         return false;
     }
 
-   private boolean waitGPSSetting;
-    private  AlertDialog alert;
+
     private  void buildAlertMessageNoGps()
     {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

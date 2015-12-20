@@ -28,7 +28,9 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             android:layout_marginBottom="10dp"
             />
 
-
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"></RelativeLayout>
         <LinearLayout
             style="@style/LinearLayoutSpinner"
             android:id="@+id/jobLayout">
@@ -37,18 +39,11 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:src="@drawable/kindofjob_icon"
                 style="@style/ImageIconStyle"/>
 
-            <!--<Spinner-->
-                <!--android:id="@+id/spinnerJobType"-->
-                <!--android:prompt="@string/service_hint_job_type"-->
-                <!--android:theme="@style/SpinnerDialogTheme"-->
-                <!--android:dropDownWidth="match_parent"-->
-                <!--style="@style/SpinnerStyle"/>-->
-
             <th.co.siamkubota.kubota.utils.ui.CustomSpinner
                 android:id="@+id/spinnerJobType"
                 android:prompt="@string/service_hint_job_type"
-
-                style="@style/SpinnerStyle"/>
+                style="@style/SpinnerStyle"
+                android:tag="required"/>
 
         </LinearLayout>
 
@@ -62,7 +57,8 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             <th.co.siamkubota.kubota.utils.ui.CustomSpinner
                 android:id="@+id/spinnerProduct"
                 android:prompt="@string/service_hint_product"
-                style="@style/SpinnerStyle"/>
+                style="@style/SpinnerStyle"
+                android:tag="required"/>
 
         </LinearLayout>
 
@@ -76,7 +72,8 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             <th.co.siamkubota.kubota.utils.ui.CustomSpinner
                 android:id="@+id/spinnerModel"
                 android:prompt="@string/service_hint_model"
-                style="@style/SpinnerStyle"/>
+                style="@style/SpinnerStyle"
+                android:tag="required"/>
 
         </LinearLayout>
 
@@ -89,7 +86,12 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             <EditText
                 android:id="@+id/editTextOtherModel"
                 android:hint="@string/service_hint_other"
-                style="@style/EditTextStyle"/>
+                style="@style/EditTextStyle"
+                android:tag="required"/>
+            <TextView
+                android:id="@+id/requireOtherModel"
+                style="@style/textViewAstericStyle"
+                android:text="*"/>
         </LinearLayout>
 
         <LinearLayout
@@ -100,7 +102,12 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             <EditText
                 android:id="@+id/editTextJobId"
                 android:hint="@string/service_hint_job_id"
-                style="@style/EditTextStyle"/>
+                style="@style/EditTextStyle"
+                android:tag="required"/>
+            <TextView
+                android:id="@+id/requireJobcode"
+                style="@style/textViewAstericStyle"
+                android:text="*"/>
         </LinearLayout>
 
 
@@ -124,8 +131,10 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             android:paddingLeft="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
+            android:tag="required"
             >
             <RadioButton
+                android:id="@+id/radioButton1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:button="@drawable/radio_button_state"
@@ -136,8 +145,10 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:text="@string/service_radio_caption_owner"
                 android:layout_marginRight="20dp"
                 android:textIsSelectable="false"
+                android:background="@android:color/transparent"
                 />
             <RadioButton
+                android:id="@+id/radioButton2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:button="@drawable/radio_button_state"
@@ -146,7 +157,8 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:drawablePadding="10dp"
                 android:textColor="@color/light_gray"
                 android:text="@string/service_radio_caption_user"
-                android:textIsSelectable="false"/>
+                android:textIsSelectable="false"
+                android:background="@android:color/transparent"/>
         </RadioGroup>
 
 
@@ -158,7 +170,12 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             <EditText
                 android:id="@+id/editTextName"
                 android:hint="@string/service_hint_name"
-                style="@style/EditTextStyle"/>
+                style="@style/EditTextStyle"
+                android:tag="required"/>
+            <TextView
+                android:id="@+id/requireName"
+                style="@style/textViewAstericStyle"
+                android:text="*"/>
         </LinearLayout>
 
         <LinearLayout
@@ -170,7 +187,12 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:id="@+id/editTextTel1"
                 android:hint="@string/service_hint_tel_1"
                 style="@style/EditTextStyle"
-                android:inputType="phone"/>
+                android:inputType="phone"
+                android:tag="required"/>
+            <TextView
+                android:id="@+id/requireTel1"
+                style="@style/textViewAstericStyle"
+                android:text="*"/>
         </LinearLayout>
 
         <LinearLayout
@@ -182,7 +204,9 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:id="@+id/editTextTel2"
                 android:hint="@string/service_hint_tel_2"
                 style="@style/EditTextStyle"
-                android:inputType="phone"/>
+                android:inputType="phone"
+                />
+
         </LinearLayout>
 
         <LinearLayout
@@ -193,7 +217,12 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             <EditText
                 android:id="@+id/editTextMachineNumber"
                 android:hint="@string/service_hint_machine_number"
-                style="@style/EditTextStyle"/>
+                style="@style/EditTextStyle"
+                android:tag="required"/>
+            <TextView
+                android:id="@+id/requireMachineNumber"
+                style="@style/textViewAstericStyle"
+                android:text="*"/>
         </LinearLayout>
 
         <LinearLayout
@@ -204,7 +233,12 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             <EditText
                 android:id="@+id/editTextEngineNumber"
                 android:hint="@string/service_hint_engine_number"
-                style="@style/EditTextStyle"/>
+                style="@style/EditTextStyle"
+                android:tag="required"/>
+            <TextView
+                android:id="@+id/requireEngineNumber"
+                style="@style/textViewAstericStyle"
+                android:text="*"/>
         </LinearLayout>
 
         <LinearLayout
@@ -216,7 +250,12 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:id="@+id/editTextWorkHours"
                 android:hint="@string/service_hint_working_hours"
                 style="@style/EditTextStyle"
-                android:inputType="numberDecimal"/>
+                android:inputType="numberDecimal"
+                android:tag="required"/>
+            <TextView
+                android:id="@+id/requireWorkHours"
+                style="@style/textViewAstericStyle"
+                android:text="*"/>
         </LinearLayout>
 
         <LinearLayout
@@ -228,16 +267,25 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 style="@style/LinearLayoutTextView"
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:background="@drawable/rectangle_left_round_corner_white_gray_border">
 
                 <ImageView
                     android:src="@drawable/address_icon"
                     style="@style/ImageIconStyle"/>
                 <EditText
-                    android:id="@+id/editTextAddress"
-                    android:hint="@string/service_hint_addrss"
+                    android:id="@+id/editTextServiceAddress"
+                    android:hint="@string/service_hint_addrss_service"
                     style="@style/EditTextStyle"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:tag="required"/>
+                <TextView
+                    android:id="@+id/requireServiceAddress"
+                    style="@style/textViewAstericStyle"
+                    android:text="*"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="-2dp"/>
 
             </LinearLayout>
 
@@ -252,6 +300,23 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:background="@drawable/button_right_blue_selector"/>
 
 
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/LinearLayoutTextView">
+            <ImageView
+                android:src="@drawable/address_icon"
+                style="@style/ImageIconStyle"/>
+            <EditText
+                android:id="@+id/editTextCustomerAddress"
+                android:hint="@string/service_hint_addrss_customer"
+                style="@style/EditTextStyle"
+                android:inputType="text"
+                android:tag="required"/>
+            <TextView
+                android:id="@+id/requireCustomerAddress"
+                style="@style/textViewAstericStyle"
+                android:text="*"/>
         </LinearLayout>
 
 

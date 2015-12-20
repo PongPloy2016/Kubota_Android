@@ -1,6 +1,7 @@
 package th.co.siamkubota.kubota.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +26,19 @@ public class CustomSpinnerAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
 
     private String[] itemList ;
-    //private String[] itemList ;
+    private int selected = -1;
 
     public void setItemList(String[] list){
         itemList = list;
         notifyDataSetChanged();
+    }
+
+    public int getSelected() {
+        return selected;
+    }
+
+    public void setSelected(int selected) {
+        this.selected = selected;
     }
 
     public CustomSpinnerAdapter(Context c) {
@@ -103,6 +112,16 @@ public class CustomSpinnerAdapter extends BaseAdapter {
         text.setText(itemList[position]);
         //rootLayout.setBackgroundColor(context.getResources().getColor(R.color.white));
         //imageExpander.setVisibility(View.GONE);
+
+        ImageView selectedImage = (ImageView) view.findViewById(R.id.selectedImage);
+
+        if(selected == position){
+            text.setTextColor(ContextCompat.getColor(context, R.color.dark_gray_selected));
+            selectedImage.setVisibility(View.VISIBLE);
+        }else{
+            text.setTextColor(ContextCompat.getColor(context, R.color.dark_gray));
+            selectedImage.setVisibility(View.GONE);
+        }
 
         view.setClickable(false);
         view.setFocusable(false);

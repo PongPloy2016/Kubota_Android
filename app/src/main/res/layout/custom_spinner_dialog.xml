@@ -28,7 +28,7 @@
         android:layout_weight="1"
         android:background="@color/background"
         android:divider="@drawable/list_divider_light_gray"
-        android:listSelector="@color/light_gray_divider"
+        android:listSelector="@color/light_gray_selector"
         >
 
     </ListView>

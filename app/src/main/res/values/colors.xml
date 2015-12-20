@@ -19,6 +19,9 @@
     <color name="dark_gray_alpha">#d15f6060</color>
     <color name="orange_alpha">#d1f5841f</color>
     <color name="orange_light_alpha">#D1FFA859</color>
+    <color name="orange_stage">#f58521</color>
+    <color name="light_gray_selector">#55CACACA</color>
+    <color name="dark_gray_selected">#FF000000</color>
 
 
 

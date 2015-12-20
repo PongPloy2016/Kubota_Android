@@ -1,0 +1,20 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+        <!--<padding android:left="6dp"-->
+        <!--android:top="6dp"-->
+        <!--android:right="6dp"-->
+        <!--android:bottom="6dp" />-->
+    <gradient
+        android:angle="270"
+        android:startColor="@color/orange_stage"
+        android:endColor="@color/orange_stage"
+        android:centerColor="@color/orange_stage"
+        />
+    <stroke android:width="0.8dp" android:color="@android:color/transparent"/>
+    <corners android:radius="16dp"
+        android:topLeftRadius="16dp"
+        android:topRightRadius="0dp"
+        android:bottomLeftRadius="16dp"
+        android:bottomRightRadius="0dp" />
+
+</shape>

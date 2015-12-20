@@ -30,6 +30,11 @@ tools:ignore="MissingPrefix"
         <!--android:layout_marginRight="20dp"-->
         <!--/>-->
 
+    <TextView
+        style="@style/textViewAstericStyle"
+        android:text="*"
+        android:layout_marginRight="25dp"/>
+
 
 </LinearLayout>
 

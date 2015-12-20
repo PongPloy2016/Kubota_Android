@@ -32,6 +32,7 @@ public class CustomSpinnerDialog extends Dialog implements AdapterView.OnItemCli
 
     public DialogInterface.OnClickListener mListener;
     public Context mContext;
+    //private int selected;
 
     public interface OnItemSelectedListener
     {
@@ -53,14 +54,19 @@ public class CustomSpinnerDialog extends Dialog implements AdapterView.OnItemCli
         this.setContentView(R.layout.custom_spinner_dialog);
         mListener = listener;
         mContext = context;
+        //this.selected = selected;
 
         //setDialogTitle();
 
 
+
+
         ListView listView = (ListView) this.findViewById(R.id.listview);
-        listView.setAdapter((ListAdapter)spinnerAdapter);
+        listView.setAdapter((ListAdapter) spinnerAdapter);
         listView.setOnItemClickListener(this);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+
     }
 
 
