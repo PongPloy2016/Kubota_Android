@@ -142,7 +142,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginLeft="-0.8dp"
+                        android:layout_marginLeft="-0.3dp"
                         android:background="@color/light_gray_stage">
                         <ImageView
                             android:id="@+id/divStep1"
@@ -167,7 +167,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginLeft="-0.8dp"
+                        android:layout_marginLeft="-0.3dp"
                         android:background="@color/light_gray_stage">
                         <ImageView
                             android:id="@+id/divStep2"
@@ -192,7 +192,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginLeft="-0.8dp"
+                        android:layout_marginLeft="-0.3dp"
                         android:background="@drawable/rectangle_right_round_corner_gray">
                         <ImageView
                             android:id="@+id/divStep3"
