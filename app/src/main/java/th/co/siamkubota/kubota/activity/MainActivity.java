@@ -3,12 +3,14 @@ package th.co.siamkubota.kubota.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
@@ -18,6 +20,11 @@ public class MainActivity extends BaseActivity  implements
         View.OnClickListener{
 
     private Button enterBtn;
+    private TextView versionName;
+
+    private String tVersionNameApp;
+    private int versionCode;
+
 
     private AppController app;
 
@@ -31,6 +38,19 @@ public class MainActivity extends BaseActivity  implements
 
         enterBtn = (Button) findViewById(R.id.enterBtn);
         enterBtn.setOnClickListener(this);
+
+        try {
+            PackageInfo pinfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            tVersionNameApp = pinfo.versionName; // 1.0
+            versionCode = pinfo.versionCode;
+
+            versionName = (TextView) findViewById(R.id.versionName);
+            versionName.setText("v " + tVersionNameApp);
+            versionName.setVisibility(View.VISIBLE);
+
+        } catch (Exception e) {
+
+        }
 
     }
 

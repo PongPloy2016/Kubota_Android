@@ -1,6 +1,8 @@
 package th.co.siamkubota.kubota.utils.function;
 
 import android.app.Activity;
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import th.co.siamkubota.kubota.R;
 
 /**
  * Created by sipangka on 9/10/2558.
@@ -88,5 +92,26 @@ public class Ui {
                 setupUI(activity,innerView);
             }
         }
+    }
+
+    public static void showAlertError(Context context, String message)
+    {
+        AlertDialog alert;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(context.getString(R.string.service_button_ok), null);
+                /*.setPositiveButton(context.getString(R.string.service_button_ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        view.requestFocus();
+
+                    }
+                });*/
+        //.setNegativeButton(getString(R.string.main_button_no), null);
+
+        alert = builder.create();
+        alert.show();
     }
 }

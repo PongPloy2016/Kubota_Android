@@ -13,6 +13,7 @@
     <string name="login_store_id_hint">รหัสร้าน</string>
     <string name="login_password_hint">รหัสผ่าน</string>
     <string name="login_button">เข้าสู่ระบบ</string>
+    <string name="login_invalid_username_password">กรุณากรอกชื่อผู้ใช้และรหัสผ่านให้ครบ</string>
 
     <!-- UnfinishTask -->ServiceFragment
     <string name="unfinish_task">งานที่ยังไม่ส่ง</string>
