@@ -51,6 +51,7 @@ import android.location.LocationProvider;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import io.swagger.client.model.TaskInfo;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.adapter.CustomSpinnerAdapter;
 import th.co.siamkubota.kubota.adapter.SelectNoneSpinnerAdapter;
@@ -103,18 +104,18 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private SelectNoneSpinnerAdapter selectNoneModelSpinnerAdapter;
 
     private EditText editTextOtherModel;
-    private EditText editTextJobId;
+    private EditText editTextTaskCode;
     private EditText editTextName;
     private EditText editTextTel1;
     private EditText editTextTel2;
-    private EditText editTextMachineNumber;
+    private EditText editTextCarNumber;
     private EditText editTextEngineNumber;
     private EditText editTextWorkHours;
     private EditText editTextServiceAddress;
     private EditText editTextCustomerAddress;
 
     private TextView requireOtherModel;
-    private TextView requireJobId;
+    private TextView requireTaskCode;
     private TextView requireName;
     private TextView requireTel1;
     private TextView requireMachineNumber;
@@ -165,8 +166,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     private String title;
     private boolean dataComplete = false;
-
     private OnFragmentInteractionListener mListener;
+    private TaskInfo taskInfo;
 
 
     //////////////////////////////////////////////////////////////////// getter setter
@@ -211,6 +212,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
         if (getArguments() != null) {
             title = getArguments().getString(ARG_PARAM_TITLE);
         }
+
+        taskInfo = new TaskInfo();
 
         jobTypeDataList = getResources().getStringArray(R.array.job_type);
         productDataList = getResources().getStringArray(R.array.product);
@@ -274,25 +277,25 @@ public class Step1CustomerDetailFragment extends Fragment implements
         layoutOtherModel = (LinearLayout) v.findViewById(R.id.layoutOtherModel);
 
         editTextOtherModel = (EditText) v.findViewById(R.id.editTextOtherModel);
-        editTextJobId = (EditText) v.findViewById(R.id.editTextJobId);
+        editTextTaskCode = (EditText) v.findViewById(R.id.editTextTaskCode);
         editTextName = (EditText) v.findViewById(R.id.editTextName);
         editTextTel1 = (EditText) v.findViewById(R.id.editTextTel1);
         editTextTel2 = (EditText) v.findViewById(R.id.editTextTel2);
-        editTextMachineNumber = (EditText) v.findViewById(R.id.editTextMachineNumber);
+        editTextCarNumber = (EditText) v.findViewById(R.id.editTextCarNumber);
         editTextEngineNumber = (EditText) v.findViewById(R.id.editTextEngineNumber);
         editTextWorkHours = (EditText) v.findViewById(R.id.editTextWorkHours);
         editTextServiceAddress = (EditText) v.findViewById(R.id.editTextServiceAddress);
         editTextCustomerAddress = (EditText) v.findViewById(R.id.editTextCustomerAddress);
 
-        requireOtherModel = (TextView) v.findViewById(R.id.editTextOtherModel);
-        requireJobId = (TextView) v.findViewById(R.id.editTextJobId);
-        requireName = (TextView) v.findViewById(R.id.editTextName);
-        requireTel1 = (TextView) v.findViewById(R.id.editTextTel1);
-        requireMachineNumber = (TextView) v.findViewById(R.id.editTextMachineNumber);
-        requireEngineNumber = (TextView) v.findViewById(R.id.editTextEngineNumber);
-        requireWorkHours = (TextView) v.findViewById(R.id.editTextWorkHours);
-        requireServiceAddress = (TextView) v.findViewById(R.id.editTextServiceAddress);
-        requireCustomerAddress = (TextView) v.findViewById(R.id.editTextCustomerAddress);
+        requireOtherModel = (TextView) v.findViewById(R.id.requireOtherModel);
+        requireTaskCode = (TextView) v.findViewById(R.id.requireTaskCode);
+        requireName = (TextView) v.findViewById(R.id.requireName);
+        requireTel1 = (TextView) v.findViewById(R.id.requireTel1);
+        requireMachineNumber = (TextView) v.findViewById(R.id.requireMachineNumber);
+        requireEngineNumber = (TextView) v.findViewById(R.id.requireEngineNumber);
+        requireWorkHours = (TextView) v.findViewById(R.id.requireWorkHours);
+        requireServiceAddress = (TextView) v.findViewById(R.id.requireServiceAddress);
+        requireCustomerAddress = (TextView) v.findViewById(R.id.requireCustomerAddress);
 
         locationButton = (ImageButton) v.findViewById(R.id.locationButton);
 
@@ -322,11 +325,11 @@ public class Step1CustomerDetailFragment extends Fragment implements
         spinnerModel.setOnItemSelectedListener(this);
 
         editTextOtherModel.addTextChangedListener(new GenericTextWatcher(editTextOtherModel));
-        editTextJobId.addTextChangedListener(new GenericTextWatcher(editTextJobId));
+        editTextTaskCode.addTextChangedListener(new GenericTextWatcher(editTextTaskCode));
         editTextName.addTextChangedListener(new GenericTextWatcher(editTextName));
         editTextTel1.addTextChangedListener(new GenericTextWatcher(editTextTel1));
         editTextTel2.addTextChangedListener(new GenericTextWatcher(editTextTel2));
-        editTextMachineNumber.addTextChangedListener(new GenericTextWatcher(editTextMachineNumber));
+        editTextCarNumber.addTextChangedListener(new GenericTextWatcher(editTextCarNumber));
         editTextEngineNumber.addTextChangedListener(new GenericTextWatcher(editTextEngineNumber));
         editTextWorkHours.addTextChangedListener(new GenericTextWatcher(editTextWorkHours));
         editTextServiceAddress.addTextChangedListener(new GenericTextWatcher(editTextServiceAddress));
@@ -454,7 +457,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         // TODO: Update argument type and name
         //public void onFragmentInteraction(Uri uri);
         //public void onFragmentPresent(Fragment fragment, String title);
-        public void onFragmentDataComplete(Fragment fragment, boolean complete);
+        public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data);
         //public void onRequestAddress();
 
     }
@@ -659,12 +662,37 @@ public class Step1CustomerDetailFragment extends Fragment implements
         View view = Validate.inputValidate(rootLayout, "required");
         if (view != null) {
             dataComplete = false;
-            mListener.onFragmentDataComplete(this, dataComplete);
+            mListener.onFragmentDataComplete(this, dataComplete, null);
             return;
         }
 
+
         dataComplete = true;
-        mListener.onFragmentDataComplete(this, dataComplete);
+        mListener.onFragmentDataComplete(this, dataComplete, collectData());
+    }
+
+    private TaskInfo collectData(){
+
+        taskInfo.setTaskType(spinnerJobType.getSelectedItem().toString());
+        taskInfo.setProduct(spinnerProduct.getSelectedItem().toString());
+        taskInfo.setCarModel(spinnerModel.getSelectedItem().toString());
+        if(taskInfo.getCarModel().equals("อื่นๆ")){
+            taskInfo.setCarModelOther(editTextOtherModel.getText().toString());
+        }
+        taskInfo.setTaskCode(editTextTaskCode.getText().toString());
+        taskInfo.setCustomerName(editTextName.getText().toString());
+        taskInfo.setTel1(editTextTel1.getText().toString());
+        taskInfo.setTel1(editTextTel1.getText().toString());
+        if(!editTextTel2.getText().toString().isEmpty()){
+            taskInfo.setTel2(editTextTel2.getText().toString());
+        }
+        taskInfo.setCarNo(editTextCarNumber.getText().toString());
+        taskInfo.setEngineNo(editTextEngineNumber.getText().toString());
+        taskInfo.setUsageHours(editTextWorkHours.getText().toString());
+        taskInfo.setAddress(editTextServiceAddress.getText().toString());
+        taskInfo.setCustomerAddress(editTextCustomerAddress.getText().toString());
+
+        return taskInfo;
     }
 
     ////////////////////////////////////////////////////////////// get address

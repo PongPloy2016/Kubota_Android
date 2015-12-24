@@ -23,9 +23,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.swagger.client.model.Image;
+import io.swagger.client.model.LoginData;
+import io.swagger.client.model.Signature;
+import io.swagger.client.model.Task;
+import io.swagger.client.model.TaskInfo;
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.activity.LoginActivity;
 import th.co.siamkubota.kubota.activity.ResultActivity;
 import th.co.siamkubota.kubota.adapter.ViewPagerAdapter;
 import th.co.siamkubota.kubota.app.AppController;
@@ -71,16 +78,18 @@ public class ServiceFragment extends Fragment implements
     private int Numboftabs;
     private CustomOnPageChangeListener pageChangeListener;
 
+    private LoginData loginData;
+    private Task task;
+
 
     public void setmListener(OnFragmentInteractionListener mListener) {
         this.mListener = mListener;
     }
 
-    public static ServiceFragment newInstance() {
+    public static ServiceFragment newInstance(LoginData loginData) {
         ServiceFragment fragment = new ServiceFragment();
         Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(LoginActivity.KEY_LOGIN_DATA, loginData);
         fragment.setArguments(args);
         return fragment;
     }
@@ -94,12 +103,13 @@ public class ServiceFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
+            loginData = getArguments().getParcelable(LoginActivity.KEY_LOGIN_DATA);
         }
 
         mTitle = getActivity().getResources().getStringArray(R.array.stage_title);
         Numboftabs = mTitle.length;
+
+        task = new Task();
 
 
         /*adapter = new ViewPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), mTitle,
@@ -285,7 +295,7 @@ public class ServiceFragment extends Fragment implements
 
 
     @Override
-    public void onFragmentDataComplete(Fragment fragment, boolean complete) {
+    public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data) {
 
         if(complete){
             showToastComplete();
@@ -297,6 +307,14 @@ public class ServiceFragment extends Fragment implements
                 divStep1.setImageResource(R.drawable.edge_orage);
                 step1Button.setImageResource(R.drawable.white_number01);
                 nextButton.setEnabled(true);
+
+                task.setTaskInfo((TaskInfo) data);
+
+                task.getTaskInfo().setEngineerID(loginData.getUserId());
+
+                Step2PhotoFragment step2PhotoFragmentadapter = (Step2PhotoFragment)adapter.getItem(1);
+                step2PhotoFragmentadapter.setMachineNumber(task.getTaskInfo().getEngineNo());
+
             }else{
                 backStep1.setBackgroundResource(R.drawable.rectangle_left_round_corner_white);
                 divStep1.setImageResource(R.drawable.edge_white);
@@ -309,6 +327,9 @@ public class ServiceFragment extends Fragment implements
                 divStep2.setImageResource(R.drawable.edge_orage);
                 step2Button.setImageResource(R.drawable.white_number02);
                 nextButton.setEnabled(true);
+
+                task.setTaskImages((ArrayList<Image>) data);
+
             }else{
                 backStep2.setBackgroundResource(R.color.white);
                 divStep2.setImageResource(R.drawable.edge_white);
@@ -321,6 +342,9 @@ public class ServiceFragment extends Fragment implements
                 divStep3.setImageResource(R.drawable.edge_orage);
                 step3Button.setImageResource(R.drawable.white_number03);
                 nextButton.setEnabled(true);
+
+                task.setSignature((Signature) data);
+
             }else{
                 backStep3.setBackgroundResource(R.color.white);
                 divStep3.setImageResource(R.drawable.edge_white);
@@ -344,6 +368,9 @@ public class ServiceFragment extends Fragment implements
     public void onConfirmSubmit(Fragment fragment, boolean complete) {
         if(complete){
             Intent intent = new Intent(getActivity(), ResultActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(ResultActivity.KEY_TASK, task);
+            intent.putExtras(bundle);
             startActivity(intent);
             getActivity().finish();
 

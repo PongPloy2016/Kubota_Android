@@ -26,6 +26,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.swagger.client.model.Image;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.activity.ImageViewActivity;
 import th.co.siamkubota.kubota.adapter.PhotoPagerAdapter;
@@ -60,6 +61,8 @@ PhotoPageFragment.OnFragmentInteractionListener{
     private OnFragmentInteractionListener mListener;
 
     private ArrayList<Photo> photos;
+    private ArrayList<Image> images;
+    private String machineNumber;
 
     private FragmentManager mRetainedChildFragmentManager;
 
@@ -81,6 +84,20 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
     public void setDataComplete(boolean dataComplete) {
         this.dataComplete = dataComplete;
+    }
+
+    public String getMachineNumber() {
+        return machineNumber;
+
+
+    }
+
+    public void setMachineNumber(String machineNumber) {
+        this.machineNumber = machineNumber;
+
+        if(photos != null){
+            photos.get(0).setDescription(machineNumber);
+        }
     }
 
     //////////////////////////////////////////////////////////////////// constructor
@@ -106,8 +123,9 @@ PhotoPageFragment.OnFragmentInteractionListener{
         }
 
         photos = new ArrayList<Photo>();
+        images = new ArrayList<Image>();
 
-        photos.add(new Photo(1,getString(R.string.service_image_1_engine_number), "K12345678"));
+        photos.add(new Photo(1,getString(R.string.service_image_1_engine_number)));
         photos.add(new Photo(2,getString(R.string.service_image_2_working_hours)));
         photos.add(new Photo(3,getString(R.string.service_image_3_machine)));
         photos.add(new Photo(4,getString(R.string.service_image_4_customer_with_machine)));
@@ -253,7 +271,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         //public void onFragmentPresent(Fragment fragment, String title);
-        public void onFragmentDataComplete(Fragment fragment, boolean complete);
+        public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data);
     }
 
 
@@ -383,12 +401,18 @@ PhotoPageFragment.OnFragmentInteractionListener{
         for(Photo photo : photos){
             if(!photo.isComplete()){
                 dataComplete = false;
-                mListener.onFragmentDataComplete(this, dataComplete);
+                mListener.onFragmentDataComplete(this, dataComplete, null);
                 return;
             }
         }
 
+
+        for(int i = 0 ; i < photos.size() ; i++){
+            images.add(new Image(photos.get(i).getPath(), photos.get(i).getDate()));
+        }
+
+
         dataComplete = true;
-        mListener.onFragmentDataComplete(this, dataComplete);
+        mListener.onFragmentDataComplete(this, dataComplete, images);
     }
 }

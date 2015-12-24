@@ -1,6 +1,8 @@
 package io.swagger.client.model;
 
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import io.swagger.client.StringUtil;
 import io.swagger.client.model.TaskInfo;
@@ -20,7 +22,7 @@ import io.swagger.annotations.*;
 
 
 @ApiModel(description = "")
-public class Task   {
+public class Task implements Parcelable {
   
   @SerializedName("taskInfo")
   private TaskInfo taskInfo = null;
@@ -139,6 +141,45 @@ public class Task   {
     sb.append("}");
     return sb.toString();
   }
+
+  //////////////////////////////////////////////////////// implement parcelable
+
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeParcelable(this.taskInfo, flags);
+    dest.writeTypedList(taskImages);
+    dest.writeParcelable(this.signature, 0);
+    dest.writeList(this.answers);
+    dest.writeValue(this.complete);
+  }
+
+  public Task() {
+  }
+
+  protected Task(Parcel in) {
+    this.taskInfo = in.readParcelable(TaskInfo.class.getClassLoader());
+    this.taskImages = in.createTypedArrayList(Image.CREATOR);
+    this.signature = in.readParcelable(Signature.class.getClassLoader());
+    this.answers = new ArrayList<Boolean>();
+    in.readList(this.answers, List.class.getClassLoader());
+    this.complete = (Boolean) in.readValue(Boolean.class.getClassLoader());
+  }
+
+  public static final Creator<Task> CREATOR = new Creator<Task>() {
+    public Task createFromParcel(Parcel source) {
+      return new Task(source);
+    }
+
+    public Task[] newArray(int size) {
+      return new Task[size];
+    }
+  };
 }
 
 

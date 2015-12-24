@@ -100,12 +100,12 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:src="@drawable/jobcode_icon"
                 style="@style/ImageIconStyle"/>
             <EditText
-                android:id="@+id/editTextJobId"
+                android:id="@+id/editTextTaskCode"
                 android:hint="@string/service_hint_job_id"
                 style="@style/EditTextStyle"
                 android:tag="required"/>
             <TextView
-                android:id="@+id/requireJobcode"
+                android:id="@+id/requireTaskCode"
                 style="@style/textViewAstericStyle"
                 android:text="*"/>
         </LinearLayout>
@@ -215,7 +215,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:src="@drawable/product_icon"
                 style="@style/ImageIconStyle"/>
             <EditText
-                android:id="@+id/editTextMachineNumber"
+                android:id="@+id/editTextCarNumber"
                 android:hint="@string/service_hint_machine_number"
                 style="@style/EditTextStyle"
                 android:tag="required"/>

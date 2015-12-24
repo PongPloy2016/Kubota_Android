@@ -215,12 +215,12 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
             //imageView.setTag(R.id.imagePath, imagePath);
 
             this.data.setPath(imagePath);
-            this.data.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
+            this.data.setDate(Converter.StringToDate(dateInfo, "yyyy-MM-dd HH:mm:ss"));
 
             imageView.setImageURI(Uri.fromFile(new File(this.data.getPath())));
             imageView.setVisibility(View.VISIBLE);
 
-            textDate.setText(dateInfo);
+            textDate.setText(Converter.DateToString(this.data.getDate(), "dd/MM/yyyy"));
 
             this.data.setComplete(true);
             mListener.onPhotoTaken(this, this.data);

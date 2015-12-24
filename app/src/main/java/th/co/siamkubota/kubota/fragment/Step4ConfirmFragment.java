@@ -136,7 +136,7 @@ View.OnClickListener{
         // TODO: Update argument type and name
         //public void onFragmentPresent(Fragment fragment, String title);
         //public void onConfirmFragmentCancel();
-        public void onFragmentDataComplete(Fragment fragment, boolean complete);
+        public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data);
         public void onConfirmSubmit(Fragment fragment, boolean complete);
     }
 
@@ -153,7 +153,7 @@ View.OnClickListener{
             //mListener.onConfirmFragmentCancel();
             //mListener.onConfirmSubmit(this, false);
             dataComplete = false;
-            mListener.onFragmentDataComplete(this,dataComplete);
+            mListener.onFragmentDataComplete(this,dataComplete, null);
         }
     }
 }

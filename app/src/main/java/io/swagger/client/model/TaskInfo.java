@@ -1,6 +1,8 @@
 package io.swagger.client.model;
 
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import io.swagger.client.StringUtil;
 
@@ -16,7 +18,7 @@ import io.swagger.annotations.*;
 
 
 @ApiModel(description = "")
-public class TaskInfo   {
+public class TaskInfo implements Parcelable {
   
   @SerializedName("engineerID")
   private String engineerID = null;
@@ -54,8 +56,8 @@ public class TaskInfo   {
   @SerializedName("usageHours")
   private String usageHours = null;
   
-  @SerializedName("serviceAddress")
-  private String serviceAddress = null;
+  @SerializedName("address")
+  private String address = null;
   
   @SerializedName("customerAddress")
   private String customerAddress = null;
@@ -197,11 +199,11 @@ public class TaskInfo   {
   /**
    **/
   @ApiModelProperty(value = "")
-  public String getServiceAddress() {
-    return serviceAddress;
+  public String getAddress() {
+    return address;
   }
-  public void setServiceAddress(String serviceAddress) {
-    this.serviceAddress = serviceAddress;
+  public void setAddress(String address) {
+    this.address = address;
   }
 
   
@@ -240,7 +242,7 @@ public class TaskInfo   {
               Objects.equals(carNo, taskInfo.carNo) &&
               Objects.equals(engineNo, taskInfo.engineNo) &&
               Objects.equals(usageHours, taskInfo.usageHours) &&
-              Objects.equals(serviceAddress, taskInfo.serviceAddress) &&
+              Objects.equals(address, taskInfo.address) &&
               Objects.equals(customerAddress, taskInfo.customerAddress);
     }else{
       return Objects.equals(engineerID, taskInfo.engineerID) &&
@@ -255,7 +257,7 @@ public class TaskInfo   {
               Objects.equals(carNo, taskInfo.carNo) &&
               Objects.equals(engineNo, taskInfo.engineNo) &&
               Objects.equals(usageHours, taskInfo.usageHours) &&
-              Objects.equals(serviceAddress, taskInfo.serviceAddress) &&
+              Objects.equals(address, taskInfo.address) &&
               Objects.equals(customerAddress, taskInfo.customerAddress);
     }
 
@@ -263,7 +265,7 @@ public class TaskInfo   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(engineerID, taskType, product, carModel, carModelOther, taskCode, customerName, tel1, tel2, carNo, engineNo, usageHours, serviceAddress, customerAddress);
+    return Objects.hash(engineerID, taskType, product, carModel, carModelOther, taskCode, customerName, tel1, tel2, carNo, engineNo, usageHours, address, customerAddress);
   }
 
   @Override
@@ -283,11 +285,67 @@ public class TaskInfo   {
     sb.append("    carNo: ").append(StringUtil.toIndentedString(carNo)).append("\n");
     sb.append("    engineNo: ").append(StringUtil.toIndentedString(engineNo)).append("\n");
     sb.append("    usageHours: ").append(StringUtil.toIndentedString(usageHours)).append("\n");
-    sb.append("    serviceAddress: ").append(StringUtil.toIndentedString(serviceAddress)).append("\n");
+    sb.append("    address: ").append(StringUtil.toIndentedString(address)).append("\n");
     sb.append("    customerAddress: ").append(StringUtil.toIndentedString(customerAddress)).append("\n");
     sb.append("}");
     return sb.toString();
   }
+
+  //////////////////////////////////////////////////////// implement parcelable
+
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.engineerID);
+    dest.writeString(this.taskType);
+    dest.writeString(this.product);
+    dest.writeString(this.carModel);
+    dest.writeString(this.carModelOther);
+    dest.writeString(this.taskCode);
+    dest.writeString(this.customerName);
+    dest.writeString(this.tel1);
+    dest.writeString(this.tel2);
+    dest.writeString(this.carNo);
+    dest.writeString(this.engineNo);
+    dest.writeString(this.usageHours);
+    dest.writeString(this.address);
+    dest.writeString(this.customerAddress);
+  }
+
+  public TaskInfo() {
+  }
+
+  protected TaskInfo(Parcel in) {
+    this.engineerID = in.readString();
+    this.taskType = in.readString();
+    this.product = in.readString();
+    this.carModel = in.readString();
+    this.carModelOther = in.readString();
+    this.taskCode = in.readString();
+    this.customerName = in.readString();
+    this.tel1 = in.readString();
+    this.tel2 = in.readString();
+    this.carNo = in.readString();
+    this.engineNo = in.readString();
+    this.usageHours = in.readString();
+    this.address = in.readString();
+    this.customerAddress = in.readString();
+  }
+
+  public static final Creator<TaskInfo> CREATOR = new Creator<TaskInfo>() {
+    public TaskInfo createFromParcel(Parcel source) {
+      return new TaskInfo(source);
+    }
+
+    public TaskInfo[] newArray(int size) {
+      return new TaskInfo[size];
+    }
+  };
 }
 
 

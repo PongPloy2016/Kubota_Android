@@ -26,7 +26,7 @@ public class UploadResponse   {
   private String message = null;
   
   @SerializedName("parameter")
-  private List<String> parameter = new ArrayList<String>();
+  private UploadData parameter = null;
   
 
   
@@ -58,10 +58,10 @@ public class UploadResponse   {
    * images path.
    **/
   @ApiModelProperty(value = "images path.")
-  public List<String> getParameter() {
+  public UploadData getParameter() {
     return parameter;
   }
-  public void setParameter(List<String> parameter) {
+  public void setParameter(UploadData parameter) {
     this.parameter = parameter;
   }
 
@@ -91,7 +91,11 @@ public class UploadResponse   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(result, message, parameter);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      return Objects.hash(result, message, parameter);
+    }else{
+      return Objects.hash(result, message, parameter);
+    }
   }
 
   @Override

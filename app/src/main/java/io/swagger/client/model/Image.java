@@ -1,6 +1,8 @@
 package io.swagger.client.model;
 
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import io.swagger.client.StringUtil;
 import java.util.Date;
@@ -17,7 +19,7 @@ import io.swagger.annotations.*;
 
 
 @ApiModel(description = "")
-public class Image   {
+public class Image implements Parcelable {
   
   @SerializedName("image")
   private String image = null;
@@ -103,6 +105,49 @@ public class Image   {
     sb.append("}");
     return sb.toString();
   }
+
+  /////////////////////////////////////////////////////////
+
+  public Image(String imagePath, Date capturedAt) {
+    this.imagePath = imagePath;
+    this.capturedAt = capturedAt;
+  }
+
+
+  //////////////////////////////////////////////////////// implement parcelable
+
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.image);
+    dest.writeLong(capturedAt != null ? capturedAt.getTime() : -1);
+    dest.writeString(this.imagePath);
+  }
+
+  public Image() {
+  }
+
+  protected Image(Parcel in) {
+    this.image = in.readString();
+    long tmpCapturedAt = in.readLong();
+    this.capturedAt = tmpCapturedAt == -1 ? null : new Date(tmpCapturedAt);
+    this.imagePath = in.readString();
+  }
+
+  public static final Creator<Image> CREATOR = new Creator<Image>() {
+    public Image createFromParcel(Parcel source) {
+      return new Image(source);
+    }
+
+    public Image[] newArray(int size) {
+      return new Image[size];
+    }
+  };
 }
 
 

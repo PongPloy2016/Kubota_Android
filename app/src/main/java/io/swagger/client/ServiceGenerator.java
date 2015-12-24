@@ -13,7 +13,8 @@ public class ServiceGenerator {
 
   public static <S> S createService(Class<S> serviceClass) {
     Gson gson = new GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            //.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            .setDateFormat("yyyy-MM-dd HH:mm:ss")
             .registerTypeAdapter(Double.class, new DoubleTypeAdapter())
             .create();
 

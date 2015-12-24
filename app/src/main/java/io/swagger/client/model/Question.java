@@ -1,6 +1,8 @@
 package io.swagger.client.model;
 
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import io.swagger.client.StringUtil;
 import java.util.*;
@@ -17,7 +19,7 @@ import io.swagger.annotations.*;
 
 
 @ApiModel(description = "")
-public class Question   {
+public class Question implements Parcelable {
   
   @SerializedName("title")
   private String title = null;
@@ -90,6 +92,38 @@ public class Question   {
     sb.append("}");
     return sb.toString();
   }
+
+  //////////////////////////////////////////////////////// implement parcelable
+
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.title);
+    dest.writeStringList(this.choices);
+  }
+
+  public Question() {
+  }
+
+  protected Question(Parcel in) {
+    this.title = in.readString();
+    this.choices = in.createStringArrayList();
+  }
+
+  public static final Creator<Question> CREATOR = new Creator<Question>() {
+    public Question createFromParcel(Parcel source) {
+      return new Question(source);
+    }
+
+    public Question[] newArray(int size) {
+      return new Question[size];
+    }
+  };
 }
 
 

@@ -20,12 +20,16 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
+import io.swagger.client.model.LoginData;
+import io.swagger.client.model.Task;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
 import th.co.siamkubota.kubota.fragment.ServiceFragment;
@@ -41,8 +45,12 @@ public class ServiceActivity extends BaseActivity {
 
     private AppController app;
 
+    AtomicReference<TextView> mTitle;
+
     private  AlertDialog alert;
     private boolean leave = false;
+
+    private LoginData loginData;
 
 
     @Override
@@ -51,11 +59,29 @@ public class ServiceActivity extends BaseActivity {
         setContentView(R.layout.activity_service);
         this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
 
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mTitle = new AtomicReference<>((TextView) toolbar.findViewById(R.id.toolbar_title));
+
+
+        Bundle bundle = getIntent().getExtras();
+        if(bundle.containsKey(LoginActivity.KEY_LOGIN_DATA)){
+            loginData = bundle.getParcelable(LoginActivity.KEY_LOGIN_DATA);
+        }
+
+
+        if(loginData != null){
+            mTitle.get().setText(loginData.getShopName());
+        }
+
+
+
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ServiceFragment newFragment = ServiceFragment.newInstance();
+        ServiceFragment newFragment = ServiceFragment.newInstance(loginData);
         //newFragment.setmListener(this);
         ft.replace(R.id.content, newFragment, "serviceFragment");
         ft.commit();

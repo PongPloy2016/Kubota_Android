@@ -1,6 +1,8 @@
 package io.swagger.client.model;
 
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import io.swagger.client.StringUtil;
 import java.util.*;
@@ -18,7 +20,7 @@ import io.swagger.annotations.*;
 
 
 @ApiModel(description = "")
-public class LoginData   {
+public class LoginData  implements Parcelable {
   
   @SerializedName("user_id")
   private String userId = null;
@@ -123,6 +125,44 @@ public class LoginData   {
     sb.append("}");
     return sb.toString();
   }
+
+  //////////////////////////////////////////////////////// implement parcelable
+
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.userId);
+    dest.writeString(this.shopId);
+    dest.writeString(this.shopName);
+    dest.writeList(this.questions);
+  }
+
+  public LoginData() {
+  }
+
+  protected LoginData(Parcel in) {
+    this.userId = in.readString();
+    this.shopId = in.readString();
+    this.shopName = in.readString();
+    //this.questions = new ArrayList<Question>();
+    in.readTypedList(this.questions, Question.CREATOR);
+    in.readList(this.questions, List.class.getClassLoader());
+  }
+
+  public static final Creator<LoginData> CREATOR = new Creator<LoginData>() {
+    public LoginData createFromParcel(Parcel source) {
+      return new LoginData(source);
+    }
+
+    public LoginData[] newArray(int size) {
+      return new LoginData[size];
+    }
+  };
 }
 
 

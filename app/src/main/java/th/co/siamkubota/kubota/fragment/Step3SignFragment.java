@@ -23,6 +23,8 @@ import com.joooonho.SelectableRoundedImageView;
 
 import java.io.File;
 
+import io.swagger.client.model.Image;
+import io.swagger.client.model.Signature;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.activity.SignaturePadActivity;
 import th.co.siamkubota.kubota.model.Photo;
@@ -59,6 +61,7 @@ public class Step3SignFragment extends Fragment implements
     private Photo imageCustomer;
     private Photo imageTechnician;
     private boolean dataComplete = false;
+    private Signature signature;
 
 
     private OnFragmentInteractionListener mListener;
@@ -105,6 +108,8 @@ public class Step3SignFragment extends Fragment implements
         if (getArguments() != null) {
             title = getArguments().getString(ARG_PARAM_TITLE);
         }
+
+        signature = new Signature();
 
     }
 
@@ -205,7 +210,7 @@ public class Step3SignFragment extends Fragment implements
         // TODO: Update argument type and name
         //public void onFragmentPresent(Fragment fragment, String title);
         //public void onInvokeSignPad();
-        public void onFragmentDataComplete(Fragment fragment, boolean complete);
+        public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data);
     }
 
 
@@ -349,18 +354,41 @@ public class Step3SignFragment extends Fragment implements
         if((imageCustomer == null || (imageCustomer != null && !imageCustomer.isComplete())) ||
                 (imageTechnician == null || (imageTechnician != null && !imageTechnician.isComplete())) ){
             dataComplete = false;
-            mListener.onFragmentDataComplete(this, dataComplete);
+            mListener.onFragmentDataComplete(this, dataComplete, null);
             return;
         }
 
         View view = Validate.inputValidate(rootLayout, "required");
         if(view != null ){
             dataComplete = false;
-            mListener.onFragmentDataComplete(this, dataComplete);
+            mListener.onFragmentDataComplete(this, dataComplete, null);
             return;
         }
 
+
+
         dataComplete = true;
-        mListener.onFragmentDataComplete(this, dataComplete);
+        mListener.onFragmentDataComplete(this, dataComplete, collectData());
+    }
+
+    private Signature collectData(){
+
+        Image imgCus = new Image();
+        imgCus.setImagePath(imageCustomer.getPath());
+        imgCus.setCapturedAt(imageCustomer.getDate());
+
+        Image imgEngineer = new Image();
+        imgEngineer.setImagePath(imageTechnician.getPath());
+        imgEngineer.setCapturedAt(imageTechnician.getDate());
+
+        signature.setCustomerSignatureImage(imgCus);
+        signature.setCustomerName(editTextCustomerName.getText().toString());
+        signature.setCustomerSignedDate(imageCustomer.getDate());
+
+        signature.setEngineerSignatureImage(imgEngineer);
+        signature.setEngineerName(editTextTechnicianName.getText().toString());
+        signature.setEngineerSignedDate(imageTechnician.getDate());
+
+        return signature;
     }
 }

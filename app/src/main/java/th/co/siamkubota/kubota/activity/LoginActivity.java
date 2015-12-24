@@ -31,6 +31,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
+    public static final String KEY_LOGIN_DATA = "LOGIN_DATA";
 
     private AppController app;
     private RelativeLayout rootLayout;
@@ -172,8 +173,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     //intent.putExtra(LoginActivity.KEY_ARGS, bundle);
                     // Create Bundle & Add user
                     Bundle bundle = new Bundle();
-//                    bundle.putParcelable(LoginActivity.KEY_USER,loginData.getUser());
-//                    bundle.putInt(LoginActivity.KEY_UNREAD,loginData.getUnread());
+                    bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA,loginData.getParameter());
 
                     intent.putExtras(bundle);
                     startActivity(intent);

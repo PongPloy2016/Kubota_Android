@@ -305,7 +305,7 @@ public class CameraTakeActivity extends BaseActivity implements
         Bundle bundle = new Bundle();
         bundle.putString("imagePath", imagePath);
         //bundle.putByteArray("image", byteArray);
-        bundle.putString("takenDate", Converter.DateToString(takenDate, "yyyy-MM-dd hh:mm:ss"));
+        bundle.putString("takenDate", Converter.DateToString(takenDate, "yyyy-MM-dd HH:mm:ss"));
         bundle.putInt(CameraTakeActivity.KEY_GROUP_CODE, GROUP_CODE);
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
