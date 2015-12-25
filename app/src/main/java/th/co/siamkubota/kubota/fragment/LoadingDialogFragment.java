@@ -37,6 +37,15 @@ public class LoadingDialogFragment extends DialogFragment implements View.OnClic
     Button okButton;
 
 
+    public static LoadingDialogFragment newInstance(String shopName) {
+        LoadingDialogFragment fragment = new LoadingDialogFragment();
+        Bundle args = new Bundle();
+        args.putString("shopName", shopName);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
     public interface onActionListener {
         void onFinishDialog();
     }
@@ -52,7 +61,14 @@ public class LoadingDialogFragment extends DialogFragment implements View.OnClic
         dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        if (getArguments() != null) {
+            title = getArguments().getString("shopName");
+        }
+
         dialog.setContentView(R.layout.alert_dialog_loading);
+
+        mTitleView = (TextView) dialog.findViewById(R.id.titleText);
+        mTitleView.setText(title);
 
 
 //        okButton = (Button) dialog.findViewById(R.id.okButton);

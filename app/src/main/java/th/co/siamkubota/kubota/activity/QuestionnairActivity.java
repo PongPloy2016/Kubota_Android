@@ -6,7 +6,11 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
+import java.util.concurrent.atomic.AtomicReference;
+
+import io.swagger.client.model.LoginData;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
 import th.co.siamkubota.kubota.fragment.ContinueQuestionFragment;
@@ -20,7 +24,9 @@ public class QuestionnairActivity extends BaseActivity implements
 ContinueQuestionFragment.OnFragmentInteractionListener{
 
     private AppController app;
-
+    private LoginData loginData;
+    AtomicReference<TextView> mTitle;
+    private String shopName;
 
 
     @Override
@@ -29,6 +35,23 @@ ContinueQuestionFragment.OnFragmentInteractionListener{
         setContentView(R.layout.activity_service);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mTitle = new AtomicReference<>((TextView) toolbar.findViewById(R.id.toolbar_title));
+
+        Bundle bundle = getIntent().getExtras();
+        if(bundle.containsKey(ResultActivity.KEY_LOGIN_DATA)){
+            loginData = bundle.getParcelable(ResultActivity.KEY_LOGIN_DATA);
+        }
+
+        if(loginData != null){
+            mTitle.get().setText(loginData.getShopName());
+        }
+
+        if(bundle.containsKey("shopName")){
+            shopName = bundle.getString("shopName");
+            mTitle.get().setText(shopName);
+        }
+
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ContinueQuestionFragment newFragment = ContinueQuestionFragment.newInstance();

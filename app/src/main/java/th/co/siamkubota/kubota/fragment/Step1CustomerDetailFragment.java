@@ -678,6 +678,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
         taskInfo.setCarModel(spinnerModel.getSelectedItem().toString());
         if(taskInfo.getCarModel().equals("อื่นๆ")){
             taskInfo.setCarModelOther(editTextOtherModel.getText().toString());
+        }else{
+            taskInfo.setCarModelOther("");
         }
         taskInfo.setTaskCode(editTextTaskCode.getText().toString());
         taskInfo.setCustomerName(editTextName.getText().toString());
@@ -685,6 +687,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
         taskInfo.setTel1(editTextTel1.getText().toString());
         if(!editTextTel2.getText().toString().isEmpty()){
             taskInfo.setTel2(editTextTel2.getText().toString());
+        }else{
+            taskInfo.setTel2("");
         }
         taskInfo.setCarNo(editTextCarNumber.getText().toString());
         taskInfo.setEngineNo(editTextEngineNumber.getText().toString());

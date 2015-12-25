@@ -25,6 +25,7 @@ import java.util.List;
 import io.swagger.client.ServiceGenerator;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.Image;
+import io.swagger.client.model.LoginData;
 import io.swagger.client.model.LoginResponse;
 import io.swagger.client.model.Signature;
 import io.swagger.client.model.Task;
@@ -42,6 +43,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class ResultActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String KEY_TASK = "TASK";
+    public static final String KEY_LOGIN_DATA = "LOGIN_DATA";
 
     private AppController app;
     private RelativeLayout rootLayout;
@@ -50,11 +52,13 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
     private TextView messageText;
     private Button okButton;
     private Task task;
+    private LoginData loginData;
 
     private Call<UploadResponse> callUpload;
     private Call<io.swagger.client.model.Response> call;
 
     private LoadingDialogFragment alertLoading;
+    private String shopName;
 
 
     @Override
@@ -77,17 +81,31 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
             task = bundle.getParcelable(ResultActivity.KEY_TASK);
         }
 
-        alertLoading = new LoadingDialogFragment();
-        alertLoading.setmListener(new LoadingDialogFragment.onActionListener() {
-            @Override
-            public void onFinishDialog() {
-                //finish();
-            }
-        });
 
-        //alert.show(getSupportFragmentManager(), "loading");
+        if(bundle.containsKey(ResultActivity.KEY_LOGIN_DATA)){
+            loginData = bundle.getParcelable(ResultActivity.KEY_LOGIN_DATA);
+        }
 
-        uploadImage();
+        if(bundle.containsKey("shopName")){
+            shopName = bundle.getString("shopName");
+        }
+
+        if(task != null){
+            //alertLoading = new LoadingDialogFragment(); // loginData.getShopName()
+            alertLoading = LoadingDialogFragment.newInstance(shopName);
+            alertLoading.setmListener(new LoadingDialogFragment.onActionListener() {
+                @Override
+                public void onFinishDialog() {
+                    //finish();
+                }
+            });
+
+            //alert.show(getSupportFragmentManager(), "loading");
+
+            uploadImage();
+        }
+
+
 
     }
 
@@ -118,6 +136,10 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         if(v == okButton){
             Intent intent = new Intent(ResultActivity.this, QuestionnairActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Bundle bundle = new Bundle();
+            //bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, loginData);
+            bundle.putString("shopName", shopName);
+            intent.putExtras(bundle);
             startActivity(intent);
             finish();
 
@@ -164,10 +186,19 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     images.get(2).setImage(uploadData.getParameter().getImage3());
                     images.get(3).setImage(uploadData.getParameter().getImage4());
 
+                    images.get(0).setImagePath(null);
+                    images.get(1).setImagePath(null);
+                    images.get(2).setImagePath(null);
+                    images.get(3).setImagePath(null);
+
 
                     Signature signature = task.getSignature();
                     signature.setCustomerSignature(uploadData.getParameter().getSignature1());
                     signature.setEngineerSignature(uploadData.getParameter().getSignature2());
+
+                    signature.setCustomerSignatureImage(null);
+                    signature.setEngineerSignatureImage(null);
+
 
                     List<Task> taskList = new ArrayList<Task>();
                     taskList.add(task);

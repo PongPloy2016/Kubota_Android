@@ -8,13 +8,13 @@ public class Config {
     // Mockup Swagger
     //public static final String host = "http://192.168.0.52:8080";
     // Test
-    public static final String host = "http://kubota.dhamadah.com";
+    public static final String host = "http://188.166.220.115";
     // Production
-    //public static final String host = "http://49.231.24.111:3000";
+    //public static final String host = "http://kubota.dhamadah.com";
 
 
     //test mockup data
-    public static final String base =  host + "/public/api/";
+    public static final String base =  host + "/kubota/public/api/";
     //public static final String base = "http://192.168.0.84:8080/api/";
     //public static final String mediaService = base + "media/";
 

@@ -110,6 +110,10 @@ public class ServiceFragment extends Fragment implements
         Numboftabs = mTitle.length;
 
         task = new Task();
+        ArrayList<Boolean> answers = new ArrayList<Boolean>();
+        answers.add(true);
+        answers.add(false);
+        task.setAnswers(answers);
 
 
         /*adapter = new ViewPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), mTitle,
@@ -370,6 +374,8 @@ public class ServiceFragment extends Fragment implements
             Intent intent = new Intent(getActivity(), ResultActivity.class);
             Bundle bundle = new Bundle();
             bundle.putParcelable(ResultActivity.KEY_TASK, task);
+            //bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, loginData);
+            bundle.putString("shopName", loginData.getShopName());
             intent.putExtras(bundle);
             startActivity(intent);
             getActivity().finish();
