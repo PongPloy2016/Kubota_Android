@@ -46,11 +46,18 @@ public class Signature implements Parcelable {
   @SerializedName("engineerSignatureImage")
   private Image engineerSignatureImage = null;
 
+  @SerializedName("customerAccept")
+  private Boolean customerAccept = null;
+
+  @SerializedName("engineerAccept")
+  private Boolean engineerAccept = null;
+
+
 
   /**
    **/
   @ApiModelProperty(value = "")
-  public String getCustomerNamr() {
+  public String getCustomerName() {
     return customerName;
   }
   public void setCustomerName(String customerName) {
@@ -134,6 +141,32 @@ public class Signature implements Parcelable {
     this.engineerSignatureImage = engineerSignatureImage;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public Boolean getCustomerAccept() {
+    if (customerAccept == null )
+      return false;
+
+    return customerAccept;
+  }
+  public void setCustomerAccept(Boolean customerAccept) {
+    this.customerAccept = customerAccept;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public Boolean getEngineerAccept() {
+    if (engineerAccept == null )
+      return false;
+
+    return engineerAccept;
+  }
+  public void setEngineerAccept(Boolean engineerAccept) {
+    this.engineerAccept = engineerAccept;
+  }
+
   
 
   @Override
@@ -154,7 +187,9 @@ public class Signature implements Parcelable {
               Objects.equals(engineerSignature, signature.engineerSignature) &&
               Objects.equals(engineerSignedDate, signature.engineerSignedDate) &&
               Objects.equals(customerSignatureImage, signature.customerSignatureImage) &&
-              Objects.equals(engineerSignatureImage, signature.engineerSignatureImage);
+              Objects.equals(engineerSignatureImage, signature.engineerSignatureImage) &&
+              Objects.equals(customerAccept, signature.customerAccept) &&
+              Objects.equals(engineerAccept, signature.engineerAccept);
     }else{
       return  Objects.equals(customerName, signature.customerName) &&
               Objects.equals(customerSignature, signature.customerSignature) &&
@@ -163,7 +198,9 @@ public class Signature implements Parcelable {
               Objects.equals(engineerSignature, signature.engineerSignature) &&
               Objects.equals(engineerSignedDate, signature.engineerSignedDate) &&
               Objects.equals(customerSignatureImage, signature.customerSignatureImage) &&
-              Objects.equals(engineerSignatureImage, signature.engineerSignatureImage);
+              Objects.equals(engineerSignatureImage, signature.engineerSignatureImage) &&
+              Objects.equals(customerAccept, signature.customerAccept) &&
+              Objects.equals(engineerAccept, signature.engineerAccept);
     }
 
   }
@@ -186,6 +223,8 @@ public class Signature implements Parcelable {
     sb.append("    engineerSignedDate: ").append(StringUtil.toIndentedString(engineerSignedDate)).append("\n");
     sb.append("    customerSignatureImage: ").append(StringUtil.toIndentedString(customerSignatureImage)).append("\n");
     sb.append("    engineerSignatureImage: ").append(StringUtil.toIndentedString(engineerSignatureImage)).append("\n");
+    sb.append("    customerAccept: ").append(StringUtil.toIndentedString(customerAccept)).append("\n");
+    sb.append("    engineerAccept: ").append(StringUtil.toIndentedString(engineerAccept)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -208,6 +247,8 @@ public class Signature implements Parcelable {
     dest.writeLong(engineerSignedDate != null ? engineerSignedDate.getTime() : -1);
     dest.writeParcelable(this.customerSignatureImage, 0);
     dest.writeParcelable(this.engineerSignatureImage, 0);
+    dest.writeValue(this.customerAccept);
+    dest.writeValue(this.engineerAccept);
   }
 
   public Signature() {
@@ -224,6 +265,8 @@ public class Signature implements Parcelable {
     this.engineerSignedDate = tmpEngineerSignedDate == -1 ? null : new Date(tmpEngineerSignedDate);
     this.customerSignatureImage = in.readParcelable(Image.class.getClassLoader());
     this.engineerSignatureImage = in.readParcelable(Image.class.getClassLoader());
+    this.customerAccept = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    this.engineerAccept = (Boolean) in.readValue(Boolean.class.getClassLoader());
   }
 
   public static final Creator<Signature> CREATOR = new Creator<Signature>() {

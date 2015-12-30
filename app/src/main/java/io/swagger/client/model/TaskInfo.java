@@ -61,6 +61,12 @@ public class TaskInfo implements Parcelable {
   
   @SerializedName("customerAddress")
   private String customerAddress = null;
+
+  @SerializedName("owner")
+  private Boolean owner = null;
+
+  @SerializedName("user")
+  private Boolean user = null;
   
 
   
@@ -217,7 +223,33 @@ public class TaskInfo implements Parcelable {
     this.customerAddress = customerAddress;
   }
 
-  
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public Boolean getOwner() {
+    if (owner == null )
+      return false;
+    return owner;
+  }
+  public void setOwner(Boolean owner) {
+    this.owner = owner;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public Boolean getUser() {
+
+    if (user == null )
+      return false;
+
+    return user;
+  }
+  public void setUser(Boolean user) {
+    this.user = user;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -243,7 +275,9 @@ public class TaskInfo implements Parcelable {
               Objects.equals(engineNo, taskInfo.engineNo) &&
               Objects.equals(usageHours, taskInfo.usageHours) &&
               Objects.equals(address, taskInfo.address) &&
-              Objects.equals(customerAddress, taskInfo.customerAddress);
+              Objects.equals(customerAddress, taskInfo.customerAddress) &&
+              Objects.equals(owner, taskInfo.owner) &&
+              Objects.equals(user, taskInfo.user);
     }else{
       return Objects.equals(engineerID, taskInfo.engineerID) &&
               Objects.equals(taskType, taskInfo.taskType) &&
@@ -258,7 +292,9 @@ public class TaskInfo implements Parcelable {
               Objects.equals(engineNo, taskInfo.engineNo) &&
               Objects.equals(usageHours, taskInfo.usageHours) &&
               Objects.equals(address, taskInfo.address) &&
-              Objects.equals(customerAddress, taskInfo.customerAddress);
+              Objects.equals(customerAddress, taskInfo.customerAddress) &&
+              Objects.equals(owner, taskInfo.owner) &&
+              Objects.equals(user, taskInfo.user);
     }
 
   }
@@ -287,6 +323,8 @@ public class TaskInfo implements Parcelable {
     sb.append("    usageHours: ").append(StringUtil.toIndentedString(usageHours)).append("\n");
     sb.append("    address: ").append(StringUtil.toIndentedString(address)).append("\n");
     sb.append("    customerAddress: ").append(StringUtil.toIndentedString(customerAddress)).append("\n");
+    sb.append("    owner: ").append(StringUtil.toIndentedString(owner)).append("\n");
+    sb.append("    user: ").append(StringUtil.toIndentedString(user)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -315,6 +353,8 @@ public class TaskInfo implements Parcelable {
     dest.writeString(this.usageHours);
     dest.writeString(this.address);
     dest.writeString(this.customerAddress);
+    dest.writeValue(this.owner);
+    dest.writeValue(this.user);
   }
 
   public TaskInfo() {
@@ -335,6 +375,9 @@ public class TaskInfo implements Parcelable {
     this.usageHours = in.readString();
     this.address = in.readString();
     this.customerAddress = in.readString();
+    this.owner = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    this.user = (Boolean) in.readValue(Boolean.class.getClassLoader());
+
   }
 
   public static final Creator<TaskInfo> CREATOR = new Creator<TaskInfo>() {

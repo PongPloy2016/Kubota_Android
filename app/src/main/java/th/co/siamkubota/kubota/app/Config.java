@@ -16,7 +16,7 @@ public class Config {
     //test mockup data
     public static final String base =  host + "/kubota/public/api/";
     //public static final String base = "http://192.168.0.84:8080/api/";
-    //public static final String mediaService = base + "media/";
+    public static final String mediaService = host + "/kubota/public";
 
     //http://kubota.dhamadah.com/public/api/login
     //http://kubota.dhamadah.com/public/api/submit-task-mobile

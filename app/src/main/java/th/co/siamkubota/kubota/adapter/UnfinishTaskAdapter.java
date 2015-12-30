@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import io.swagger.client.model.Task;
 import th.co.siamkubota.kubota.R;
-import th.co.siamkubota.kubota.model.Task;
 
 /**
  * Created by sipangka on 15/11/2558.
@@ -90,7 +90,7 @@ public class UnfinishTaskAdapter extends BaseAdapter {
             holder.statusImage.setImageResource(R.drawable.bullet_inactive);
         }
 
-        holder.titleText.setText(task.getName());
+        holder.titleText.setText(task.getTaskInfo().getTaskCode());
 
 
         view.setClickable(false);

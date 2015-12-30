@@ -154,7 +154,7 @@ public class Task implements Parcelable {
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeParcelable(this.taskInfo, flags);
     dest.writeTypedList(taskImages);
-    dest.writeParcelable(this.signature, 0);
+    dest.writeParcelable(this.signature, flags);
     dest.writeList(this.answers);
     dest.writeValue(this.complete);
   }
@@ -164,7 +164,8 @@ public class Task implements Parcelable {
 
   protected Task(Parcel in) {
     this.taskInfo = in.readParcelable(TaskInfo.class.getClassLoader());
-    this.taskImages = in.createTypedArrayList(Image.CREATOR);
+    //this.taskImages = in.createTypedArrayList(Image.CREATOR);
+    in.readTypedList(this.taskImages, Image.CREATOR);
     this.signature = in.readParcelable(Signature.class.getClassLoader());
     this.answers = new ArrayList<Boolean>();
     in.readList(this.answers, List.class.getClassLoader());

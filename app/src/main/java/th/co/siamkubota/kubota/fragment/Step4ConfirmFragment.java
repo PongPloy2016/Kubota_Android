@@ -58,10 +58,10 @@ View.OnClickListener{
     //////////////////////////////////////////////////////////////////// constructor
 
 
-    public static Step4ConfirmFragment newInstance(String title) {
+    public static Step4ConfirmFragment newInstance() {
         Step4ConfirmFragment fragment = new Step4ConfirmFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM_TITLE, title);
+        //args.putString(ARG_PARAM_TITLE, title);
         fragment.setArguments(args);
         return fragment;
     }

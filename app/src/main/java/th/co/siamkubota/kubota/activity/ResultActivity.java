@@ -37,6 +37,7 @@ import retrofit.Retrofit;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
 import th.co.siamkubota.kubota.fragment.LoadingDialogFragment;
+import th.co.siamkubota.kubota.sqlite.TaskDataSource;
 import th.co.siamkubota.kubota.utils.function.Ui;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -59,6 +60,8 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
     private LoadingDialogFragment alertLoading;
     private String shopName;
+
+    private TaskDataSource dataSource;
 
 
     @Override
@@ -92,7 +95,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
         if(task != null){
             //alertLoading = new LoadingDialogFragment(); // loginData.getShopName()
-            alertLoading = LoadingDialogFragment.newInstance(shopName);
+            alertLoading = LoadingDialogFragment.newInstance(loginData.getShopName());
             alertLoading.setmListener(new LoadingDialogFragment.onActionListener() {
                 @Override
                 public void onFinishDialog() {
@@ -137,8 +140,8 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
             Intent intent = new Intent(ResultActivity.this, QuestionnairActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             Bundle bundle = new Bundle();
-            //bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, loginData);
-            bundle.putString("shopName", shopName);
+            bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, loginData);
+            //bundle.putString("shopName", shopName);
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
@@ -151,21 +154,63 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         //spinner.setVisibility(View.VISIBLE);
         alertLoading.show(getSupportFragmentManager(), "loading");
 
-        //File file = new File(media.getPath());
-        File image1 = new File(task.getTaskImages().get(0).getImagePath());
-        RequestBody image1body = RequestBody.create(MediaType.parse("image/jpeg"), image1);
-        File image2 = new File(task.getTaskImages().get(1).getImagePath());
-        RequestBody image2body = RequestBody.create(MediaType.parse("image/jpeg"), image2);
-        File image3 = new File(task.getTaskImages().get(2).getImagePath());
-        RequestBody image3body = RequestBody.create(MediaType.parse("image/jpeg"), image3);
-        File image4 = new File(task.getTaskImages().get(3).getImagePath());
-        RequestBody image4body = RequestBody.create(MediaType.parse("image/jpeg"), image4);
+        RequestBody image1body = null;
+        RequestBody image2body = null;
+        RequestBody image3body = null;
+        RequestBody image4body = null;
+        RequestBody signature1body = null;
+        RequestBody signature2body = null;
 
-        File signature1 = new File(task.getSignature().getCustomerSignatureImage().getImagePath());
+        List<Image> images = task.getTaskImages();
+
+        if( images.get(0).getImagePath() != null && !images.get(0).getImagePath().isEmpty() ){
+            File image1 = new File(task.getTaskImages().get(0).getImagePath() );
+            image1body = RequestBody.create(MediaType.parse("image/jpeg"), image1);
+        }
+        if( images.get(1).getImagePath() != null && !images.get(1).getImagePath().isEmpty() ){
+            File image2 = new File(task.getTaskImages().get(1).getImagePath());
+            image2body = RequestBody.create(MediaType.parse("image/jpeg"), image2);
+        }
+        if( images.get(2).getImagePath() != null && !images.get(2).getImagePath().isEmpty() ){
+            File image3 = new File(task.getTaskImages().get(2).getImagePath());
+            image3body = RequestBody.create(MediaType.parse("image/jpeg"), image3);
+        }
+        if( images.get(3).getImagePath() != null && !images.get(3).getImagePath().isEmpty() ){
+            File image4 = new File(task.getTaskImages().get(3).getImagePath());
+            image4body = RequestBody.create(MediaType.parse("image/jpeg"), image4);
+        }
+
+        //File file = new File(media.getPath());
+       /* image1 = new File(task.getTaskImages().get(0).getImagePath() );
+        RequestBody image1body = RequestBody.create(MediaType.parse("image/jpeg"), image1);
+        image2 = new File(task.getTaskImages().get(1).getImagePath());
+        RequestBody image2body = RequestBody.create(MediaType.parse("image/jpeg"), image2);
+        image3 = new File(task.getTaskImages().get(2).getImagePath());
+        RequestBody image3body = RequestBody.create(MediaType.parse("image/jpeg"), image3);
+        image4 = new File(task.getTaskImages().get(3).getImagePath());
+        RequestBody image4body = RequestBody.create(MediaType.parse("image/jpeg"), image4);
+         signature1 = new File(task.getSignature().getCustomerSignatureImage().getImagePath());
         RequestBody signature1body = RequestBody.create(MediaType.parse("image/jpeg"), signature1);
 
-        File signature2 = new File(task.getSignature().getEngineerSignatureImage().getImagePath());
+        signature2 = new File(task.getSignature().getEngineerSignatureImage().getImagePath());
         RequestBody signature2body = RequestBody.create(MediaType.parse("image/jpeg"), signature2);
+        */
+
+
+        Signature signature = task.getSignature();
+
+        if( signature.getCustomerSignatureImage().getImagePath() != null &&  !signature.getCustomerSignatureImage().getImagePath().isEmpty() ){
+            File signature1 = new File(task.getSignature().getCustomerSignatureImage().getImagePath());
+            signature1body = RequestBody.create(MediaType.parse("image/jpeg"), signature1);
+        }
+
+        if( signature.getEngineerSignatureImage().getImagePath() != null &&  !signature.getEngineerSignatureImage().getImagePath().isEmpty() ){
+            File signature2 = new File(task.getSignature().getEngineerSignatureImage().getImagePath());
+            signature2body = RequestBody.create(MediaType.parse("image/jpeg"), signature2);
+        }
+
+
+
 
         DefaultApi service = ServiceGenerator.createService(DefaultApi.class);
 
@@ -179,23 +224,48 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
                 if(uploadData != null && uploadData.getResult().equals("success")){
 
-
                     List<Image> images = task.getTaskImages();
-                    images.get(0).setImage(uploadData.getParameter().getImage1());
+                    if(uploadData.getParameter().getImage1() != null){
+                        images.get(0).setImage(uploadData.getParameter().getImage1());
+                    }
+
+                    if(uploadData.getParameter().getImage2() != null){
+                        images.get(1).setImage(uploadData.getParameter().getImage2());
+                    }
+
+                    if(uploadData.getParameter().getImage3() != null){
+                        images.get(2).setImage(uploadData.getParameter().getImage3());
+                    }
+
+                    if(uploadData.getParameter().getImage4() != null){
+                        images.get(3).setImage(uploadData.getParameter().getImage4());
+                    }
+
+
+                    Signature signature = task.getSignature();
+
+                    if(uploadData.getParameter().getSignature1() != null){
+                        signature.setCustomerSignature(uploadData.getParameter().getSignature1());
+                    }
+
+                    if(uploadData.getParameter().getSignature2() != null){
+                        signature.setEngineerSignature(uploadData.getParameter().getSignature2());
+                    }
+
+
+                 /*   images.get(0).setImage(uploadData.getParameter().getImage1());
                     images.get(1).setImage(uploadData.getParameter().getImage2());
                     images.get(2).setImage(uploadData.getParameter().getImage3());
                     images.get(3).setImage(uploadData.getParameter().getImage4());
+                    signature.setCustomerSignature(uploadData.getParameter().getSignature1());
+                    signature.setEngineerSignature(uploadData.getParameter().getSignature2());
+                    */
+
 
                     images.get(0).setImagePath(null);
                     images.get(1).setImagePath(null);
                     images.get(2).setImagePath(null);
                     images.get(3).setImagePath(null);
-
-
-                    Signature signature = task.getSignature();
-                    signature.setCustomerSignature(uploadData.getParameter().getSignature1());
-                    signature.setEngineerSignature(uploadData.getParameter().getSignature2());
-
                     signature.setCustomerSignatureImage(null);
                     signature.setEngineerSignatureImage(null);
 
@@ -208,6 +278,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     String json = gson.toJson(taskList);
 
                     submitTask(taskList);
+                    //saveTask(taskList.get(0));
 
 /*                    Intent intent = new Intent(ResultActivity.this, QuestionnairActivity.class);
                     //intent.putExtra(LoginActivity.KEY_ARGS, bundle);
@@ -229,7 +300,6 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                         message = response.raw().message();
                     }
 
-
                     //Ui.showAlertError(ResultActivity.this, message);
                     showResultFail();
                     alertLoading.dismiss();
@@ -249,7 +319,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         });
     }
 
-    private void submitTask(List<Task> taskList){
+    private void submitTask(final List<Task> taskList){
 
         //spinner.setVisibility(View.VISIBLE);
         //alertLoading.show(getSupportFragmentManager(), "loading");
@@ -266,17 +336,9 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
                 if(submitData != null && submitData.getResult().equals("success")){
 
+                    //deleteTask(task.getTaskInfo().getTaskCode());
 
-
-                 /*   Intent intent = new Intent(ResultActivity.this, QuestionnairActivity.class);
-                    //intent.putExtra(LoginActivity.KEY_ARGS, bundle);
-                    // Create Bundle & Add user
-//                    Bundle bundle = new Bundle();
-//                    bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA,loginData.getParameter());
-
-                    //intent.putExtras(bundle);
-                    startActivity(intent);
-                    finish();*/
+                    saveTask(taskList.get(0));
 
 
                 }else{
@@ -288,8 +350,8 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                         message = response.raw().message();
                     }
 
-
                     showResultFail();
+                    saveTask(taskList.get(0));
 
                 }
                 //spinner.setVisibility(View.GONE);
@@ -311,5 +373,22 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         imageView.setImageResource(R.drawable.failed_icon);
         titleText.setText(getString(R.string.service_popup_fail_title));
         messageText.setText(getString(R.string.service_popup_fail_message));
+    }
+
+    private void saveTask(Task task){
+
+        dataSource = new TaskDataSource(ResultActivity.this);
+        dataSource.open();
+        dataSource.addTask(task);
+
+    }
+
+    private void deleteTask(String taskCode){
+
+        dataSource = new TaskDataSource(ResultActivity.this);
+        dataSource.open();
+
+        dataSource.deleteTask(taskCode);
+
     }
 }

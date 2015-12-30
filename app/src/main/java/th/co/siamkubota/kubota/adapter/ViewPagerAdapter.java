@@ -9,6 +9,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import java.util.ArrayList;
+
+import io.swagger.client.model.Image;
+import io.swagger.client.model.Task;
+import io.swagger.client.model.TaskInfo;
 import th.co.siamkubota.kubota.fragment.ServiceFragment;
 import th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment;
 import th.co.siamkubota.kubota.fragment.Step2PhotoFragment;
@@ -28,8 +33,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private Context context;
     private Fragment listener;
 
+
+
     public ViewPagerAdapter(Context context, FragmentManager fm, String mTitles[],
-                            int mNumbOfTabsumb, Fragment listener) {
+                            int mNumbOfTabsumb, Fragment listener, Task task) {
         super(fm);
 
         this.context = context;
@@ -37,10 +44,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         this.NumbOfTabs = mNumbOfTabsumb;
         this.listener = listener;
 
-        step1CustomerDetailFragment = Step1CustomerDetailFragment.newInstance(Titles[0]);
-        step2PhotoFragment = Step2PhotoFragment.newInstance(Titles[1]);
-        step3SignFragment = Step3SignFragment.newInstance(Titles[2]);
-        step4ConfirmFragment = Step4ConfirmFragment.newInstance(Titles[3]);
+        step1CustomerDetailFragment = Step1CustomerDetailFragment.newInstance(task.getTaskInfo());
+        step2PhotoFragment = Step2PhotoFragment.newInstance( (ArrayList<Image>)task.getTaskImages());
+        step3SignFragment = Step3SignFragment.newInstance(task.getSignature());
+        step4ConfirmFragment = Step4ConfirmFragment.newInstance();
 
         step1CustomerDetailFragment.setmListener((Step1CustomerDetailFragment.OnFragmentInteractionListener) listener);
         step2PhotoFragment.setmListener((Step2PhotoFragment.OnFragmentInteractionListener) listener);

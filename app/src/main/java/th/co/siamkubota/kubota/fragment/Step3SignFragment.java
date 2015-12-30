@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.joooonho.SelectableRoundedImageView;
 
 import java.io.File;
@@ -27,6 +29,8 @@ import io.swagger.client.model.Image;
 import io.swagger.client.model.Signature;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.activity.SignaturePadActivity;
+import th.co.siamkubota.kubota.app.AppController;
+import th.co.siamkubota.kubota.app.Config;
 import th.co.siamkubota.kubota.model.Photo;
 import th.co.siamkubota.kubota.utils.function.Converter;
 import th.co.siamkubota.kubota.utils.function.Validate;
@@ -43,7 +47,9 @@ public class Step3SignFragment extends Fragment implements
         View.OnClickListener,
         CompoundButton.OnCheckedChangeListener{
 
-    private static final String ARG_PARAM_TITLE = "title";
+    //private static final String ARG_PARAM_TITLE = "title";
+    private static final String KEY_SIGNATURE = "signature";
+
 
     private LinearLayout rootLayout;
     private SelectableRoundedImageView imageCustomerSignature;
@@ -89,10 +95,11 @@ public class Step3SignFragment extends Fragment implements
 
 
 
-    public static Step3SignFragment newInstance(String title) {
+    public static Step3SignFragment newInstance(Signature signature) {
         Step3SignFragment fragment = new Step3SignFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM_TITLE, title);
+        //args.putString(ARG_PARAM_TITLE, title);
+        args.putParcelable(KEY_SIGNATURE, signature);
         fragment.setArguments(args);
         return fragment;
     }
@@ -106,10 +113,19 @@ public class Step3SignFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         //setRetainInstance(true);
         if (getArguments() != null) {
-            title = getArguments().getString(ARG_PARAM_TITLE);
+            signature = getArguments().getParcelable(KEY_SIGNATURE);
         }
 
-        signature = new Signature();
+        //signature = new Signature();
+
+        if(imageCustomer == null){
+            imageCustomer = new Photo(5,getString(R.string.sign_pad_customer_signature));
+        }
+
+
+        if(imageTechnician == null){
+            imageTechnician = new Photo(6,getString(R.string.sign_pad_technician_signature));
+        }
 
     }
 
@@ -152,6 +168,7 @@ public class Step3SignFragment extends Fragment implements
         }
 
         setDataChangeListener();
+        setData();
 
     }
 
@@ -168,6 +185,85 @@ public class Step3SignFragment extends Fragment implements
         checkBoxUserAccept.setOnCheckedChangeListener(this);
         checkBoxTecnicianAccept.setOnCheckedChangeListener(this);
     }
+
+
+    private void setData() {
+
+        if(signature.getCustomerSignatureImage() != null){
+            imageCustomer.setServerPath(signature.getCustomerSignatureImage().getImage());
+            imageCustomer.setPath(signature.getCustomerSignatureImage().getImagePath());
+            imageCustomer.setDate(signature.getCustomerSignatureImage().getCapturedAt());
+        }else if(signature.getCustomerSignature() != null && !signature.getCustomerSignature().isEmpty()){
+            imageCustomer.setPath(signature.getCustomerSignature());
+            imageCustomer.setDate(signature.getCustomerSignedDate());
+        }
+
+        if(signature.getEngineerSignatureImage() != null){
+            imageTechnician.setServerPath(signature.getEngineerSignatureImage().getImage());
+            imageTechnician.setPath(signature.getEngineerSignatureImage().getImagePath());
+            imageTechnician.setDate(signature.getEngineerSignedDate());
+        }else if(signature.getCustomerSignature() != null && !signature.getCustomerSignature().isEmpty()){
+            imageTechnician.setPath(signature.getEngineerSignature());
+            imageTechnician.setDate(signature.getEngineerSignedDate());
+        }
+
+        setImage(imageCustomerSignature,imageCustomer );
+        setImage(imageTechnicianSignature,imageTechnician );
+
+
+        editTextCustomerName.setText(signature.getCustomerName());
+        if(signature.getCustomerSignedDate() != null){
+            editTextCustomerSignDate.setText(Converter.DateToString(signature.getCustomerSignedDate(), "dd/MM/yyyy"));
+        }
+
+        editTextTechnicianName.setText(signature.getEngineerName());
+        if(signature.getEngineerSignedDate() != null){
+            editTextTechnicianSignDate.setText(Converter.DateToString(signature.getEngineerSignedDate(), "dd/MM/yyyy"));
+        }
+
+        checkBoxUserAccept.setChecked(signature.getCustomerAccept());
+        checkBoxTecnicianAccept.setChecked(signature.getEngineerAccept());
+
+    }
+
+    private void setImage(final ImageView imageView, Photo data){
+
+        imageView.setVisibility(View.VISIBLE);
+
+        if(data.getPath() != null && !data.getPath().isEmpty()){
+
+            imageView.setImageURI(Uri.fromFile(new File(data.getPath())));
+
+        }else if(data.getServerPath() != null && !data.getServerPath().isEmpty()){
+
+            ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+
+            String imagePath = Config.mediaService + data.getServerPath();
+
+            imageLoader.get(imagePath, new ImageLoader.ImageListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    //Log.e("### ", "Image Load Error: " + error.getMessage());
+                    //imageView.setImageResource(R.drawable.demo_logo_product);
+                }
+
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean arg1) {
+                    if (response.getBitmap() != null) {
+                        // load image into imageview
+                        imageView.setImageBitmap(response.getBitmap());
+                    }else{
+                        //imageView.setImageResource(R.drawable.demo_logo_product);
+                    }
+                }
+            });
+
+
+        }
+
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -226,10 +322,10 @@ public class Step3SignFragment extends Fragment implements
 
             if(v == imageCustomerSignature){
 
-
-                if(imageCustomer == null){
+              /*  if(imageCustomer == null){
                     imageCustomer = new Photo(5,getString(R.string.sign_pad_customer_signature));
-                }
+                }*/
+
                 requestCode = imageCustomer.getId();
 
                 if(imageCustomer != null && imageCustomer.getPath() != null && !imageCustomer.getPath().isEmpty()){
@@ -239,10 +335,10 @@ public class Step3SignFragment extends Fragment implements
 
             }else if(v == imageTechnicianSignature){
                 //requestCode = 1;
-
+/*
                 if(imageTechnician == null){
                     imageTechnician = new Photo(6,getString(R.string.sign_pad_technician_signature));
-                }
+                }*/
 
                 requestCode = imageTechnician.getId();
 
@@ -365,8 +461,6 @@ public class Step3SignFragment extends Fragment implements
             return;
         }
 
-
-
         dataComplete = true;
         mListener.onFragmentDataComplete(this, dataComplete, collectData());
     }
@@ -388,6 +482,9 @@ public class Step3SignFragment extends Fragment implements
         signature.setEngineerSignatureImage(imgEngineer);
         signature.setEngineerName(editTextTechnicianName.getText().toString());
         signature.setEngineerSignedDate(imageTechnician.getDate());
+
+        signature.setCustomerAccept(checkBoxUserAccept.isChecked());
+        signature.setEngineerAccept(checkBoxTecnicianAccept.isChecked());
 
         return signature;
     }

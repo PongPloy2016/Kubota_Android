@@ -11,6 +11,7 @@ import java.util.Date;
 public class Photo implements Parcelable{
     private String title;
     private String path;
+    private String serverPath;
     private Date date;
     private String description;
     private int id;
@@ -53,6 +54,14 @@ public class Photo implements Parcelable{
         this.path = path;
     }
 
+    public String getServerPath() {
+        return serverPath;
+    }
+
+    public void setServerPath(String serverPath) {
+        this.serverPath = serverPath;
+    }
+
     public Date getDate() {
         return date;
     }
@@ -76,6 +85,7 @@ public class Photo implements Parcelable{
     public void setComplete(boolean complete) {
         this.complete = complete;
     }
+
 
 
 /////////////////////////////////////////////////////////////////////////////// implement parcelable
@@ -124,6 +134,7 @@ public class Photo implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.title);
         dest.writeString(this.path);
+        dest.writeString(this.serverPath);
         dest.writeLong(date != null ? date.getTime() : -1);
         dest.writeString(this.description);
         dest.writeInt(this.id);
@@ -133,6 +144,7 @@ public class Photo implements Parcelable{
     protected Photo(Parcel in) {
         this.title = in.readString();
         this.path = in.readString();
+        this.serverPath = in.readString();
         long tmpDate = in.readLong();
         this.date = tmpDate == -1 ? null : new Date(tmpDate);
         this.description = in.readString();

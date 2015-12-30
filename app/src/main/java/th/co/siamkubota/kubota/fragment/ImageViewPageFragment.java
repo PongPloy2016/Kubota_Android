@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.joooonho.SelectableRoundedImageView;
 
 import java.io.File;
@@ -26,6 +28,8 @@ import java.io.File;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.activity.CameraTakeActivity;
 import th.co.siamkubota.kubota.activity.ImageViewActivity;
+import th.co.siamkubota.kubota.app.AppController;
+import th.co.siamkubota.kubota.app.Config;
 import th.co.siamkubota.kubota.model.Photo;
 import th.co.siamkubota.kubota.utils.function.Converter;
 
@@ -121,6 +125,31 @@ public class ImageViewPageFragment extends Fragment {
 
         if(data != null && data.getPath() != null && !data.getPath().isEmpty()){
             imageView.setImageURI(Uri.fromFile(new File(data.getPath())));
+        }else if(data != null && data.getServerPath() != null && !data.getServerPath().isEmpty()){
+
+            ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+
+            String imagePath = Config.mediaService + data.getServerPath();
+
+            imageLoader.get(imagePath, new ImageLoader.ImageListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    //Log.e("### ", "Image Load Error: " + error.getMessage());
+                    //imageView.setImageResource(R.drawable.demo_logo_product);
+                }
+
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean arg1) {
+                    if (response.getBitmap() != null) {
+                        // load image into imageview
+                        imageView.setImageBitmap(response.getBitmap());
+                    }else{
+                        //imageView.setImageResource(R.drawable.demo_logo_product);
+                    }
+                }
+            });
+
         }
 
     }
@@ -147,7 +176,9 @@ public class ImageViewPageFragment extends Fragment {
     }
 
     public boolean onTouchEvent(MotionEvent ev) {
-        scaleGestureDetector.onTouchEvent(ev);
+        if(scaleGestureDetector != null){
+            scaleGestureDetector.onTouchEvent(ev);
+        }
         return true;
     }
 

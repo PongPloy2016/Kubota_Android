@@ -16,6 +16,8 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.joooonho.SelectableRoundedImageView;
 
 import java.io.File;
@@ -23,6 +25,8 @@ import java.io.File;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.activity.CameraTakeActivity;
 import th.co.siamkubota.kubota.activity.ImageViewActivity;
+import th.co.siamkubota.kubota.app.AppController;
+import th.co.siamkubota.kubota.app.Config;
 import th.co.siamkubota.kubota.model.Photo;
 import th.co.siamkubota.kubota.utils.function.Converter;
 import th.co.siamkubota.kubota.utils.function.ImageFile;
@@ -122,11 +126,39 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
             data = savedInstanceState.getParcelable(ARG_PARAM_DATA);
         }
 
+
+        imageView.setVisibility(View.VISIBLE);
+        textDate.setText(Converter.DateToString(this.data.getDate(), "dd/MM/yyyy"));
+
         if(data.getPath() != null && !data.getPath().isEmpty()){
             imageView.setImageURI(Uri.fromFile(new File(this.data.getPath())));
-            imageView.setVisibility(View.VISIBLE);
 
-            textDate.setText(Converter.DateToString(this.data.getDate(),"dd/MM/yyyy"));
+        }else if(data.getServerPath() != null && !data.getServerPath().isEmpty()){
+
+            ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+
+            String imagePath = Config.mediaService + data.getServerPath();
+
+            imageLoader.get(imagePath, new ImageLoader.ImageListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    //Log.e("### ", "Image Load Error: " + error.getMessage());
+                    //imageView.setImageResource(R.drawable.demo_logo_product);
+                }
+
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean arg1) {
+                    if (response.getBitmap() != null) {
+                        // load image into imageview
+                        imageView.setImageBitmap(response.getBitmap());
+                    }else{
+                        //imageView.setImageResource(R.drawable.demo_logo_product);
+                    }
+                }
+            });
+
+
         }
 
     }
@@ -187,7 +219,9 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
 
         }else if(v == imageZoomButton){
 
-            if(data != null && data.getPath() != null && !data.getPath().isEmpty()){
+            if(data != null && ( (data.getPath() != null && !data.getPath().isEmpty())
+                    || (data.getServerPath() != null && !data.getServerPath().isEmpty())
+            )){
                /* Intent intent = new Intent(getActivity(), ImageViewActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(ImageViewActivity.KEY_IMAGE_PATH, data.getPath());
@@ -214,6 +248,7 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
             String dateInfo = bundle.getString("takenDate");
             //imageView.setTag(R.id.imagePath, imagePath);
 
+            this.data.setServerPath(null);
             this.data.setPath(imagePath);
             this.data.setDate(Converter.StringToDate(dateInfo, "yyyy-MM-dd HH:mm:ss"));
 

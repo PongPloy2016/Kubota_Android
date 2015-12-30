@@ -139,7 +139,8 @@ public class LoginData  implements Parcelable {
     dest.writeString(this.userId);
     dest.writeString(this.shopId);
     dest.writeString(this.shopName);
-    dest.writeList(this.questions);
+    //dest.writeList(this.questions);
+    dest.writeTypedList(this.questions);
   }
 
   public LoginData() {
@@ -150,8 +151,11 @@ public class LoginData  implements Parcelable {
     this.shopId = in.readString();
     this.shopName = in.readString();
     //this.questions = new ArrayList<Question>();
+    if(this.questions  == null){
+      this.questions = new ArrayList<Question>();
+    }
     in.readTypedList(this.questions, Question.CREATOR);
-    in.readList(this.questions, List.class.getClassLoader());
+    //in.readList(this.questions, List.class.getClassLoader());
   }
 
   public static final Creator<LoginData> CREATOR = new Creator<LoginData>() {

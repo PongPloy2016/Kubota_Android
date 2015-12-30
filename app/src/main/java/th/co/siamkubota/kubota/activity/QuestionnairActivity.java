@@ -47,11 +47,11 @@ ContinueQuestionFragment.OnFragmentInteractionListener{
             mTitle.get().setText(loginData.getShopName());
         }
 
-        if(bundle.containsKey("shopName")){
+      /*  if(bundle.containsKey("shopName")){
             shopName = bundle.getString("shopName");
             mTitle.get().setText(shopName);
         }
-
+*/
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ContinueQuestionFragment newFragment = ContinueQuestionFragment.newInstance();

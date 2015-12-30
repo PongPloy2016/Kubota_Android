@@ -3,6 +3,7 @@ package th.co.siamkubota.kubota.fragment;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,6 +40,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.internal.Command;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -58,6 +60,7 @@ import th.co.siamkubota.kubota.adapter.SelectNoneSpinnerAdapter;
 import th.co.siamkubota.kubota.service.Constants;
 import th.co.siamkubota.kubota.service.FetchAddressIntentService;
 import th.co.siamkubota.kubota.service.GeocodeAddressIntentService;
+import th.co.siamkubota.kubota.sqlite.TaskDataSource;
 import th.co.siamkubota.kubota.utils.function.Converter;
 import th.co.siamkubota.kubota.utils.function.LocationService;
 import th.co.siamkubota.kubota.utils.function.Network;
@@ -84,7 +87,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     private static final String TAG = Step1CustomerDetailFragment.class.getSimpleName();
 
-    private static final String ARG_PARAM_TITLE = "title";
+    private static final String KEY_TITLE = "TITLE";
+    private static final String KEY_TASK_INFO = "TASK_INFO";
 
     private LinearLayout rootLayout;
     private TextView textStepTitle;
@@ -156,7 +160,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private boolean mRequestingLocationUpdates = false;
     private LocationRequest mLocationRequest;
     private boolean waitGPSSetting;
-    private  AlertDialog alert;
+    private AlertDialog alert;
 
     // Location updates intervals in sec
     private static int UPDATE_INTERVAL = 10000; // 10 sec
@@ -164,10 +168,12 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private static int DISPLACEMENT = 10; // 10 meters
 
 
-    private String title;
+    //private String title;
     private boolean dataComplete = false;
     private OnFragmentInteractionListener mListener;
     private TaskInfo taskInfo;
+
+    private TaskDataSource dataSource;
 
 
     //////////////////////////////////////////////////////////////////// getter setter
@@ -190,10 +196,11 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     //////////////////////////////////////////////////////////////////// constructor
 
-    public static Step1CustomerDetailFragment newInstance(String title) {
+    public static Step1CustomerDetailFragment newInstance(TaskInfo taskInfo) {
         Step1CustomerDetailFragment fragment = new Step1CustomerDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM_TITLE, title);
+        //args.putString(KEY_TITLE, title);
+        args.putParcelable(KEY_TASK_INFO, taskInfo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -210,10 +217,11 @@ public class Step1CustomerDetailFragment extends Fragment implements
         super.onCreate(savedInstanceState);
 //        setRetainInstance(true);
         if (getArguments() != null) {
-            title = getArguments().getString(ARG_PARAM_TITLE);
+            //title = getArguments().getString(KEY_TITLE);
+            taskInfo = getArguments().getParcelable(KEY_TASK_INFO);
         }
 
-        taskInfo = new TaskInfo();
+        //taskInfo = new TaskInfo();
 
         jobTypeDataList = getResources().getStringArray(R.array.job_type);
         productDataList = getResources().getStringArray(R.array.product);
@@ -300,8 +308,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
         locationButton = (ImageButton) v.findViewById(R.id.locationButton);
 
         radioGroupUserType = (RadioGroup) v.findViewById(R.id.radioGroupUserType);
-        RadioButton radioButton1 =  (RadioButton) v.findViewById(R.id.radioButton1);
-        RadioButton radioButton2 =  (RadioButton) v.findViewById(R.id.radioButton2);
+        RadioButton radioButton1 = (RadioButton) v.findViewById(R.id.radioButton1);
+        RadioButton radioButton2 = (RadioButton) v.findViewById(R.id.radioButton2);
 
         radioButton1.getCompoundDrawables()[0].setBounds(0, 0, 10, 10);
 
@@ -315,6 +323,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         Ui.setupUI(getActivity(), rootLayout);
 
         setDataChangeListener();
+        setData();
 
     }
 
@@ -338,6 +347,61 @@ public class Step1CustomerDetailFragment extends Fragment implements
         locationButton.setOnClickListener(this);
 
         radioGroupUserType.setOnCheckedChangeListener(this);
+    }
+
+    private void setData() {
+
+        spinnerJobType.setSelection(getIndex(spinnerJobType, jobTypeDataList, taskInfo.getTaskType()));
+        spinnerProduct.setSelection(getIndex(spinnerProduct, productDataList, taskInfo.getProduct()));
+        spinnerModel.setSelection(getIndex(spinnerModel, modelDataList, taskInfo.getCarModel()));
+
+        editTextOtherModel.setText(taskInfo.getCarModelOther());
+        editTextTaskCode.setText(taskInfo.getTaskCode());
+        editTextName.setText(taskInfo.getCustomerName());
+        editTextTel1.setText(taskInfo.getTel1());
+        editTextTel2.setText(taskInfo.getTel2());
+        editTextCarNumber.setText(taskInfo.getCarNo());
+        editTextEngineNumber.setText(taskInfo.getEngineNo());
+        editTextWorkHours.setText(taskInfo.getUsageHours());
+        editTextServiceAddress.setText(taskInfo.getAddress());
+        editTextCustomerAddress.setText(taskInfo.getCustomerAddress());
+
+        if(taskInfo.getOwner()){
+            radioGroupUserType.check(R.id.radioButton1);
+        }else{
+            radioGroupUserType.check(R.id.radioButton2);
+        }
+
+    }
+
+    private int getIndex(Spinner spinner, String[] datalist, String string) {
+
+
+        int index = 0;
+
+        if (spinner.getAdapter() != null) {
+
+            SelectNoneSpinnerAdapter adapter = (SelectNoneSpinnerAdapter) spinner.getAdapter();
+
+            for (int i = 0; i < adapter.getCount(); i++) {
+
+                try {
+                    //if (adapter.getItem(i).toString().equals(string)){
+                    String r = (String) adapter.getItem(i);
+                    if (r != null && r.equals(string)) {
+                        index = i;
+                        break;
+                    }
+                } catch (NullPointerException e) {
+                    return 0;
+                }
+
+            }
+
+        }
+
+        return index;
+
     }
 
 
@@ -494,7 +558,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             }*/
 
             if (!EnableGPSIfPossible()) {
-                if ( mLastLocation != null) {
+                if (mLastLocation != null) {
                     startIntentService();
                 } else {
                     mAddressRequested = true;
@@ -565,7 +629,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             LinearLayout rootLayout = (LinearLayout) view.findViewById(R.id.rootLayout);
             TextView textViewDialog = (TextView) view.findViewById(R.id.textView);
             textViewDialog.setTextSize(Converter.pxTosp(getActivity(), Converter.dpTopx(getActivity(), 15)));
-            textViewDialog.setTextColor(ContextCompat.getColor(getActivity(),R.color.dark_gray));
+            textViewDialog.setTextColor(ContextCompat.getColor(getActivity(), R.color.dark_gray));
 
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textViewDialog.getLayoutParams();
             int left = Converter.dpTopx(getActivity(), 10);
@@ -628,27 +692,27 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
             if (!text.isEmpty() && view != null) {
 
-                LinearLayout parent = (LinearLayout)this.view.getParent();
+                LinearLayout parent = (LinearLayout) this.view.getParent();
                 /*ArrayList<View> requires = new ArrayList<View>();
                 parent.findViewsWithText(requires,"*",View.FIND_VIEWS_WITH_TEXT);
                 for (View v : requires){
                     v.setVisibility(View.GONE);
                 }*/
                 View required = parent.findViewWithTag("*");
-                if(required != null){
+                if (required != null) {
                     required.setVisibility(View.GONE);
                 }
 
 
-            }else{
-                LinearLayout parent = (LinearLayout)this.view.getParent();
+            } else {
+                LinearLayout parent = (LinearLayout) this.view.getParent();
                /* ArrayList<View> requires = new ArrayList<View>();
                 parent.findViewsWithText(requires,"*",View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
                 for (View v : requires){
                     v.setVisibility(View.VISIBLE);
                 }*/
                 View required = parent.findViewWithTag("*");
-                if(required != null){
+                if (required != null) {
                     required.setVisibility(View.VISIBLE);
                 }
             }
@@ -671,23 +735,31 @@ public class Step1CustomerDetailFragment extends Fragment implements
         mListener.onFragmentDataComplete(this, dataComplete, collectData());
     }
 
-    private TaskInfo collectData(){
+    private TaskInfo collectData() {
 
         taskInfo.setTaskType(spinnerJobType.getSelectedItem().toString());
         taskInfo.setProduct(spinnerProduct.getSelectedItem().toString());
         taskInfo.setCarModel(spinnerModel.getSelectedItem().toString());
-        if(taskInfo.getCarModel().equals("อื่นๆ")){
+        if (taskInfo.getCarModel().equals("อื่นๆ")) {
             taskInfo.setCarModelOther(editTextOtherModel.getText().toString());
-        }else{
+        } else {
             taskInfo.setCarModelOther("");
         }
+
+        if(taskInfo.getTaskCode() != null && !taskInfo.getTaskCode().equals(editTextTaskCode.getText().toString())){
+            long row = updateTask(taskInfo.getTaskCode(), editTextTaskCode.getText().toString() );
+
+            if(row < 0){
+                deleteTask(taskInfo.getTaskCode());
+            }
+        }
+
         taskInfo.setTaskCode(editTextTaskCode.getText().toString());
         taskInfo.setCustomerName(editTextName.getText().toString());
         taskInfo.setTel1(editTextTel1.getText().toString());
-        taskInfo.setTel1(editTextTel1.getText().toString());
-        if(!editTextTel2.getText().toString().isEmpty()){
+        if (!editTextTel2.getText().toString().isEmpty()) {
             taskInfo.setTel2(editTextTel2.getText().toString());
-        }else{
+        } else {
             taskInfo.setTel2("");
         }
         taskInfo.setCarNo(editTextCarNumber.getText().toString());
@@ -695,6 +767,15 @@ public class Step1CustomerDetailFragment extends Fragment implements
         taskInfo.setUsageHours(editTextWorkHours.getText().toString());
         taskInfo.setAddress(editTextServiceAddress.getText().toString());
         taskInfo.setCustomerAddress(editTextCustomerAddress.getText().toString());
+
+        if(radioGroupUserType.getCheckedRadioButtonId() == R.id.radioButton1){
+            taskInfo.setOwner(true);
+            taskInfo.setUser(false);
+        }else{
+            taskInfo.setOwner(false);
+            taskInfo.setUser(true);
+        }
+
 
         return taskInfo;
     }
@@ -726,7 +807,6 @@ public class Step1CustomerDetailFragment extends Fragment implements
         }
 
 
-
     }
 
     private LocationManager locMgr;
@@ -755,7 +835,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            switch( status ) {
+            switch (status) {
                 case LocationProvider.AVAILABLE:
                     //Toast.makeText(CheckinActivity.this, "LocationProvider.AVAILABLE", Toast.LENGTH_LONG);
                     break;
@@ -794,6 +874,16 @@ public class Step1CustomerDetailFragment extends Fragment implements
         }
         // Gets the best and most recent location currently available,
         // which may be null in rare cases when a location is not available.
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
 
@@ -854,9 +944,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 });
 
 
-
-            }
-            else {
+            } else {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -880,6 +968,16 @@ public class Step1CustomerDetailFragment extends Fragment implements
     }
 
     protected void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
     }
@@ -905,7 +1003,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
     /**
      * Method to verify google play services on the device
      * */
-    private boolean checkPlayServices() {
+    private boolean checkPlayServices(boolean check) {
         int resultCode = GooglePlayServicesUtil
                 .isGooglePlayServicesAvailable(getActivity());
         if (resultCode != ConnectionResult.SUCCESS) {
@@ -925,6 +1023,21 @@ public class Step1CustomerDetailFragment extends Fragment implements
             }*/
             return false;
         }
+        return true;
+    }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(getActivity());
+        if(result != ConnectionResult.SUCCESS) {
+           /* if(googleAPI.isUserResolvableError(result)) {
+                googleAPI.getErrorDialog(getActivity(), result,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            }*/
+
+            return false;
+        }
+
         return true;
     }
 
@@ -1009,6 +1122,24 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         alert = builder.create();
         alert.show();
+    }
+
+    private long updateTask(String taskCode, String newTaskCode){
+
+        dataSource = new TaskDataSource(getActivity());
+        dataSource.open();
+
+        return dataSource.updateTaskCode(taskCode, newTaskCode);
+
+    }
+
+    private void deleteTask(String taskCode){
+
+        dataSource = new TaskDataSource(getActivity());
+        dataSource.open();
+
+        dataSource.deleteTask(taskCode);
+
     }
 
 }

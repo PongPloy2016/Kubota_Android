@@ -17,10 +17,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import io.swagger.client.model.Task;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.adapter.UnfinishTaskAdapter;
-import th.co.siamkubota.kubota.model.Task;
 import th.co.siamkubota.kubota.utils.function.Converter;
 
 /**
@@ -36,8 +37,7 @@ public class UnfinishTaskFragment extends Fragment implements
         View.OnClickListener{
 
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM_DATA = "data";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -60,9 +60,10 @@ public class UnfinishTaskFragment extends Fragment implements
      * @return A new instance of fragment UnfinishTaskFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static UnfinishTaskFragment newInstance() {
+    public static UnfinishTaskFragment newInstance(List<Task> datalist) {
         UnfinishTaskFragment fragment = new UnfinishTaskFragment();
         Bundle args = new Bundle();
+        args.putParcelableArrayList(ARG_PARAM_DATA, (ArrayList<Task>)datalist);
 //        args.putString(ARG_PARAM1, param1);
 //        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
@@ -73,21 +74,24 @@ public class UnfinishTaskFragment extends Fragment implements
         // Required empty public constructor
     }
 
+    public void setmListener(OnFragmentInteractionListener mListener) {
+        this.mListener = mListener;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            datalist = getArguments().getParcelableArrayList(ARG_PARAM_DATA);
         }
 
-        datalist = new ArrayList<Task>();
+       /* datalist = new ArrayList<Task>();
 
         datalist.add(new Task("งานที่ 1", true));
         datalist.add(new Task("งานที่ 2", true));
         datalist.add(new Task("งานที่ 3", true));
         datalist.add(new Task("งานที่ 4", true));
-        datalist.add(new Task("งานที่ 5", false));
+        datalist.add(new Task("งานที่ 5", false));*/
 
     }
 
@@ -141,11 +145,11 @@ public class UnfinishTaskFragment extends Fragment implements
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+  /*  public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
-    }
+    }*/
 
     @Override
     public void onAttach(Activity activity) {
@@ -176,7 +180,8 @@ public class UnfinishTaskFragment extends Fragment implements
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        //public void onFragmentInteraction(Uri uri);
+        public void onDisplayTask(Task task);
     }
 
     //////////////////////////////////////////////////////////// Implement method
@@ -186,6 +191,9 @@ public class UnfinishTaskFragment extends Fragment implements
 
         if(parent == listView){
 
+            int headerCount = listView.getHeaderViewsCount();
+
+            mListener.onDisplayTask(datalist.get(position - headerCount));
         }
     }
 
@@ -193,7 +201,8 @@ public class UnfinishTaskFragment extends Fragment implements
     public void onClick(View v) {
         if(v == startNewTaskButton){
             //getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-            getActivity().getSupportFragmentManager().popBackStack();
+            //getActivity().getSupportFragmentManager().popBackStack();
+            mListener.onDisplayTask(null);
         }
     }
 }

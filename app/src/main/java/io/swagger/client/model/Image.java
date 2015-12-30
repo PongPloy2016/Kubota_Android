@@ -114,6 +114,16 @@ public class Image implements Parcelable {
   }
 
 
+  public Image(String imagePath, Date capturedAt, String image) {
+    this.imagePath = imagePath;
+    this.capturedAt = capturedAt;
+    this.image = image;
+  }
+
+
+
+
+
   //////////////////////////////////////////////////////// implement parcelable
 
 

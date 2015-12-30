@@ -48,7 +48,8 @@ public class Step2PhotoFragment extends Fragment implements
         View.OnClickListener,
 PhotoPageFragment.OnFragmentInteractionListener{
 
-    private static final String ARG_PARAM_TITLE = "title";
+    private static final String KEY_TITLE = "title";
+    private static final String KEY_IMAGES = "images";
 
     private ViewPager pager;
     private Button button1, button2, button3, button4;
@@ -61,6 +62,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
     private OnFragmentInteractionListener mListener;
 
     private ArrayList<Photo> photos;
+    private ArrayList<Photo> photosView;
     private ArrayList<Image> images;
     private String machineNumber;
 
@@ -102,10 +104,11 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
     //////////////////////////////////////////////////////////////////// constructor
 
-    public static Step2PhotoFragment newInstance(String title) {
+    public static Step2PhotoFragment newInstance(ArrayList<Image> images) {
         Step2PhotoFragment fragment = new Step2PhotoFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM_TITLE, title);
+        //args.putString(KEY_TITLE, title);
+        args.putParcelableArrayList(KEY_IMAGES, images);
         fragment.setArguments(args);
         return fragment;
     }
@@ -120,15 +123,35 @@ PhotoPageFragment.OnFragmentInteractionListener{
         //setRetainInstance(true);
         if (getArguments() != null) {
             //title = getArguments().getString(ARG_PARAM_TITLE);
+            images = getArguments().getParcelableArrayList(KEY_IMAGES);
         }
 
         photos = new ArrayList<Photo>();
-        images = new ArrayList<Image>();
-
         photos.add(new Photo(1,getString(R.string.service_image_1_engine_number)));
         photos.add(new Photo(2,getString(R.string.service_image_2_working_hours)));
         photos.add(new Photo(3,getString(R.string.service_image_3_machine)));
         photos.add(new Photo(4,getString(R.string.service_image_4_customer_with_machine)));
+
+        if(images == null){
+            images = new ArrayList<Image>();
+        }else if(images.size()> 0){
+
+            int i = 0;
+            for(Image img : images){
+                if(img.getImage() != null  && !img.getImage().isEmpty()){
+                    photos.get(i).setServerPath(img.getImage());
+                }else{
+                    photos.get(i).setPath(img.getImagePath());
+                }
+
+                photos.get(i).setComplete(true);
+
+            }
+
+            dataComplete = true;
+
+        }
+
 
         //adapter = new PhotoPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), photos , Step2PhotoFragment.this);
         FragmentManager cfManager = getChildFragmentManager();
@@ -313,6 +336,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
     public void onPhotoTaken(Fragment fragment, Photo data) {
         for(Photo photo : photos){
             if(photo.getId() == data.getId()){
+                photo.setServerPath(null);
                 Copier.copy(data, photo);
                 break;
             }
@@ -325,6 +349,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
     public void onPhotoView(Fragment fragment, Photo data) {
 
         ArrayList<Photo> images = new ArrayList<>();
+        images.clear();
 
         for(Photo photo : photos){
             if(photo.isComplete()){
@@ -387,8 +412,6 @@ PhotoPageFragment.OnFragmentInteractionListener{
                     button4.setTextColor(ContextCompat.getColor(getActivity(), R.color.light_gray_stage));
                     break;
             }
-
-
         }
 
         public final int getCurrentPage() {
@@ -407,10 +430,17 @@ PhotoPageFragment.OnFragmentInteractionListener{
         }
 
 
-        for(int i = 0 ; i < photos.size() ; i++){
-            images.add(new Image(photos.get(i).getPath(), photos.get(i).getDate()));
-        }
+        images.clear();
 
+        for(int i = 0 ; i < photos.size() ; i++){
+
+            if(photos.get(i).getServerPath() != null && !photos.get(i).getServerPath().isEmpty()){
+                images.add(new Image(null, photos.get(i).getDate(), photos.get(i).getServerPath()));
+            }else{
+                images.add(new Image(photos.get(i).getPath(), photos.get(i).getDate()));
+            }
+
+        }
 
         dataComplete = true;
         mListener.onFragmentDataComplete(this, dataComplete, images);
