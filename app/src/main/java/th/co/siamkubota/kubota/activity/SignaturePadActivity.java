@@ -55,69 +55,66 @@ public class SignaturePadActivity extends BaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signature_pad);
 
-        Bundle bundle = getIntent().getExtras();
-        title = bundle.getString(KEY_TITLE, getString(R.string.service_hint_signature));
-       /* signatureImagePath = bundle.getString(KEY_SIGNATURE_IMAGE_PATH, null);
+        if(savedInstanceState == null){
 
-        if(signatureImagePath != null){
-            signatureBitmap = ImageFile.bitmapFromFilePath(signatureImagePath);
-        }*/
+            Bundle bundle = getIntent().getExtras();
+            title = bundle.getString(KEY_TITLE, getString(R.string.service_hint_signature));
+           /* signatureImagePath = bundle.getString(KEY_SIGNATURE_IMAGE_PATH, null);
+
+            if(signatureImagePath != null){
+                signatureBitmap = ImageFile.bitmapFromFilePath(signatureImagePath);
+            }*/
 
 
-        clearButton = (Button) findViewById(R.id.clearButton);
-        saveButton = (Button) findViewById(R.id.saveButton);
-        mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
-        titleTextView = (TextView) findViewById(R.id.titleTextView);
-        progress = (ProgressBar) findViewById(R.id.progress);
+            clearButton = (Button) findViewById(R.id.clearButton);
+            saveButton = (Button) findViewById(R.id.saveButton);
+            mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
+            titleTextView = (TextView) findViewById(R.id.titleTextView);
+            progress = (ProgressBar) findViewById(R.id.progress);
 
-        titleTextView.setText(title);
+            titleTextView.setText(title);
 
-       /* if(signatureBitmap != null){
-            mSignaturePad.setSignatureBitmap(signatureBitmap);
-        }*/
+           /* if(signatureBitmap != null){
+                mSignaturePad.setSignatureBitmap(signatureBitmap);
+            }*/
 
-        mSignaturePad.setOnSignedListener(new SignaturePad.OnSignedListener() {
-            @Override
-            public void onSigned() {
-                //Event triggered when the pad is signed
-                signed = true;
+            mSignaturePad.setOnSignedListener(new SignaturePad.OnSignedListener() {
+                @Override
+                public void onSigned() {
+                    //Event triggered when the pad is signed
+                    signed = true;
+                }
+
+                @Override
+                public void onClear() {
+                    //Event triggered when the pad is cleared
+                    signed = false;
+                }
+            });
+
+
+
+            clearButton.setOnClickListener(this);
+            saveButton.setOnClickListener(this);
+
+        }else{
+
+            if(savedInstanceState != null && savedInstanceState.containsKey("KEY_BITMAP")){
+                Bitmap bitmap = (Bitmap) savedInstanceState.getParcelable("KEY_BITMAP");
+                if(bitmap != null){
+                    //mSignaturePad.setSignatureBitmap(bitmap);
+                    signatureBitmap = bitmap;
+                }
             }
 
-            @Override
-            public void onClear() {
-                //Event triggered when the pad is cleared
-                signed = false;
+
+            if(signatureBitmap != null && mSignaturePad != null){
+                mSignaturePad.setSignatureBitmap(signatureBitmap);
             }
-        });
-
-
-
-        clearButton.setOnClickListener(this);
-        saveButton.setOnClickListener(this);
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
         }
 
-        return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onClick(View v) {
@@ -142,11 +139,6 @@ public class SignaturePadActivity extends BaseActivity implements View.OnClickLi
                 finishWithResult(signatureBitmap);
             }else{
 
-      /*          Toast toast = Toast.makeText(SignaturePadActivity.this, getString(R.string.sign_pad_not_complete), Toast.LENGTH_LONG);
-
-                toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 300);
-                toast.show();*/
-
                 LayoutInflater inflater = getLayoutInflater();
                 View layout = inflater.inflate(R.layout.toast_custom_layout,
                         (ViewGroup) findViewById(R.id.toast_layout_root));
@@ -160,7 +152,6 @@ public class SignaturePadActivity extends BaseActivity implements View.OnClickLi
                 toast.setView(layout);
                 toast.show();
             }
-
 
         }
     }
@@ -198,4 +189,31 @@ public class SignaturePadActivity extends BaseActivity implements View.OnClickLi
 
     myBitmap.setPixels(allpixels, 0, myBitmap.getWidth(), 0, 0, myBitmap.getWidth(), myBitmap.getHeight());
     }
+
+/*
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(mSignaturePad != null && mSignaturePad.getSignatureBitmap() != null){
+            outState.putParcelable("KEY_BITMAP", mSignaturePad.getSignatureBitmap());
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if(savedInstanceState != null && savedInstanceState.containsKey("KEY_BITMAP")){
+            Bitmap bitmap = (Bitmap) savedInstanceState.getParcelable("KEY_BITMAP");
+            if(bitmap != null){
+                //mSignaturePad.setSignatureBitmap(bitmap);
+                signatureBitmap = bitmap;
+            }
+        }
+
+        //mSignaturePad.setSignatureBitmap((Bitmap) savedInstanceState.getParcelable("KEY_BITMAP"));
+
+    }*/
+
 }

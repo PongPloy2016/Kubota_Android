@@ -481,7 +481,7 @@ public class Step3SignFragment extends Fragment implements
         View view = Validate.inputValidate(rootLayout, "required");
         if(view != null ){
             dataComplete = false;
-            mListener.onFragmentDataComplete(this, dataComplete, null);
+            mListener.onFragmentDataComplete(this, dataComplete, collectData());
             return;
         }
 

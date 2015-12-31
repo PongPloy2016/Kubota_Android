@@ -35,7 +35,8 @@
                 android:textColor="@color/light_gray"
                 android:text="@string/sign_pad_customer_signature"
                 android:layout_alignBottom="@+id/signature_pad"
-                android:layout_marginBottom="60dp"/>
+                android:layout_marginBottom="60dp"
+                android:freezesText="true"/>
 
             <com.github.gcacace.signaturepad.views.SignaturePad
                 xmlns:android="http://schemas.android.com/apk/res/android"

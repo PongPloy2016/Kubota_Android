@@ -31,6 +31,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -617,7 +618,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             modelDataList = getModelDataList(position);
 
             if (position != 0) {
-                spinnerModel.setPrompt(productDataList[position - 1]);
+                //spinnerModel.setPrompt(productDataList[position - 1]);
                 //selectNoneModelSpinnerAdapter.setPromptText(productDataList[position - 1]);
                 spinnerModel.setEnabled(true);
                 spinnerModel.invalidate();
@@ -649,12 +650,15 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         if (view != null) {
 
+
             LinearLayout rootLayout = (LinearLayout) view.findViewById(R.id.rootLayout);
             TextView textViewDialog = (TextView) view.findViewById(R.id.textView);
             textViewDialog.setTextSize(Converter.pxTosp(getActivity(), Converter.dpTopx(getActivity(), 15)));
 
             if(position != 0){
                 textViewDialog.setTextColor(ContextCompat.getColor(getActivity(), R.color.dark_gray));
+                ImageView selectedImage = (ImageView) view.findViewById(R.id.selectedImage);
+                selectedImage.setVisibility(View.GONE);
             }
 
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textViewDialog.getLayoutParams();
@@ -752,7 +756,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         View view = Validate.inputValidate(rootLayout, "required");
         if (view != null) {
             dataComplete = false;
-            mListener.onFragmentDataComplete(this, dataComplete, null);
+            mListener.onFragmentDataComplete(this, dataComplete, collectData());
             return;
         }
 

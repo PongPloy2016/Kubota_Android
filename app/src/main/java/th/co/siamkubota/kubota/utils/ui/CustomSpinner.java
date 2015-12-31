@@ -91,5 +91,17 @@ public class CustomSpinner extends Spinner implements DialogInterface.OnClickLis
             dialog.setDialogTitle(this.prompt);
         }
     }
+
+    @Override
+    public void setSelection(int position) {
+        super.setSelection(position);
+
+        this.selected = position - 1;
+
+        if(adapter != null){
+            adapter.setSelected(selected);
+        }
+
+    }
 }
 

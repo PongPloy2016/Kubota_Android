@@ -96,6 +96,7 @@
         <activity
             android:name=".activity.SignaturePadActivity"
             android:screenOrientation="fullSensor"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/AppTheme"></activity>
 
         <service

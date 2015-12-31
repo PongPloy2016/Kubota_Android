@@ -429,7 +429,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
         for(Photo photo : photos){
             if(!photo.isComplete()){
                 dataComplete = false;
-                mListener.onFragmentDataComplete(this, dataComplete, null);
+                mListener.onFragmentDataComplete(this, dataComplete, images);
                 return;
             }
         }
