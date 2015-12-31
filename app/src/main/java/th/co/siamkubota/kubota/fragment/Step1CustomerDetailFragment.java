@@ -225,7 +225,18 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         jobTypeDataList = getResources().getStringArray(R.array.job_type);
         productDataList = getResources().getStringArray(R.array.product);
-        modelDataList = new String[0];
+        modelDataList = getModelDataList(0);
+
+        if(taskInfo != null && taskInfo.getProduct() != null && !taskInfo.getProduct().isEmpty()){
+
+            for (int i = 0 ; i < productDataList.length ; i++){
+
+                if(taskInfo.getProduct().equals(productDataList[i])){
+                    modelDataList = getModelDataList(i + 1);
+                    break;
+                }
+            }
+        }
 
 
         jobTypeSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), jobTypeDataList);
@@ -250,6 +261,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 R.layout.item_spinner_row_nothing_selected,
                 // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
                 getActivity(), getString(R.string.service_hint_model));
+
 
         mResultReceiver = new AddressResultReceiver(null);
 
@@ -325,6 +337,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         setDataChangeListener();
         setData();
 
+
     }
 
     private void setDataChangeListener() {
@@ -351,9 +364,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     private void setData() {
 
-        spinnerJobType.setSelection(getIndex(spinnerJobType, jobTypeDataList, taskInfo.getTaskType()));
-        spinnerProduct.setSelection(getIndex(spinnerProduct, productDataList, taskInfo.getProduct()));
-        spinnerModel.setSelection(getIndex(spinnerModel, modelDataList, taskInfo.getCarModel()));
+        spinnerJobType.setSelection(getIndex(spinnerJobType, taskInfo.getTaskType()));
+        spinnerProduct.setSelection(getIndex(spinnerProduct,  taskInfo.getProduct()));
+        spinnerModel.setSelection(getIndex(spinnerModel, taskInfo.getCarModel()));
 
         editTextOtherModel.setText(taskInfo.getCarModelOther());
         editTextTaskCode.setText(taskInfo.getTaskCode());
@@ -368,13 +381,13 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         if(taskInfo.getOwner()){
             radioGroupUserType.check(R.id.radioButton1);
-        }else{
+        }else if(taskInfo.getUser()){
             radioGroupUserType.check(R.id.radioButton2);
         }
 
     }
 
-    private int getIndex(Spinner spinner, String[] datalist, String string) {
+    private int getIndex(Spinner spinner, String string) {
 
 
         int index = 0;
@@ -395,7 +408,6 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 } catch (NullPointerException e) {
                     return 0;
                 }
-
             }
 
         }
@@ -568,6 +580,32 @@ public class Step1CustomerDetailFragment extends Fragment implements
         }
     }
 
+    private String[] getModelDataList(int position){
+
+        String[] dataList = new String[0];
+
+        switch (position) {
+            case 0:
+                dataList = new String[]{getString(R.string.service_hint_model)};
+                break;
+            case 1:
+                dataList = getResources().getStringArray(R.array.product_tractor);
+                break;
+            case 2:
+                dataList = getResources().getStringArray(R.array.product_harvester);
+                break;
+            case 3:
+                dataList = getResources().getStringArray(R.array.product_digger);
+                break;
+            case 4:
+            default:
+                dataList = getResources().getStringArray(R.array.product_planter);
+                break;
+        }
+
+        return dataList;
+    }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -575,26 +613,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         } else if (parent == spinnerProduct) {
 
-            //int tmppos = position - 1;
 
-            switch (position) {
-                case 0:
-                    modelDataList = new String[]{getString(R.string.service_hint_model)};
-                    break;
-                case 1:
-                    modelDataList = getResources().getStringArray(R.array.product_tractor);
-                    break;
-                case 2:
-                    modelDataList = getResources().getStringArray(R.array.product_harvester);
-                    break;
-                case 3:
-                    modelDataList = getResources().getStringArray(R.array.product_digger);
-                    break;
-                case 4:
-                default:
-                    modelDataList = getResources().getStringArray(R.array.product_planter);
-                    break;
-            }
+            modelDataList = getModelDataList(position);
 
             if (position != 0) {
                 spinnerModel.setPrompt(productDataList[position - 1]);
@@ -612,6 +632,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             selectNoneModelSpinnerAdapter.setAdapter(modelSpinnerAdapter);
             spinnerModel.setAdapter(selectNoneModelSpinnerAdapter);
             spinnerModel.invalidate();
+            spinnerModel.setSelection(getIndex(spinnerModel, taskInfo.getCarModel()));
 
 
         } else if (parent == spinnerModel) {
@@ -622,6 +643,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 layoutOtherModel.setVisibility(View.GONE);
                 editTextOtherModel.setVisibility(View.GONE);
             }
+
+            taskInfo.setCarModel(null);
         }
 
         if (view != null) {
@@ -629,7 +652,10 @@ public class Step1CustomerDetailFragment extends Fragment implements
             LinearLayout rootLayout = (LinearLayout) view.findViewById(R.id.rootLayout);
             TextView textViewDialog = (TextView) view.findViewById(R.id.textView);
             textViewDialog.setTextSize(Converter.pxTosp(getActivity(), Converter.dpTopx(getActivity(), 15)));
-            textViewDialog.setTextColor(ContextCompat.getColor(getActivity(), R.color.dark_gray));
+
+            if(position != 0){
+                textViewDialog.setTextColor(ContextCompat.getColor(getActivity(), R.color.dark_gray));
+            }
 
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textViewDialog.getLayoutParams();
             int left = Converter.dpTopx(getActivity(), 10);
@@ -1026,6 +1052,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
         return true;
     }
 
+    /**
+     * Method to verify google play services on the device
+     * */
     private boolean checkPlayServices() {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
         int result = googleAPI.isGooglePlayServicesAvailable(getActivity());

@@ -17,12 +17,11 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Objects;
 
 import io.swagger.annotations.*;
-
-
+import th.co.siamkubota.kubota.utils.function.Copier;
 
 
 @ApiModel(description = "")
-public class Task implements Parcelable {
+public class Task implements Parcelable, Cloneable {
   
   @SerializedName("taskInfo")
   private TaskInfo taskInfo = null;
@@ -181,6 +180,61 @@ public class Task implements Parcelable {
       return new Task[size];
     }
   };
+
+  ////////////////////////////////////////////////////////////////////////// implement Cloneable
+
+  @Override
+  public Object clone() throws CloneNotSupportedException {
+    Task cloned = (Task)super.clone();
+
+    cloned.setComplete(cloned.getComplete());
+    // the above is applicable in case of primitive member types,
+    // however, in case of non primitive types
+    // cloned.setNonPrimitiveType(cloned.getNonPrimitiveType().clone());
+
+    cloned.setTaskInfo(cloned.getTaskInfo());
+    cloned.setTaskImages(cloned.getTaskImages());
+    cloned.setSignature(cloned.getSignature());
+    cloned.setAnswers(cloned.getAnswers());
+    return cloned;
+  }
+
+  public Task(Task task) {
+   /* this.taskInfo = task.taskInfo;
+    this.taskImages = task.taskImages;
+    this.signature = task.signature;
+    this.answers = task.answers;
+    this.complete = task.complete;*/
+
+    setTaskInfo(new TaskInfo());
+    setTaskImages(new ArrayList<Image>());
+    setSignature(new Signature());
+    setAnswers(new ArrayList<Boolean>());
+    setComplete(task.getComplete());
+
+    Copier.copy(task.taskInfo, this.taskInfo);
+    Copier.copy(task.signature, this.signature);
+
+    this.signature.setCustomerSignatureImage(new Image());
+    this.signature.setEngineerSignatureImage(new Image());
+
+    Copier.copy(task.signature.getCustomerSignatureImage(), this.signature.getCustomerSignatureImage());
+    Copier.copy(task.signature.getEngineerSignatureImage(), this.signature.getEngineerSignatureImage());
+
+    for (Image img : task.getTaskImages()){
+
+      Image i = new Image();
+      Copier.copy(img, i);
+      taskImages.add(i);
+
+    }
+
+    for (Boolean b : task.getAnswers()){
+      answers.add(b);
+    }
+
+
+  }
 }
 
 

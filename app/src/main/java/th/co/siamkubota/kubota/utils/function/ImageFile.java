@@ -310,11 +310,11 @@ public class ImageFile {
         return Math.round((float)dp * density);
     }
 
-    public static String saveBitmapToPath(Context mContext,Bitmap bm, String name){
+    public static String saveBitmapToPath(Context mContext,Bitmap bm, String folder, String name){
 
         try{
             String tempFilePath = Environment.getExternalStorageDirectory() + "/"
-                    + mContext.getPackageName() + "/ImageTempPerDay/" + name + ".jpg";
+                    + mContext.getPackageName() + "/" + folder + "/" + name + ".jpg";
             File tempFile = new File(tempFilePath);
             if (!tempFile.exists()) {
                 if (!tempFile.getParentFile().exists()) {
@@ -345,14 +345,14 @@ public class ImageFile {
         }
         return "";
     }
-    public static void deleteFilesFromStorage(final Context mContext){
+    public static void deleteFilesFromStorage(final Context mContext, final String imageFolder){
 
         new Thread(new Runnable() {
             @Override
             public void run() {
 
                 String filePath = Environment.getExternalStorageDirectory() + "/"
-                        + mContext.getPackageName() + "/ImageTempPerDay";
+                        + mContext.getPackageName() + "/"+ imageFolder;
 
                 File dir = new File(filePath);
                 if (dir.isDirectory())
@@ -367,6 +367,14 @@ public class ImageFile {
                 }
             }
         }).start();
+    }
+
+    public static void deleteFile(String fileName){
+
+            File file = new File(fileName);
+            if(file != null && file.exists()){
+                file.delete();
+            }
     }
 
     public static void renderTextOnImage(Bitmap originalBitmap, String text) {

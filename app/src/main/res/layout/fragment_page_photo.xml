@@ -12,10 +12,7 @@ android:layout_marginTop="10dp"
 android:layout_marginBottom="10dp"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
-    android:gravity="center"
     android:id="@id/rootLayout">
-
-
 
 
     <com.joooonho.SelectableRoundedImageView
@@ -23,9 +20,8 @@ android:layout_marginBottom="10dp"
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
         android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
+        android:adjustViewBounds="false"
         android:clickable="true"
         app:sriv_left_top_corner_radius="25dp"
         app:sriv_right_top_corner_radius="25dp"

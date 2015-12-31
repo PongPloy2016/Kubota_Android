@@ -17,6 +17,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ public class SignaturePadActivity extends BaseActivity implements View.OnClickLi
     private Button clearButton;
     private Button saveButton;
     private TextView titleTextView;
+    private ProgressBar progress;
 
     private String title;
     private String signatureImagePath;
@@ -66,6 +68,7 @@ public class SignaturePadActivity extends BaseActivity implements View.OnClickLi
         saveButton = (Button) findViewById(R.id.saveButton);
         mSignaturePad = (SignaturePad) findViewById(R.id.signature_pad);
         titleTextView = (TextView) findViewById(R.id.titleTextView);
+        progress = (ProgressBar) findViewById(R.id.progress);
 
         titleTextView.setText(title);
 
@@ -125,6 +128,8 @@ public class SignaturePadActivity extends BaseActivity implements View.OnClickLi
         }else if(v == saveButton){
 
             if(signed){
+
+                progress.setVisibility(View.VISIBLE);
                 //getActivity().getSupportFragmentManager().popBackStack();
                 signatureBitmap = mSignaturePad.getTransparentSignatureBitmap(true);
                 //signatureBitmap = mSignaturePad.getSignatureBitmap();
@@ -163,7 +168,7 @@ public class SignaturePadActivity extends BaseActivity implements View.OnClickLi
 
     private void finishWithResult(Bitmap bitmap)
     {
-        String imagePath = ImageFile.saveBitmapToPath(SignaturePadActivity.this, bitmap, "signature_" +Converter.DateToString(new Date(), "yyyyMMddHHmmss"));
+        String imagePath = ImageFile.saveBitmapToPath(SignaturePadActivity.this, bitmap, getString(R.string.image_path), "signature_" +Converter.DateToString(new Date(), "yyyyMMddHHmmss"));
 
         Intent intent = new Intent();
         Bundle bundle = new Bundle();

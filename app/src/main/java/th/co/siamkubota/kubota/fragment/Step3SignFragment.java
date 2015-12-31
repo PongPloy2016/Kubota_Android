@@ -33,6 +33,7 @@ import th.co.siamkubota.kubota.app.AppController;
 import th.co.siamkubota.kubota.app.Config;
 import th.co.siamkubota.kubota.model.Photo;
 import th.co.siamkubota.kubota.utils.function.Converter;
+import th.co.siamkubota.kubota.utils.function.ImageFile;
 import th.co.siamkubota.kubota.utils.function.Validate;
 
 /**
@@ -189,22 +190,34 @@ public class Step3SignFragment extends Fragment implements
 
     private void setData() {
 
-        if(signature.getCustomerSignatureImage() != null){
-            imageCustomer.setServerPath(signature.getCustomerSignatureImage().getImage());
+        signatureCustomerHintLayout.setVisibility(View.GONE);
+        signatureTechnicianHintLayout.setVisibility(View.GONE);
+
+        if(signature.getCustomerSignatureImage() != null ){
+            //imageCustomer.setServerPath(signature.getCustomerSignatureImage().getImage());
             imageCustomer.setPath(signature.getCustomerSignatureImage().getImagePath());
             imageCustomer.setDate(signature.getCustomerSignatureImage().getCapturedAt());
-        }else if(signature.getCustomerSignature() != null && !signature.getCustomerSignature().isEmpty()){
-            imageCustomer.setPath(signature.getCustomerSignature());
+            imageCustomer.setComplete(true);
+       /* }else if(signature.getCustomerSignature() != null && !signature.getCustomerSignature().isEmpty()){
+            imageCustomer.setServerPath(signature.getCustomerSignature());
             imageCustomer.setDate(signature.getCustomerSignedDate());
+            imageCustomer.setComplete(true);*/
+        }else{
+            signatureCustomerHintLayout.setVisibility(View.VISIBLE);
+
         }
 
         if(signature.getEngineerSignatureImage() != null){
-            imageTechnician.setServerPath(signature.getEngineerSignatureImage().getImage());
+            //imageTechnician.setServerPath(signature.getEngineerSignatureImage().getImage());
             imageTechnician.setPath(signature.getEngineerSignatureImage().getImagePath());
+            imageTechnician.setDate(signature.getEngineerSignatureImage().getCapturedAt());
+            imageTechnician.setComplete(true);
+       /* }else if(signature.getEngineerSignature() != null && !signature.getEngineerSignature().isEmpty()){
+            imageTechnician.setServerPath(signature.getEngineerSignature());
             imageTechnician.setDate(signature.getEngineerSignedDate());
-        }else if(signature.getCustomerSignature() != null && !signature.getCustomerSignature().isEmpty()){
-            imageTechnician.setPath(signature.getEngineerSignature());
-            imageTechnician.setDate(signature.getEngineerSignedDate());
+            imageTechnician.setComplete(true);*/
+        }else{
+            signatureTechnicianHintLayout.setVisibility(View.VISIBLE);
         }
 
         setImage(imageCustomerSignature,imageCustomer );
@@ -224,9 +237,11 @@ public class Step3SignFragment extends Fragment implements
         checkBoxUserAccept.setChecked(signature.getCustomerAccept());
         checkBoxTecnicianAccept.setChecked(signature.getEngineerAccept());
 
+        validateInput();
+
     }
 
-    private void setImage(final ImageView imageView, Photo data){
+    private void setImage(final SelectableRoundedImageView imageView, Photo data){
 
         imageView.setVisibility(View.VISIBLE);
 
@@ -384,6 +399,10 @@ public class Step3SignFragment extends Fragment implements
 
             if(imageCustomer != null && requestCode == imageCustomer.getId()){
 
+                if(imageCustomer.getPath() != null && !imageCustomer.getPath().isEmpty()){
+                    ImageFile.deleteFile(imageCustomer.getPath());
+                }
+
                 imageCustomer.setPath(imagePath);
                 imageCustomer.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
                 imageCustomerSignature.setImageURI(Uri.fromFile(new File(imageCustomer.getPath())));
@@ -395,6 +414,11 @@ public class Step3SignFragment extends Fragment implements
                 validateInput();
 
             }else if(imageTechnician != null && requestCode == imageTechnician.getId()){
+
+                if(imageTechnician.getPath() != null && !imageTechnician.getPath().isEmpty()){
+                    ImageFile.deleteFile(imageTechnician.getPath());
+                }
+
                 imageTechnician.setPath(imagePath);
                 imageTechnician.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
                 imageTechnicianSignature.setImageURI(Uri.fromFile(new File(imageTechnician.getPath())));

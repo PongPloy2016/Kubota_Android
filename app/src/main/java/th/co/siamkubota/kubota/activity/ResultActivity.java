@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
 
@@ -29,6 +31,7 @@ import io.swagger.client.model.LoginData;
 import io.swagger.client.model.LoginResponse;
 import io.swagger.client.model.Signature;
 import io.swagger.client.model.Task;
+import io.swagger.client.model.TaskInfo;
 import io.swagger.client.model.UploadResponse;
 import retrofit.Call;
 import retrofit.Callback;
@@ -38,6 +41,8 @@ import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
 import th.co.siamkubota.kubota.fragment.LoadingDialogFragment;
 import th.co.siamkubota.kubota.sqlite.TaskDataSource;
+import th.co.siamkubota.kubota.utils.function.Copier;
+import th.co.siamkubota.kubota.utils.function.ImageFile;
 import th.co.siamkubota.kubota.utils.function.Ui;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -53,6 +58,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
     private TextView messageText;
     private Button okButton;
     private Task task;
+    private Task taskSave;
     private LoginData loginData;
 
     private Call<UploadResponse> callUpload;
@@ -62,6 +68,14 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
     private String shopName;
 
     private TaskDataSource dataSource;
+
+
+    private Handler handler;
+    private Runnable runnable;
+    boolean mStopHandler = false;
+    private final long limitTime = 500L;
+    private long delay_time;
+    private long time = limitTime;
 
 
     @Override
@@ -82,6 +96,17 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         Bundle bundle = getIntent().getExtras();
         if(bundle.containsKey(ResultActivity.KEY_TASK)){
             task = bundle.getParcelable(ResultActivity.KEY_TASK);
+            taskSave = new Task(task);
+            /*taskSave.setTaskInfo(new TaskInfo());
+            taskSave.setTaskImages(new ArrayList<Image>());
+            taskSave.setSignature(new Signature());
+            taskSave.setAnswers(new ArrayList<Boolean>());
+            taskSave.setComplete(task.getComplete());*/
+
+
+
+
+
         }
 
 
@@ -100,12 +125,14 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                 @Override
                 public void onFinishDialog() {
                     //finish();
+                    //alertLoading.updateProgress(100);
                 }
             });
 
-            //alert.show(getSupportFragmentManager(), "loading");
+            handler = new Handler();
 
             uploadImage();
+
         }
 
 
@@ -141,7 +168,6 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             Bundle bundle = new Bundle();
             bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, loginData);
-            //bundle.putString("shopName", shopName);
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
@@ -151,8 +177,20 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
     private void uploadImage(){
 
-        //spinner.setVisibility(View.VISIBLE);
         alertLoading.show(getSupportFragmentManager(), "loading");
+
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                // do your stuff - don't create a new runnable here!
+                if(alertLoading.getProgress() < 50){
+                    alertLoading.increaseProgress(2);
+                    handler.postDelayed(this, time);
+                }
+            }
+        };
+        handler.post(runnable);
+
 
         RequestBody image1body = null;
         RequestBody image2body = null;
@@ -180,22 +218,6 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
             image4body = RequestBody.create(MediaType.parse("image/jpeg"), image4);
         }
 
-        //File file = new File(media.getPath());
-       /* image1 = new File(task.getTaskImages().get(0).getImagePath() );
-        RequestBody image1body = RequestBody.create(MediaType.parse("image/jpeg"), image1);
-        image2 = new File(task.getTaskImages().get(1).getImagePath());
-        RequestBody image2body = RequestBody.create(MediaType.parse("image/jpeg"), image2);
-        image3 = new File(task.getTaskImages().get(2).getImagePath());
-        RequestBody image3body = RequestBody.create(MediaType.parse("image/jpeg"), image3);
-        image4 = new File(task.getTaskImages().get(3).getImagePath());
-        RequestBody image4body = RequestBody.create(MediaType.parse("image/jpeg"), image4);
-         signature1 = new File(task.getSignature().getCustomerSignatureImage().getImagePath());
-        RequestBody signature1body = RequestBody.create(MediaType.parse("image/jpeg"), signature1);
-
-        signature2 = new File(task.getSignature().getEngineerSignatureImage().getImagePath());
-        RequestBody signature2body = RequestBody.create(MediaType.parse("image/jpeg"), signature2);
-        */
-
 
         Signature signature = task.getSignature();
 
@@ -210,8 +232,6 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         }
 
 
-
-
         DefaultApi service = ServiceGenerator.createService(DefaultApi.class);
 
         callUpload = service.uploadMultiple(image1body, image2body, image3body, image4body, signature1body, signature2body);
@@ -220,47 +240,47 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
             public void onResponse(Response<UploadResponse> response, Retrofit retrofit) {
                 // Get result Repo from response.body()
 
+                handler.removeCallbacks(runnable);
+
                 UploadResponse uploadData = response.body();
 
                 if(uploadData != null && uploadData.getResult().equals("success")){
+
+                    alertLoading.updateProgress(50);
 
                     List<Image> images = task.getTaskImages();
                     if(uploadData.getParameter().getImage1() != null){
                         images.get(0).setImage(uploadData.getParameter().getImage1());
                     }
-
                     if(uploadData.getParameter().getImage2() != null){
                         images.get(1).setImage(uploadData.getParameter().getImage2());
                     }
-
                     if(uploadData.getParameter().getImage3() != null){
                         images.get(2).setImage(uploadData.getParameter().getImage3());
                     }
-
                     if(uploadData.getParameter().getImage4() != null){
                         images.get(3).setImage(uploadData.getParameter().getImage4());
                     }
-
 
                     Signature signature = task.getSignature();
 
                     if(uploadData.getParameter().getSignature1() != null){
                         signature.setCustomerSignature(uploadData.getParameter().getSignature1());
                     }
-
                     if(uploadData.getParameter().getSignature2() != null){
                         signature.setEngineerSignature(uploadData.getParameter().getSignature2());
                     }
 
-
-                 /*   images.get(0).setImage(uploadData.getParameter().getImage1());
-                    images.get(1).setImage(uploadData.getParameter().getImage2());
-                    images.get(2).setImage(uploadData.getParameter().getImage3());
-                    images.get(3).setImage(uploadData.getParameter().getImage4());
-                    signature.setCustomerSignature(uploadData.getParameter().getSignature1());
-                    signature.setEngineerSignature(uploadData.getParameter().getSignature2());
-                    */
-
+//                    int i = 0;
+//                    for (Image image : images){
+//                        taskSave.getTaskImages().set(i, image);
+//                        i++;
+//                    }
+//
+//                    taskSave.getSignature().getCustomerSignatureImage().setImagePath(signature.getCustomerSignatureImage().getImagePath());
+//                    taskSave.getSignature().getCustomerSignatureImage().setCapturedAt(signature.getCustomerSignatureImage().getCapturedAt());
+//                    taskSave.getSignature().getEngineerSignatureImage().setImagePath(signature.getEngineerSignatureImage().getImagePath());
+//                    taskSave.getSignature().getEngineerSignatureImage().setCapturedAt(signature.getEngineerSignatureImage().getCapturedAt());
 
                     images.get(0).setImagePath(null);
                     images.get(1).setImagePath(null);
@@ -270,26 +290,8 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     signature.setEngineerSignatureImage(null);
 
 
-                    List<Task> taskList = new ArrayList<Task>();
-                    taskList.add(task);
 
-                    Gson gson = new Gson();
-
-                    String json = gson.toJson(taskList);
-
-                    submitTask(taskList);
-                    //saveTask(taskList.get(0));
-
-/*                    Intent intent = new Intent(ResultActivity.this, QuestionnairActivity.class);
-                    //intent.putExtra(LoginActivity.KEY_ARGS, bundle);
-                    // Create Bundle & Add user
-//                    Bundle bundle = new Bundle();
-//                    bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA,loginData.getParameter());
-
-                    //intent.putExtras(bundle);
-                    startActivity(intent);
-                    finish();*/
-
+                    submitTask(task);
 
                 }else{
 
@@ -303,26 +305,44 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     //Ui.showAlertError(ResultActivity.this, message);
                     showResultFail();
                     alertLoading.dismiss();
+                    saveTask(taskSave);
                 }
-                //spinner.setVisibility(View.GONE);
 
             }
 
 
             @Override
             public void onFailure(Throwable t) {
-                //spinner.setVisibility(View.GONE);
-                alertLoading.dismiss();
-                //Ui.showAlertError(ResultActivity.this, t.getMessage());
+                handler.removeCallbacks(runnable);
                 showResultFail();
+                alertLoading.dismiss();
+                saveTask(taskSave);
             }
         });
     }
 
-    private void submitTask(final List<Task> taskList){
+    private void submitTask(Task task){
 
-        //spinner.setVisibility(View.VISIBLE);
-        //alertLoading.show(getSupportFragmentManager(), "loading");
+
+        final List<Task> taskList = new ArrayList<Task>();
+        taskList.add(task);
+       /* Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd' 'HH:mm:ss").create();
+        String json = gson.toJson(taskList);*/
+
+
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                // do your stuff - don't create a new runnable here!
+                if(alertLoading.getProgress() < 100){
+                    alertLoading.increaseProgress(2);
+                    handler.postDelayed(this, time);
+                }
+            }
+        };
+        handler.post(runnable);
+
 
         DefaultApi service = ServiceGenerator.createService(DefaultApi.class);
 
@@ -332,14 +352,27 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
             public void onResponse(Response<io.swagger.client.model.Response> response, Retrofit retrofit) {
                 // Get result Repo from response.body()
 
+                handler.removeCallbacks(runnable);
+                alertLoading.updateProgress(100);
+
                 io.swagger.client.model.Response submitData = response.body();
 
                 if(submitData != null && submitData.getResult().equals("success")){
 
-                    //deleteTask(task.getTaskInfo().getTaskCode());
 
-                    saveTask(taskList.get(0));
+                    List<Image> images = taskSave.getTaskImages();
 
+                    for (Image image : images){
+                        ImageFile.deleteFile(image.getImagePath());
+                    }
+
+                    Signature signature = taskSave.getSignature();
+                    ImageFile.deleteFile(signature.getCustomerSignatureImage().getImagePath());
+                    ImageFile.deleteFile(signature.getEngineerSignatureImage().getImagePath());
+
+                    deleteTask(taskSave.getTaskInfo().getTaskCode());
+
+                    //saveTask(taskSave);
 
                 }else{
 
@@ -351,20 +384,19 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     }
 
                     showResultFail();
-                    saveTask(taskList.get(0));
+                    saveTask(taskSave);
 
                 }
-                //spinner.setVisibility(View.GONE);
                 alertLoading.dismiss();
             }
 
 
             @Override
             public void onFailure(Throwable t) {
-                //spinner.setVisibility(View.GONE);
+                handler.removeCallbacks(runnable);
                 alertLoading.dismiss();
-                //Ui.showAlertError(ResultActivity.this, t.getMessage());
                 showResultFail();
+                saveTask(taskSave);
             }
         });
     }

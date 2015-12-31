@@ -18,7 +18,7 @@ import io.swagger.annotations.*;
 
 
 @ApiModel(description = "")
-public class TaskInfo implements Parcelable {
+public class TaskInfo implements Parcelable, Cloneable {
   
   @SerializedName("engineerID")
   private String engineerID = null;
@@ -389,6 +389,14 @@ public class TaskInfo implements Parcelable {
       return new TaskInfo[size];
     }
   };
+
+
+  ////////////////////////////////////////////////////////////////////////// implement Cloneable
+
+  @Override
+  protected Object clone() throws CloneNotSupportedException {
+    return super.clone();
+  }
 }
 
 

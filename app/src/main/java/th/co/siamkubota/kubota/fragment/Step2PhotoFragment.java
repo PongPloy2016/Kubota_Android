@@ -138,17 +138,22 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
             int i = 0;
             for(Image img : images){
-                if(img.getImage() != null  && !img.getImage().isEmpty()){
+                /*if(img.getImage() != null  && !img.getImage().isEmpty()){
                     photos.get(i).setServerPath(img.getImage());
-                }else{
+                    photos.get(i).setComplete(true);
+                }else */
+                if(img.getImagePath() != null  && !img.getImagePath().isEmpty()){
                     photos.get(i).setPath(img.getImagePath());
+                    photos.get(i).setComplete(true);
                 }
 
-                photos.get(i).setComplete(true);
+                i++;
 
             }
 
-            dataComplete = true;
+            if(images.size() == 4){
+                dataComplete = true;
+            }
 
         }
 

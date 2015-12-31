@@ -1,5 +1,6 @@
 package th.co.siamkubota.kubota.fragment;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -133,6 +134,10 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
         if(data.getPath() != null && !data.getPath().isEmpty()){
             imageView.setImageURI(Uri.fromFile(new File(this.data.getPath())));
 
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            imageView.setLayoutParams(params);
+            imageView.requestLayout();
+
         }else if(data.getServerPath() != null && !data.getServerPath().isEmpty()){
 
             ImageLoader imageLoader = AppController.getInstance().getImageLoader();
@@ -152,13 +157,16 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
                     if (response.getBitmap() != null) {
                         // load image into imageview
                         imageView.setImageBitmap(response.getBitmap());
+
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        imageView.setLayoutParams(params);
+                        imageView.requestLayout();
+
                     }else{
                         //imageView.setImageResource(R.drawable.demo_logo_product);
                     }
                 }
             });
-
-
         }
 
     }
@@ -222,13 +230,6 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
             if(data != null && ( (data.getPath() != null && !data.getPath().isEmpty())
                     || (data.getServerPath() != null && !data.getServerPath().isEmpty())
             )){
-               /* Intent intent = new Intent(getActivity(), ImageViewActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(ImageViewActivity.KEY_IMAGE_PATH, data.getPath());
-                bundle.putString(ImageViewActivity.KEY_IMAGE_TITLE, data.getTitle());
-
-                intent.putExtras(bundle);
-                startActivity(intent);*/
 
                 mListener.onPhotoView(this, data);
             }
@@ -247,6 +248,10 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
             String imagePath = bundle.getString("imagePath");
             String dateInfo = bundle.getString("takenDate");
             //imageView.setTag(R.id.imagePath, imagePath);
+
+            if(this.data.getPath() != null && !this.data.getPath().isEmpty()){
+                ImageFile.deleteFile(this.data.getPath());
+            }
 
             this.data.setServerPath(null);
             this.data.setPath(imagePath);

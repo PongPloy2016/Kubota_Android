@@ -120,6 +120,8 @@ public class ServiceFragment extends Fragment implements
             answers.add(true);
             answers.add(false);
             task.setAnswers(answers);
+        }else{
+
         }
 
 
@@ -229,9 +231,17 @@ public class ServiceFragment extends Fragment implements
                     divStep3.setImageResource(R.drawable.edge_orage);
                     step3Button.setImageResource(R.drawable.white_number03);
                 }else{
-                    backStep3.setBackgroundResource(R.color.white);
-                    divStep3.setImageResource(R.drawable.edge_white);
-                    step3Button.setImageResource(R.drawable.deepgrey_number03);
+
+                    if(pageChangeListener.getCurrentPage() == 2){
+                        backStep3.setBackgroundResource(R.color.white);
+                        divStep3.setImageResource(R.drawable.edge_white);
+                        step3Button.setImageResource(R.drawable.deepgrey_number03);
+                    }else{
+                        backStep3.setBackgroundResource(R.color.light_gray_stage);
+                        divStep3.setImageResource(R.drawable.edge_grey);
+                        step3Button.setImageResource(R.drawable.lightgrey_number03);
+                    }
+
                 }
 
                 break;

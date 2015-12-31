@@ -16,8 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
         android:gravity="center">
 
 
@@ -41,17 +41,26 @@
             android:layout_marginBottom="30dp"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:gravity="center">
-            <ProgressBar
+          <!--  <ProgressBar
                 android:id="@+id/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:layout_centerHorizontal="true"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:indeterminate="true"/>
+                android:indeterminate="true"/>-->
             <!--style="?android:attr/progressBarStyleHorizontal"-->
             <!--android:indeterminate="true"-->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_centerHorizontal="true"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:indeterminate="false"
+                android:progressDrawable="@drawable/blueprogress"
+                android:max="100"/>
 
         </LinearLayout>
 

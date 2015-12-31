@@ -294,7 +294,7 @@ public class CameraTakeActivity extends BaseActivity implements
             bitmap = ImageFile.drawTextToBitmap(CameraTakeActivity.this, bitmap, renderText );
         }
 
-        String imagePath = ImageFile.saveBitmapToPath(CameraTakeActivity.this, bitmap, Converter.DateToString(takenDate, "yyyyMMddHHmmss"));
+        String imagePath = ImageFile.saveBitmapToPath(CameraTakeActivity.this, bitmap, getString(R.string.image_path), Converter.DateToString(takenDate, "yyyyMMddHHmmss"));
 
         //Convert to byte array
 //        ByteArrayOutputStream stream = new ByteArrayOutputStream();

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Kubota</string>
     <string name="action_settings">Settings</string>
+    <string name="image_path">kubota</string>
 
     <!-- Main -->
     <string name="main_enter_store_button">เข้าระบบร้าน</string>
@@ -40,7 +41,7 @@
     <string name="service_title_confirm_submittion">ยืนยันการส่งข้อมูล</string>
 
     <string name="service_radio_caption_owner">เจ้าของรถ</string>
-    <string name="service_radio_caption_user">ผู้ใช้</string>
+    <string name="service_radio_caption_user">ผู้ใช้รถ</string>
 
     <string name="service_select_title">เลือกรุ่นรถ</string>
 

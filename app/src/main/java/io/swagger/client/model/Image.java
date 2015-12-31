@@ -19,7 +19,7 @@ import io.swagger.annotations.*;
 
 
 @ApiModel(description = "")
-public class Image implements Parcelable {
+public class Image implements Parcelable , Cloneable{
   
   @SerializedName("image")
   private String image = null;
@@ -158,6 +158,13 @@ public class Image implements Parcelable {
       return new Image[size];
     }
   };
+
+  ////////////////////////////////////////////////////////////////////////// implement Cloneable
+
+  @Override
+  protected Object clone() throws CloneNotSupportedException {
+    return super.clone();
+  }
 }
 
 
