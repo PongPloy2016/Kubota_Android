@@ -119,15 +119,6 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private EditText editTextServiceAddress;
     private EditText editTextCustomerAddress;
 
-    private TextView requireOtherModel;
-    private TextView requireTaskCode;
-    private TextView requireName;
-    private TextView requireTel1;
-    private TextView requireMachineNumber;
-    private TextView requireEngineNumber;
-    private TextView requireWorkHours;
-    private TextView requireServiceAddress;
-    private TextView requireCustomerAddress;
 
     private ImageButton locationButton;
 
@@ -214,65 +205,84 @@ public class Step1CustomerDetailFragment extends Fragment implements
     //////////////////////////////////////////////////////////////////// onCreate
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //outState.putParcelable(KEY_TASK_INFO, taskInfo);
+        //mListener.onFragmentSaveInstanceState(this);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if(savedInstanceState != null){
+
+            //taskInfo = savedInstanceState.getParcelable(KEY_TASK_INFO);
+
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setRetainInstance(true);
-        if (getArguments() != null) {
-            //title = getArguments().getString(KEY_TITLE);
-            taskInfo = getArguments().getParcelable(KEY_TASK_INFO);
-        }
 
-        //taskInfo = new TaskInfo();
+        //if(savedInstanceState == null){
 
-        jobTypeDataList = getResources().getStringArray(R.array.job_type);
-        productDataList = getResources().getStringArray(R.array.product);
-        modelDataList = getModelDataList(0);
+            if (getArguments() != null) {
+                taskInfo = getArguments().getParcelable(KEY_TASK_INFO);
+            }
+            //taskInfo = new TaskInfo();
 
-        if(taskInfo != null && taskInfo.getProduct() != null && !taskInfo.getProduct().isEmpty()){
+            jobTypeDataList = getResources().getStringArray(R.array.job_type);
+            productDataList = getResources().getStringArray(R.array.product);
+            modelDataList = getModelDataList(0);
 
-            for (int i = 0 ; i < productDataList.length ; i++){
+            if(taskInfo != null && taskInfo.getProduct() != null && !taskInfo.getProduct().isEmpty()){
 
-                if(taskInfo.getProduct().equals(productDataList[i])){
-                    modelDataList = getModelDataList(i + 1);
-                    break;
+                for (int i = 0 ; i < productDataList.length ; i++){
+
+                    if(taskInfo.getProduct().equals(productDataList[i])){
+                        modelDataList = getModelDataList(i + 1);
+                        break;
+                    }
                 }
             }
-        }
 
 
-        jobTypeSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), jobTypeDataList);
-        productSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), productDataList);
-        modelSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), modelDataList);
+            jobTypeSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), jobTypeDataList);
+            productSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), productDataList);
+            modelSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), modelDataList);
 
 
-        selectNoneJobTypeSpinnerAdapter = new SelectNoneSpinnerAdapter(
-                jobTypeSpinnerAdapter,
-                R.layout.item_spinner_row_nothing_selected,
-                // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
-                getActivity(), getString(R.string.service_hint_job_type));
+            selectNoneJobTypeSpinnerAdapter = new SelectNoneSpinnerAdapter(
+                    jobTypeSpinnerAdapter,
+                    R.layout.item_spinner_row_nothing_selected,
+                    // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                    getActivity(), getString(R.string.service_hint_job_type));
 
-        selectNoneProductSpinnerAdapter = new SelectNoneSpinnerAdapter(
-                productSpinnerAdapter,
-                R.layout.item_spinner_row_nothing_selected,
-                // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
-                getActivity(), getString(R.string.service_hint_product));
+            selectNoneProductSpinnerAdapter = new SelectNoneSpinnerAdapter(
+                    productSpinnerAdapter,
+                    R.layout.item_spinner_row_nothing_selected,
+                    // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                    getActivity(), getString(R.string.service_hint_product));
 
-        selectNoneModelSpinnerAdapter = new SelectNoneSpinnerAdapter(
-                modelSpinnerAdapter,
-                R.layout.item_spinner_row_nothing_selected,
-                // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
-                getActivity(), getString(R.string.service_hint_model));
-
-
-        mResultReceiver = new AddressResultReceiver(null);
+            selectNoneModelSpinnerAdapter = new SelectNoneSpinnerAdapter(
+                    modelSpinnerAdapter,
+                    R.layout.item_spinner_row_nothing_selected,
+                    // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                    getActivity(), getString(R.string.service_hint_model));
 
 
-        // First we need to check availability of play services
-        if (checkPlayServices()) {
-            // Building the GoogleApi client
-            buildGoogleApiClient();
-            createLocationRequest();
-        }
+            mResultReceiver = new AddressResultReceiver(null);
+
+
+            // First we need to check availability of play services
+            if (checkPlayServices()) {
+                // Building the GoogleApi client
+                buildGoogleApiClient();
+                createLocationRequest();
+            }
+        //}
 
     }
 
@@ -308,15 +318,6 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextServiceAddress = (EditText) v.findViewById(R.id.editTextServiceAddress);
         editTextCustomerAddress = (EditText) v.findViewById(R.id.editTextCustomerAddress);
 
-        requireOtherModel = (TextView) v.findViewById(R.id.requireOtherModel);
-        requireTaskCode = (TextView) v.findViewById(R.id.requireTaskCode);
-        requireName = (TextView) v.findViewById(R.id.requireName);
-        requireTel1 = (TextView) v.findViewById(R.id.requireTel1);
-        requireMachineNumber = (TextView) v.findViewById(R.id.requireMachineNumber);
-        requireEngineNumber = (TextView) v.findViewById(R.id.requireEngineNumber);
-        requireWorkHours = (TextView) v.findViewById(R.id.requireWorkHours);
-        requireServiceAddress = (TextView) v.findViewById(R.id.requireServiceAddress);
-        requireCustomerAddress = (TextView) v.findViewById(R.id.requireCustomerAddress);
 
         locationButton = (ImageButton) v.findViewById(R.id.locationButton);
 
@@ -335,8 +336,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         Ui.setupUI(getActivity(), rootLayout);
 
-        setDataChangeListener();
         setData();
+        setDataChangeListener();
+        validateInput();
 
 
     }
@@ -433,21 +435,11 @@ public class Step1CustomerDetailFragment extends Fragment implements
             }
             intent.putExtra(Constants.LOCATION_NAME_DATA_EXTRA, addressText);
         } else {
-           /* if(latitudeText.length() == 0 || longitudeText.length() == 0) {
-                Toast.makeText(getActivity(),
-                        "Please enter both latitude and longitude",
-                        Toast.LENGTH_LONG).show();
-                return;
-            }*/
 
             if (mLastLocation == null) {
                 return;
             }
-            /*intent.putExtra(Constants.LOCATION_LATITUDE_DATA_EXTRA,
-                    Double.parseDouble(latitudeText));
-            intent.putExtra(Constants.LOCATION_LONGITUDE_DATA_EXTRA,
-                    Double.parseDouble(longitudeText));
-*/
+
             intent.putExtra(Constants.LOCATION_LATITUDE_DATA_EXTRA,
                     mLastLocation.getLatitude());
             intent.putExtra(Constants.LOCATION_LONGITUDE_DATA_EXTRA,
@@ -532,10 +524,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        //public void onFragmentInteraction(Uri uri);
-        //public void onFragmentPresent(Fragment fragment, String title);
         public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data);
-        //public void onRequestAddress();
+        public void onFragmentSaveInstanceState(Fragment fragment);
 
     }
 
@@ -767,41 +757,71 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     private TaskInfo collectData() {
 
-        taskInfo.setTaskType(spinnerJobType.getSelectedItem().toString());
-        taskInfo.setProduct(spinnerProduct.getSelectedItem().toString());
-        taskInfo.setCarModel(spinnerModel.getSelectedItem().toString());
-        if (taskInfo.getCarModel().equals("อื่นๆ")) {
+        if(spinnerJobType.getSelectedItem() != null){
+            taskInfo.setTaskType(spinnerJobType.getSelectedItem().toString());
+        }
+        if(spinnerProduct.getSelectedItem() != null){
+            taskInfo.setProduct(spinnerProduct.getSelectedItem().toString());
+        }
+        if(spinnerModel.getSelectedItem() != null){
+            taskInfo.setCarModel(spinnerModel.getSelectedItem().toString());
+        }
+
+        if (taskInfo.getCarModel() != null && taskInfo.getCarModel().equals("อื่นๆ") && editTextOtherModel.getText() != null ) {
             taskInfo.setCarModelOther(editTextOtherModel.getText().toString());
         } else {
             taskInfo.setCarModelOther("");
         }
 
-        if(taskInfo.getTaskCode() != null && !taskInfo.getTaskCode().equals(editTextTaskCode.getText().toString())){
+       /* if(taskInfo.getTaskCode() != null && !taskInfo.getTaskCode().equals(editTextTaskCode.getText().toString()) && !editTextTaskCode.getText().toString().isEmpty()){
             long row = updateTask(taskInfo.getTaskCode(), editTextTaskCode.getText().toString() );
 
             if(row < 0){
                 deleteTask(taskInfo.getTaskCode());
             }
+
+        }else if(taskInfo.getTaskCode() == null && editTextTaskCode.getText() != null && !editTextTaskCode.getText().toString().isEmpty()){
+            long row = updateTask("undefine", editTextTaskCode.getText().toString() );
+        }*/
+
+        if(editTextTaskCode.getText() != null){
+            taskInfo.setTaskCode(editTextTaskCode.getText().toString());
         }
 
-        taskInfo.setTaskCode(editTextTaskCode.getText().toString());
-        taskInfo.setCustomerName(editTextName.getText().toString());
-        taskInfo.setTel1(editTextTel1.getText().toString());
-        if (!editTextTel2.getText().toString().isEmpty()) {
+        if(editTextName.getText() != null){
+            taskInfo.setCustomerName(editTextName.getText().toString());
+        }
+        if(editTextTel1.getText() != null){
+            taskInfo.setTel1(editTextTel1.getText().toString());
+        }
+
+        if (editTextTel2.getText() != null && !editTextTel2.getText().toString().isEmpty()) {
             taskInfo.setTel2(editTextTel2.getText().toString());
         } else {
             taskInfo.setTel2("");
         }
-        taskInfo.setCarNo(editTextCarNumber.getText().toString());
-        taskInfo.setEngineNo(editTextEngineNumber.getText().toString());
-        taskInfo.setUsageHours(editTextWorkHours.getText().toString());
-        taskInfo.setAddress(editTextServiceAddress.getText().toString());
-        taskInfo.setCustomerAddress(editTextCustomerAddress.getText().toString());
+
+        if(editTextCarNumber.getText() != null){
+            taskInfo.setCarNo(editTextCarNumber.getText().toString());
+        }
+        if(editTextEngineNumber.getText() != null){
+            taskInfo.setEngineNo(editTextEngineNumber.getText().toString());
+        }
+        if(editTextWorkHours.getText() != null){
+            taskInfo.setUsageHours(editTextWorkHours.getText().toString());
+        }
+        if(editTextServiceAddress.getText() != null){
+            taskInfo.setAddress(editTextServiceAddress.getText().toString());
+        }
+        if(editTextCustomerAddress.getText() != null){
+            taskInfo.setCustomerAddress(editTextCustomerAddress.getText().toString());
+        }
+
 
         if(radioGroupUserType.getCheckedRadioButtonId() == R.id.radioButton1){
             taskInfo.setOwner(true);
             taskInfo.setUser(false);
-        }else{
+        }else  if(radioGroupUserType.getCheckedRadioButtonId() == R.id.radioButton2){
             taskInfo.setOwner(false);
             taskInfo.setUser(true);
         }

@@ -85,13 +85,6 @@ public class UnfinishTaskFragment extends Fragment implements
             datalist = getArguments().getParcelableArrayList(ARG_PARAM_DATA);
         }
 
-       /* datalist = new ArrayList<Task>();
-
-        datalist.add(new Task("งานที่ 1", true));
-        datalist.add(new Task("งานที่ 2", true));
-        datalist.add(new Task("งานที่ 3", true));
-        datalist.add(new Task("งานที่ 4", true));
-        datalist.add(new Task("งานที่ 5", false));*/
 
     }
 

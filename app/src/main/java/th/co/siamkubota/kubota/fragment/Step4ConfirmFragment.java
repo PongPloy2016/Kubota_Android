@@ -70,13 +70,27 @@ View.OnClickListener{
         // Required empty public constructor
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //mListener.onFragmentSaveInstanceState(this);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if(savedInstanceState != null){
+
+        }
+
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            title = getArguments().getString(ARG_PARAM_TITLE);
-        }
-
     }
 
     @Override
@@ -85,14 +99,22 @@ View.OnClickListener{
         // Inflate the layout for this fragment
         //View v = View.inflate(getActivity(), R.layout.tab_product, null);
         View v = inflater.inflate(R.layout.fragment_step4_confirm, container, false);
-        confirmButton = (Button) v.findViewById(R.id.confirmButton);
-        cancelButton = (Button) v.findViewById(R.id.cancelButton);
-
-        confirmButton.setOnClickListener(this);
-        cancelButton.setOnClickListener(this);
 
 
         return v;
+    }
+
+    @Override
+    public void onViewCreated(View v, Bundle savedInstanceState) {
+
+        if(savedInstanceState == null){
+            confirmButton = (Button) v.findViewById(R.id.confirmButton);
+            cancelButton = (Button) v.findViewById(R.id.cancelButton);
+
+            confirmButton.setOnClickListener(this);
+            cancelButton.setOnClickListener(this);
+        }
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -138,6 +160,7 @@ View.OnClickListener{
         //public void onConfirmFragmentCancel();
         public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data);
         public void onConfirmSubmit(Fragment fragment, boolean complete);
+        public void onFragmentSaveInstanceState(Fragment fragment);
     }
 
     ////////////////////////////////////////////////////////////// implement method

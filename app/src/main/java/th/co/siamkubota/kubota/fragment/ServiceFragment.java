@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.swagger.client.model.Image;
@@ -36,6 +37,8 @@ import th.co.siamkubota.kubota.activity.LoginActivity;
 import th.co.siamkubota.kubota.activity.ResultActivity;
 import th.co.siamkubota.kubota.adapter.ViewPagerAdapter;
 import th.co.siamkubota.kubota.app.AppController;
+import th.co.siamkubota.kubota.sqlite.TaskDataSource;
+import th.co.siamkubota.kubota.utils.function.Converter;
 import th.co.siamkubota.kubota.utils.function.Ui;
 import th.co.siamkubota.kubota.utils.ui.NoneScrollableViewPager;
 
@@ -56,7 +59,7 @@ public class ServiceFragment extends Fragment implements
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String KEY_TASK = "TASK";
+    public static final String KEY_TASK = "TASK";
 
     // TODO: Rename and change types of parameters
 //    private String mParam1;
@@ -79,6 +82,7 @@ public class ServiceFragment extends Fragment implements
 
     private LoginData loginData;
     private Task task;
+    private TaskDataSource dataSource;
 
 
     public void setmListener(OnFragmentInteractionListener mListener) {
@@ -102,34 +106,89 @@ public class ServiceFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if (getArguments() != null) {
-            loginData = getArguments().getParcelable(LoginActivity.KEY_LOGIN_DATA);
-            task = getArguments().getParcelable(ServiceFragment.KEY_TASK);
+
+        if(savedInstanceState == null){
+            if (getArguments() != null) {
+                loginData = getArguments().getParcelable(LoginActivity.KEY_LOGIN_DATA);
+                task = getArguments().getParcelable(ServiceFragment.KEY_TASK);
+            }
+
+            mTitle = getActivity().getResources().getStringArray(R.array.stage_title);
+            Numboftabs = mTitle.length;
+
+            if(task == null){
+                task = new Task(Converter.DateToString(new Date(), "yyyyMMddHHmmss"));
+                task.setTaskInfo(new TaskInfo());
+                task.setTaskImages(new ArrayList<Image>());
+                task.setSignature(new Signature());
+
+                ArrayList<Boolean> answers = new ArrayList<Boolean>();
+                answers.add(true);
+                answers.add(false);
+                task.setAnswers(answers);
+
+                task.getTaskInfo().setEngineerID(loginData.getUserId());
+            }
+
+            FragmentManager cfManager = getChildFragmentManager();
+            adapter = new ViewPagerAdapter(getActivity(), cfManager, mTitle,
+                    Numboftabs, ServiceFragment.this, task);
         }
 
-        mTitle = getActivity().getResources().getStringArray(R.array.stage_title);
-        Numboftabs = mTitle.length;
+    }
 
-        if(task == null){
-            task = new Task();
-            task.setTaskInfo(new TaskInfo());
-            task.setTaskImages(new ArrayList<Image>());
-            task.setSignature(new Signature());
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-            ArrayList<Boolean> answers = new ArrayList<Boolean>();
-            answers.add(true);
-            answers.add(false);
-            task.setAnswers(answers);
-        }else{
+       if(savedInstanceState == null){
 
-        }
+           /*
+           if (getArguments() != null) {
+               loginData = getArguments().getParcelable(LoginActivity.KEY_LOGIN_DATA);
+               task = getArguments().getParcelable(ServiceFragment.KEY_TASK);
+           }
+
+           mTitle = getActivity().getResources().getStringArray(R.array.stage_title);
+           Numboftabs = mTitle.length;
+
+           if(task == null){
+               task = new Task();
+               task.setTaskInfo(new TaskInfo());
+               task.setTaskImages(new ArrayList<Image>());
+               task.setSignature(new Signature());
+
+               ArrayList<Boolean> answers = new ArrayList<Boolean>();
+               answers.add(true);
+               answers.add(false);
+               task.setAnswers(answers);
+           }
+
+           FragmentManager cfManager = getChildFragmentManager();
+           adapter = new ViewPagerAdapter(getActivity(), cfManager, mTitle,
+                   Numboftabs, ServiceFragment.this, task);
+           */
 
 
-        /*adapter = new ViewPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), mTitle,
-                Numboftabs, ServiceFragment.this);*/
-        FragmentManager cfManager = getChildFragmentManager();
-        adapter = new ViewPagerAdapter(getActivity(), cfManager, mTitle,
-                Numboftabs, ServiceFragment.this, task);
+       }/*else if(savedInstanceState != null){
+
+           if(savedInstanceState.containsKey(LoginActivity.KEY_LOGIN_DATA)){
+               loginData = savedInstanceState.getParcelable(LoginActivity.KEY_LOGIN_DATA);
+           }
+
+           if(savedInstanceState.containsKey(LoginActivity.KEY_LOGIN_DATA)){
+               task = savedInstanceState.getParcelable(ServiceFragment.KEY_TASK);
+           }
+
+       }*/
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
+        saveTask(task, loginData);
     }
 
     @Override
@@ -166,11 +225,6 @@ public class ServiceFragment extends Fragment implements
         navigationControleLayout = (LinearLayout) v.findViewById(R.id.navigationControleLayout);
 
 
-//        step1Button.setOnClickListener(this);
-//        step2Button.setOnClickListener(this);
-//        step3Button.setOnClickListener(this);
-//        step4Button.setOnClickListener(this);
-
         previousButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         nextButton.setEnabled(false);
@@ -190,6 +244,8 @@ public class ServiceFragment extends Fragment implements
             pager.setCurrentItem(adapter.getCount() -1);
 
         }else{
+
+            pager.setCurrentItem(task.getCurrentStep() -1);
 
         }
 
@@ -218,9 +274,17 @@ public class ServiceFragment extends Fragment implements
                     divStep2.setImageResource(R.drawable.edge_orage);
                     step2Button.setImageResource(R.drawable.white_number02);
                 }else{
-                    backStep2.setBackgroundResource(R.color.white);
-                    divStep2.setImageResource(R.drawable.edge_white);
-                    step2Button.setImageResource(R.drawable.deepgrey_number02);
+
+                    if(pageChangeListener.getCurrentPage() == 1){
+                        backStep2.setBackgroundResource(R.color.white);
+                        divStep2.setImageResource(R.drawable.edge_white);
+                        step2Button.setImageResource(R.drawable.deepgrey_number02);
+                    }else{
+                        backStep2.setBackgroundResource(R.color.light_gray_stage);
+                        divStep2.setImageResource(R.drawable.edge_grey);
+                        step2Button.setImageResource(R.drawable.lightgrey_number02);
+                    }
+
                 }
 
                 break;
@@ -394,11 +458,8 @@ public class ServiceFragment extends Fragment implements
             setStepComplete(1, complete);
 
             task.setTaskInfo((TaskInfo) data);
-            task.getTaskInfo().setEngineerID(loginData.getUserId());
 
             if(complete){
-
-                //setStepComplete(1, complete);
 
                 nextButton.setEnabled(true);
 
@@ -406,7 +467,6 @@ public class ServiceFragment extends Fragment implements
                 step2PhotoFragmentadapter.setMachineNumber(task.getTaskInfo().getEngineNo());
 
             }else{
-
                 nextButton.setEnabled(false);
             }
         }else if(fragment instanceof Step2PhotoFragment){
@@ -416,16 +476,15 @@ public class ServiceFragment extends Fragment implements
 
             if(complete){
                 nextButton.setEnabled(true);
-
             }else{
                 nextButton.setEnabled(false);
             }
         }else if(fragment instanceof Step3SignFragment){
             setStepComplete(3, complete);
             task.setSignature((Signature) data);
+
             if(complete){
                 nextButton.setEnabled(true);
-
             }else{
                 nextButton.setEnabled(false);
             }
@@ -433,7 +492,6 @@ public class ServiceFragment extends Fragment implements
             setStepComplete(4, complete);
             if(complete){
                 nextButton.setEnabled(true);
-
             }else{
                 pager.setCurrentItem((pageChangeListener.getCurrentPage() - 1));
             }
@@ -460,6 +518,12 @@ public class ServiceFragment extends Fragment implements
         }
     }
 
+    @Override
+    public void onFragmentSaveInstanceState(Fragment fragment) {
+        task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
+
+        saveTask(task, loginData);
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -574,5 +638,13 @@ public class ServiceFragment extends Fragment implements
         public final int getCurrentPage() {
             return currentPage;
         }
+    }
+
+    private void saveTask(Task task, LoginData loginData){
+
+        dataSource = new TaskDataSource(getActivity());
+        dataSource.open();
+        dataSource.addIncompleteTask(task, loginData);
+
     }
 }

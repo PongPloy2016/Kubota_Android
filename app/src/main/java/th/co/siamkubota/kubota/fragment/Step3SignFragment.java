@@ -110,22 +110,40 @@ public class Step3SignFragment extends Fragment implements
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //outState.putParcelable(KEY_SIGNATURE, signature);
+        //mListener.onFragmentSaveInstanceState(this);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if(savedInstanceState != null){
+
+            //signature = savedInstanceState.getParcelable(KEY_SIGNATURE);
+
+        }
+
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setRetainInstance(true);
-        if (getArguments() != null) {
-            signature = getArguments().getParcelable(KEY_SIGNATURE);
-        }
 
-        //signature = new Signature();
+        if(savedInstanceState == null){
+            if (getArguments() != null) {
+                signature = getArguments().getParcelable(KEY_SIGNATURE);
+            }
 
-        if(imageCustomer == null){
-            imageCustomer = new Photo(5,getString(R.string.sign_pad_customer_signature));
-        }
+            if(imageCustomer == null){
+                imageCustomer = new Photo(5,getString(R.string.sign_pad_customer_signature));
+            }
 
-
-        if(imageTechnician == null){
-            imageTechnician = new Photo(6,getString(R.string.sign_pad_technician_signature));
+            if(imageTechnician == null){
+                imageTechnician = new Photo(6,getString(R.string.sign_pad_technician_signature));
+            }
         }
 
     }
@@ -143,33 +161,39 @@ public class Step3SignFragment extends Fragment implements
     @Override
     public void onViewCreated(View v, Bundle savedInstanceState) {
 
-        rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
-        imageCustomerSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageCustomerSignature);
-        imageTechnicianSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageTechnicianSignature);
-        editTextCustomerSignDate = (EditText) v.findViewById(R.id.editTextCustomerSignDate);
-        editTextTechnicianSignDate = (EditText) v.findViewById(R.id.editTextTechnicianSignDate);
-        editTextCustomerName = (EditText) v.findViewById(R.id.editTextCustomerName);
-        editTextTechnicianName = (EditText) v.findViewById(R.id.editTextTechnicianName);
-        signatureCustomerHintLayout = (LinearLayout) v.findViewById(R.id.signatureCustomerHintLayout);
-        signatureTechnicianHintLayout = (LinearLayout) v.findViewById(R.id.signatureTechnicianHintLayout);
-        checkBoxUserAccept = (CheckBox) v.findViewById(R.id.checkBoxUserAccept);
-        checkBoxTecnicianAccept = (CheckBox) v.findViewById(R.id.checkBoxTecnicianAccept);
+        if(savedInstanceState == null){
+
+            rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
+            imageCustomerSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageCustomerSignature);
+            imageTechnicianSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageTechnicianSignature);
+            editTextCustomerSignDate = (EditText) v.findViewById(R.id.editTextCustomerSignDate);
+            editTextTechnicianSignDate = (EditText) v.findViewById(R.id.editTextTechnicianSignDate);
+            editTextCustomerName = (EditText) v.findViewById(R.id.editTextCustomerName);
+            editTextTechnicianName = (EditText) v.findViewById(R.id.editTextTechnicianName);
+            signatureCustomerHintLayout = (LinearLayout) v.findViewById(R.id.signatureCustomerHintLayout);
+            signatureTechnicianHintLayout = (LinearLayout) v.findViewById(R.id.signatureTechnicianHintLayout);
+            checkBoxUserAccept = (CheckBox) v.findViewById(R.id.checkBoxUserAccept);
+            checkBoxTecnicianAccept = (CheckBox) v.findViewById(R.id.checkBoxTecnicianAccept);
 
 
-        if(imageCustomer != null && imageCustomer.getPath() != null && !imageCustomer.getPath().isEmpty()){
-            imageCustomerSignature.setImageURI(Uri.fromFile(new File(imageCustomer.getPath())));
-            editTextCustomerSignDate.setText(Converter.DateToString(imageCustomer.getDate(),"dd/MM/yyyy"));
-            signatureCustomerHintLayout.setVisibility(View.GONE);
+            if(imageCustomer != null && imageCustomer.getPath() != null && !imageCustomer.getPath().isEmpty()){
+                imageCustomerSignature.setImageURI(Uri.fromFile(new File(imageCustomer.getPath())));
+                editTextCustomerSignDate.setText(Converter.DateToString(imageCustomer.getDate(),"dd/MM/yyyy"));
+                signatureCustomerHintLayout.setVisibility(View.GONE);
+            }
+
+            if(imageTechnician != null && imageTechnician.getPath() != null && !imageTechnician.getPath().isEmpty()){
+                imageTechnicianSignature.setImageURI(Uri.fromFile(new File(imageTechnician.getPath())));
+                editTextTechnicianSignDate.setText(Converter.DateToString(imageTechnician.getDate(),"dd/MM/yyyy"));
+                signatureTechnicianHintLayout.setVisibility(View.GONE);
+            }
+
         }
 
-        if(imageTechnician != null && imageTechnician.getPath() != null && !imageTechnician.getPath().isEmpty()){
-            imageTechnicianSignature.setImageURI(Uri.fromFile(new File(imageTechnician.getPath())));
-            editTextTechnicianSignDate.setText(Converter.DateToString(imageTechnician.getDate(),"dd/MM/yyyy"));
-            signatureTechnicianHintLayout.setVisibility(View.GONE);
-        }
-
-        setDataChangeListener();
         setData();
+        setDataChangeListener();
+        validateInput();
+
 
     }
 
@@ -193,7 +217,7 @@ public class Step3SignFragment extends Fragment implements
         signatureCustomerHintLayout.setVisibility(View.GONE);
         signatureTechnicianHintLayout.setVisibility(View.GONE);
 
-        if(signature.getCustomerSignatureImage() != null ){
+        if(signature != null && signature.getCustomerSignatureImage() != null && signature.getCustomerSignatureImage().getImagePath() != null){
             //imageCustomer.setServerPath(signature.getCustomerSignatureImage().getImage());
             imageCustomer.setPath(signature.getCustomerSignatureImage().getImagePath());
             imageCustomer.setDate(signature.getCustomerSignatureImage().getCapturedAt());
@@ -207,7 +231,7 @@ public class Step3SignFragment extends Fragment implements
 
         }
 
-        if(signature.getEngineerSignatureImage() != null){
+        if(signature != null && signature.getEngineerSignatureImage() != null && signature.getEngineerSignatureImage().getImagePath() != null){
             //imageTechnician.setServerPath(signature.getEngineerSignatureImage().getImage());
             imageTechnician.setPath(signature.getEngineerSignatureImage().getImagePath());
             imageTechnician.setDate(signature.getEngineerSignatureImage().getCapturedAt());
@@ -221,21 +245,29 @@ public class Step3SignFragment extends Fragment implements
         }
 
         setImage(imageCustomerSignature,imageCustomer );
-        setImage(imageTechnicianSignature,imageTechnician );
+        setImage(imageTechnicianSignature, imageTechnician);
 
+        if(signature != null && signature.getCustomerName() != null){
+            editTextCustomerName.setText(signature.getCustomerName());
+        }
 
-        editTextCustomerName.setText(signature.getCustomerName());
-        if(signature.getCustomerSignedDate() != null){
+        if(signature != null && signature.getCustomerSignedDate() != null){
             editTextCustomerSignDate.setText(Converter.DateToString(signature.getCustomerSignedDate(), "dd/MM/yyyy"));
         }
 
-        editTextTechnicianName.setText(signature.getEngineerName());
-        if(signature.getEngineerSignedDate() != null){
+        if(signature != null && signature.getEngineerName() != null){
+            editTextTechnicianName.setText(signature.getEngineerName());
+        }
+
+
+        if(signature != null && signature.getEngineerSignedDate() != null){
             editTextTechnicianSignDate.setText(Converter.DateToString(signature.getEngineerSignedDate(), "dd/MM/yyyy"));
         }
 
-        checkBoxUserAccept.setChecked(signature.getCustomerAccept());
-        checkBoxTecnicianAccept.setChecked(signature.getEngineerAccept());
+        if(signature != null){
+            checkBoxUserAccept.setChecked(signature.getCustomerAccept());
+            checkBoxTecnicianAccept.setChecked(signature.getEngineerAccept());
+        }
 
         validateInput();
 
@@ -322,6 +354,7 @@ public class Step3SignFragment extends Fragment implements
         //public void onFragmentPresent(Fragment fragment, String title);
         //public void onInvokeSignPad();
         public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data);
+        public void onFragmentSaveInstanceState(Fragment fragment);
     }
 
 
@@ -474,7 +507,7 @@ public class Step3SignFragment extends Fragment implements
         if((imageCustomer == null || (imageCustomer != null && !imageCustomer.isComplete())) ||
                 (imageTechnician == null || (imageTechnician != null && !imageTechnician.isComplete())) ){
             dataComplete = false;
-            mListener.onFragmentDataComplete(this, dataComplete, null);
+            mListener.onFragmentDataComplete(this, dataComplete, collectData());
             return;
         }
 
@@ -500,12 +533,21 @@ public class Step3SignFragment extends Fragment implements
         imgEngineer.setCapturedAt(imageTechnician.getDate());
 
         signature.setCustomerSignatureImage(imgCus);
-        signature.setCustomerName(editTextCustomerName.getText().toString());
-        signature.setCustomerSignedDate(imageCustomer.getDate());
-
         signature.setEngineerSignatureImage(imgEngineer);
-        signature.setEngineerName(editTextTechnicianName.getText().toString());
-        signature.setEngineerSignedDate(imageTechnician.getDate());
+
+        if(editTextCustomerName.getText() != null){
+            signature.setCustomerName(editTextCustomerName.getText().toString());
+        }
+        if(imageCustomer.getDate() != null){
+            signature.setCustomerSignedDate(imageCustomer.getDate());
+        }
+
+        if(editTextTechnicianName.getText() != null){
+            signature.setEngineerName(editTextTechnicianName.getText().toString());
+        }
+        if(imageTechnician.getDate() != null){
+            signature.setEngineerSignedDate(imageTechnician.getDate());
+        }
 
         signature.setCustomerAccept(checkBoxUserAccept.isChecked());
         signature.setEngineerAccept(checkBoxTecnicianAccept.isChecked());

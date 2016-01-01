@@ -81,13 +81,26 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //setRetainInstance(true);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(ARG_PARAM_DATA, data);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         if(savedInstanceState != null && savedInstanceState.containsKey(ARG_PARAM_DATA)){
             data = savedInstanceState.getParcelable(ARG_PARAM_DATA);
-        }else{
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+
+        if(savedInstanceState == null){
             if (getArguments() != null) {
                 data = getArguments().getParcelable(ARG_PARAM_DATA);
             }
@@ -100,10 +113,10 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_page_photo, container, false);
-
+/*
         if(savedInstanceState != null && savedInstanceState.containsKey(ARG_PARAM_DATA)) {
             data = savedInstanceState.getParcelable(ARG_PARAM_DATA);
-        }
+        }*/
 
         return v;
     }
@@ -111,71 +124,72 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onViewCreated(View v, Bundle savedInstanceState) {
 
-        rootLayout = (RelativeLayout) v.findViewById(R.id.rootLayout);
-        cameraButton = (Button) v.findViewById(R.id.cameraButton);
-        imageView = (SelectableRoundedImageView) v.findViewById(R.id.imageView);
-        textDate = (TextView) v.findViewById(R.id.textDate);
-        imageZoomButton = (ImageButton) v.findViewById(R.id.imageZoomButton);
+        if(savedInstanceState == null){
+
+            rootLayout = (RelativeLayout) v.findViewById(R.id.rootLayout);
+            cameraButton = (Button) v.findViewById(R.id.cameraButton);
+            imageView = (SelectableRoundedImageView) v.findViewById(R.id.imageView);
+            textDate = (TextView) v.findViewById(R.id.textDate);
+            imageZoomButton = (ImageButton) v.findViewById(R.id.imageZoomButton);
 
 
-        cameraButton.setText(data.getTitle());
-        cameraButton.setOnClickListener(this);
-        imageView.setOnClickListener(this);
-        imageZoomButton.setOnClickListener(this);
+            cameraButton.setText(data.getTitle());
+            cameraButton.setOnClickListener(this);
+            imageView.setOnClickListener(this);
+            imageZoomButton.setOnClickListener(this);
 
-        if(savedInstanceState != null && savedInstanceState.containsKey(ARG_PARAM_DATA)) {
-            data = savedInstanceState.getParcelable(ARG_PARAM_DATA);
-        }
+        /*    if(savedInstanceState != null && savedInstanceState.containsKey(ARG_PARAM_DATA)) {
+                data = savedInstanceState.getParcelable(ARG_PARAM_DATA);
+            }
+    */
 
+            imageView.setVisibility(View.VISIBLE);
+            textDate.setText(Converter.DateToString(this.data.getDate(), "dd/MM/yyyy"));
 
-        imageView.setVisibility(View.VISIBLE);
-        textDate.setText(Converter.DateToString(this.data.getDate(), "dd/MM/yyyy"));
+            if(data.getPath() != null && !data.getPath().isEmpty()){
+                imageView.setImageURI(Uri.fromFile(new File(this.data.getPath())));
 
-        if(data.getPath() != null && !data.getPath().isEmpty()){
-            imageView.setImageURI(Uri.fromFile(new File(this.data.getPath())));
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                imageView.setLayoutParams(params);
+                imageView.requestLayout();
+                imageView.invalidate();
 
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-            imageView.setLayoutParams(params);
-            imageView.requestLayout();
+            }else if(data.getServerPath() != null && !data.getServerPath().isEmpty()){
 
-        }else if(data.getServerPath() != null && !data.getServerPath().isEmpty()){
+                ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-            ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+                String imagePath = Config.mediaService + data.getServerPath();
 
-            String imagePath = Config.mediaService + data.getServerPath();
+                imageLoader.get(imagePath, new ImageLoader.ImageListener() {
 
-            imageLoader.get(imagePath, new ImageLoader.ImageListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    //Log.e("### ", "Image Load Error: " + error.getMessage());
-                    //imageView.setImageResource(R.drawable.demo_logo_product);
-                }
-
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean arg1) {
-                    if (response.getBitmap() != null) {
-                        // load image into imageview
-                        imageView.setImageBitmap(response.getBitmap());
-
-                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                        imageView.setLayoutParams(params);
-                        imageView.requestLayout();
-
-                    }else{
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Log.e("### ", "Image Load Error: " + error.getMessage());
                         //imageView.setImageResource(R.drawable.demo_logo_product);
                     }
-                }
-            });
+
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer response, boolean arg1) {
+                        if (response.getBitmap() != null) {
+                            // load image into imageview
+                            imageView.setImageBitmap(response.getBitmap());
+
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                            imageView.setLayoutParams(params);
+                            imageView.requestLayout();
+                            imageView.invalidate();
+
+                        }else{
+                            //imageView.setImageResource(R.drawable.demo_logo_product);
+                        }
+                    }
+                });
+            }
+
         }
 
     }
 
-   /* @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(ARG_PARAM_DATA, data);
-    }*/
 
     @Override
     public void onResume() {

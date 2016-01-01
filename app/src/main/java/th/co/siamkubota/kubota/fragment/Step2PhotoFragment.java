@@ -117,64 +117,69 @@ PhotoPageFragment.OnFragmentInteractionListener{
         // Required empty public constructor
     }
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //setRetainInstance(true);
-        if (getArguments() != null) {
-            //title = getArguments().getString(ARG_PARAM_TITLE);
-            images = getArguments().getParcelableArrayList(KEY_IMAGES);
-        }
-
-        photos = new ArrayList<Photo>();
-        photos.add(new Photo(1,getString(R.string.service_image_1_engine_number)));
-        photos.add(new Photo(2,getString(R.string.service_image_2_working_hours)));
-        photos.add(new Photo(3,getString(R.string.service_image_3_machine)));
-        photos.add(new Photo(4,getString(R.string.service_image_4_customer_with_machine)));
-
-        if(images == null){
-            images = new ArrayList<Image>();
-        }else if(images.size()> 0){
-
-            int i = 0;
-            for(Image img : images){
-                /*if(img.getImage() != null  && !img.getImage().isEmpty()){
-                    photos.get(i).setServerPath(img.getImage());
-                    photos.get(i).setComplete(true);
-                }else */
-                if(img.getImagePath() != null  && !img.getImagePath().isEmpty()){
-                    photos.get(i).setPath(img.getImagePath());
-                    photos.get(i).setComplete(true);
-                }
-
-                i++;
-
-            }
-
-            if(images.size() == 4){
-                dataComplete = true;
-            }
-
-        }
-
-
-        //adapter = new PhotoPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), photos , Step2PhotoFragment.this);
-        FragmentManager cfManager = getChildFragmentManager();
-        adapter = new PhotoPagerAdapter(getActivity(), cfManager, photos , Step2PhotoFragment.this);
-        pageChangeListener = new CustomOnPageChangeListener();
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //outState.putParcelableArrayList(KEY_IMAGES, images);
+        //mListener.onFragmentSaveInstanceState(this);
     }
 
-   /* @Override
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // Note that we are passing childFragmentManager, not FragmentManager
-        //adapter = new PhotoViewPagerAdapter(getResources(), getChildFragmentManager());
-        FragmentManager cfManager = getChildFragmentManager();
-        adapter = new PhotoViewPagerAdapter(getActivity(), cfManager, photos , Step2PhotoFragment.this);
+        if(savedInstanceState != null){
+            //images = savedInstanceState.getParcelableArrayList(KEY_IMAGES);
 
-        pager.setAdapter(adapter);
-    }*/
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(savedInstanceState == null ){
+            if (getArguments() != null) {
+                //title = getArguments().getString(ARG_PARAM_TITLE);
+                images = getArguments().getParcelableArrayList(KEY_IMAGES);
+            }
+
+            photos = new ArrayList<Photo>();
+            photos.add(new Photo(1,getString(R.string.service_image_1_engine_number)));
+            photos.add(new Photo(2,getString(R.string.service_image_2_working_hours)));
+            photos.add(new Photo(3,getString(R.string.service_image_3_machine)));
+            photos.add(new Photo(4,getString(R.string.service_image_4_customer_with_machine)));
+
+            if(images == null){
+                images = new ArrayList<Image>();
+            }else if(images.size()> 0){
+
+                int i = 0;
+                for(Image img : images){
+
+                    if(img.getImagePath() != null  && !img.getImagePath().isEmpty()){
+                        photos.get(i).setPath(img.getImagePath());
+                        photos.get(i).setComplete(true);
+                    }
+                    i++;
+                }
+
+                if(images.size() == 4){
+                    dataComplete = true;
+                }
+
+            }
+
+            FragmentManager cfManager = getChildFragmentManager();
+            adapter = new PhotoPagerAdapter(getActivity(), cfManager, photos , Step2PhotoFragment.this);
+            pageChangeListener = new CustomOnPageChangeListener();
+
+            validateInput();
+        }
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -248,21 +253,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
 //                    + " must implement OnFragmentInteractionListener");
 //        }
 
-     /*   if (mRetainedChildFragmentManager != null) {
-            //restore the last retained child fragment manager to the new
-            //created fragment
-            try {
-                Field childFMField = Fragment.class.getDeclaredField("mChildFragmentManager");
-                childFMField.setAccessible(true);
-                childFMField.set(this, mRetainedChildFragmentManager);
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        } else {
-            mRetainedChildFragmentManager = getChildFragmentManager();
-        }*/
+
 
     }
 
@@ -300,6 +291,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
         // TODO: Update argument type and name
         //public void onFragmentPresent(Fragment fragment, String title);
         public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data);
+        public void onFragmentSaveInstanceState(Fragment fragment);
     }
 
 
@@ -426,15 +418,23 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
     private void validateInput(){
 
+        images.clear();
+
         for(Photo photo : photos){
             if(!photo.isComplete()){
                 dataComplete = false;
                 mListener.onFragmentDataComplete(this, dataComplete, images);
                 return;
+            }else{
+                if(photo.getServerPath() != null && !photo.getServerPath().isEmpty()){
+                    images.add(new Image(null, photo.getDate(), photo.getServerPath()));
+                }else{
+                    images.add(new Image(photo.getPath(), photo.getDate()));
+                }
             }
         }
 
-
+/*
         images.clear();
 
         for(int i = 0 ; i < photos.size() ; i++){
@@ -445,7 +445,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
                 images.add(new Image(photos.get(i).getPath(), photos.get(i).getDate()));
             }
 
-        }
+        }*/
 
         dataComplete = true;
         mListener.onFragmentDataComplete(this, dataComplete, images);

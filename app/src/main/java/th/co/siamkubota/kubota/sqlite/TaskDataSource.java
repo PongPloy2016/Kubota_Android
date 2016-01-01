@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import io.swagger.client.model.LoginData;
 import io.swagger.client.model.Task;
 import th.co.siamkubota.kubota.utils.function.Converter;
 
@@ -77,9 +78,21 @@ public class TaskDataSource {
         ContentValues values = new ContentValues();
         values.put(DatabaseInfo.KEY_COL_TASK_ID, newTaskCode);
 
-        String whereClause = DatabaseInfo.KEY_COL_TASK_ID+" = ? ";
+        String whereClause = DatabaseInfo.KEY_COL_TASK_ID +" = ? ";
 
         long row = UpdateData(DatabaseInfo.KEY_TABLE_TASK, values, whereClause, new String[] { taskCode });
+
+        return row;
+    }
+
+    public long updateTaskId(String taskCode, String newTaskCode){
+
+        ContentValues values = new ContentValues();
+        values.put(DatabaseInfo.KEY_COL_TASK_ID, newTaskCode);
+
+        String whereClause = DatabaseInfo.KEY_COL_TASK_ID +" = ? AND " + DatabaseInfo.KEY_COL_COMPLETE + " = ? ";
+
+        long row = UpdateData(DatabaseInfo.KEY_TABLE_TASK, values, whereClause, new String[] { taskCode , String.valueOf(false)});
 
         return row;
     }
@@ -190,9 +203,14 @@ public class TaskDataSource {
         List<Task> tasktList = new ArrayList<Task>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + DatabaseInfo.KEY_TABLE_TASK;
+        String whereClause = " WHERE " + DatabaseInfo.KEY_COL_COMPLETE +" = ? ";
+
+        selectQuery += whereClause;
+
+        String[] args = new String[]{String.valueOf(true)};
 
         database = dbHelper.getWritableDatabase();
-        Cursor cursor = database.rawQuery(selectQuery, null);
+        Cursor cursor = database.rawQuery(selectQuery, args);
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -216,6 +234,77 @@ public class TaskDataSource {
         return tasktList;
     }
 
+    public HashMap<Task, LoginData> getIncompleteTask() {
+
+        //List<HashMap<Task, LoginData>> mapList = new ArrayList<HashMap<Task, LoginData>>();
+        HashMap<Task, LoginData> map = new HashMap<Task, LoginData>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + DatabaseInfo.KEY_TABLE_TASK ;
+        String whereClause = " WHERE " + DatabaseInfo.KEY_COL_COMPLETE +" = ? ";
+
+        selectQuery += whereClause;
+
+        String[] args = new String[]{String.valueOf(false)};
+
+        database = dbHelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, args);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+
+                String jsonData = cursor.getString(2);
+                Gson gson = new Gson();
+                Task task = gson.fromJson(jsonData, Task.class);
+
+                String jsonData2 = cursor.getString(4);
+                LoginData loginData = gson.fromJson(jsonData2, LoginData.class);
+
+                map.put(task, loginData);
+
+                // Adding contact to list
+            } while (cursor.moveToNext());
+        }
+
+        // return store list
+        return map;
+    }
+
+    public HashMap<String, String> getCheckTempTask() {
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + DatabaseInfo.KEY_TABLE_TASK ;
+        String whereClause = " WHERE " + DatabaseInfo.KEY_COL_COMPLETE +" = ? ";
+
+        selectQuery += whereClause;
+
+        String[] args = new String[]{String.valueOf(false)};
+
+        database = dbHelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, args);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+
+                String taskId = cursor.getString(1);
+                String create_date = cursor.getString(3);
+
+                map.put(taskId, create_date);
+
+                // Adding contact to list
+                //mapList.add(map);
+            } while (cursor.moveToNext());
+        }
+
+        // return store list
+        return map;
+    }
+
+
     public void addTask(Task task) {
         //SQLiteDatabase db = this.getWritableDatabase();
 
@@ -223,9 +312,33 @@ public class TaskDataSource {
         String jsonData = gson.toJson(task, Task.class);
 
         ContentValues values = new ContentValues();
-        values.put(DatabaseInfo.KEY_COL_TASK_ID, task.getTaskInfo().getTaskCode());
+        values.put(DatabaseInfo.KEY_COL_TASK_ID, task.getTaskId());
         values.put(DatabaseInfo.KEY_COL_TASK_DETAIL, jsonData);
-        values.put(DatabaseInfo.KEY_COL_CREATE_DATE, Converter.DateToString(new Date(), "dd/MM/yyyy"));
+        values.put(DatabaseInfo.KEY_COL_CREATE_DATE, Converter.DateToString(new Date(), "dd/MM/yyyy HH:mm:ss"));
+        values.put(DatabaseInfo.KEY_COL_COMPLETE, task.getComplete().toString());
+
+        // Inserting Row
+//		db.insert(DatabaseInfo.KEY_TABLE_STORE, null, values);
+//		db.close(); // Closing database connection
+
+        InsertData(DatabaseInfo.KEY_TABLE_TASK, values);
+    }
+
+    public void addIncompleteTask(Task task, LoginData loginData) {
+        //SQLiteDatabase db = this.getWritableDatabase();
+
+        Gson gson = new Gson();
+        String jsonData = gson.toJson(task, Task.class);
+        String jsonDataLogin = gson.toJson(loginData, LoginData.class);
+        String task_id = task.getTaskId();
+
+
+        ContentValues values = new ContentValues();
+        values.put(DatabaseInfo.KEY_COL_TASK_ID, task_id);
+        values.put(DatabaseInfo.KEY_COL_TASK_DETAIL, jsonData);
+        values.put(DatabaseInfo.KEY_COL_CREATE_DATE, Converter.DateToString(new Date(), "dd/MM/yyyy HH:mm:ss"));
+        values.put(DatabaseInfo.KEY_COL_COMPLETE, task.getComplete().toString());
+        values.put(DatabaseInfo.KEY_COL_LOGIN_DETAIL, jsonDataLogin);
 
         // Inserting Row
 //		db.insert(DatabaseInfo.KEY_TABLE_STORE, null, values);
@@ -242,12 +355,14 @@ public class TaskDataSource {
         }
     }
 
-	public long deleteTask(String taskCode){
+	public long deleteTask(String taskId){
 
-        String whereClause = DatabaseInfo.KEY_COL_TASK_ID+" = ? ";
-		long mData = Delete(DatabaseInfo.KEY_TABLE_TASK, whereClause, new String[]{taskCode});
+        String whereClause = DatabaseInfo.KEY_COL_TASK_ID +" = ? ";
+		long mData = Delete(DatabaseInfo.KEY_TABLE_TASK, whereClause, new String[]{taskId});
 
 		return mData;
 	}
+
+
 
 }

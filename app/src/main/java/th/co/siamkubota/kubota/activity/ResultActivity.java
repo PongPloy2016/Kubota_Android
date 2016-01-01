@@ -7,13 +7,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -165,7 +169,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         if(v == okButton){
             Intent intent = new Intent(ResultActivity.this, QuestionnairActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             Bundle bundle = new Bundle();
             bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, loginData);
             intent.putExtras(bundle);
@@ -290,7 +294,6 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     signature.setEngineerSignatureImage(null);
 
 
-
                     submitTask(task);
 
                 }else{
@@ -306,6 +309,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     showResultFail();
                     alertLoading.dismiss();
                     saveTask(taskSave);
+                    showToastError(message);
                 }
 
             }
@@ -317,6 +321,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                 showResultFail();
                 alertLoading.dismiss();
                 saveTask(taskSave);
+                showToastError(t.getMessage());
             }
         });
     }
@@ -357,12 +362,12 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
                 io.swagger.client.model.Response submitData = response.body();
 
-                if(submitData != null && submitData.getResult().equals("success")){
+                if (submitData != null && submitData.getResult().equals("success")) {
 
 
                     List<Image> images = taskSave.getTaskImages();
 
-                    for (Image image : images){
+                    for (Image image : images) {
                         ImageFile.deleteFile(image.getImagePath());
                     }
 
@@ -370,21 +375,22 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     ImageFile.deleteFile(signature.getCustomerSignatureImage().getImagePath());
                     ImageFile.deleteFile(signature.getEngineerSignatureImage().getImagePath());
 
-                    deleteTask(taskSave.getTaskInfo().getTaskCode());
+                    deleteTask(taskSave.getTaskId());
 
                     //saveTask(taskSave);
 
-                }else{
+                } else {
 
                     String message;
-                    if(submitData != null){
+                    if (submitData != null) {
                         message = submitData.getMessage();
-                    }else{
+                    } else {
                         message = response.raw().message();
                     }
 
                     showResultFail();
                     saveTask(taskSave);
+                    showToastError(message);
 
                 }
                 alertLoading.dismiss();
@@ -397,6 +403,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                 alertLoading.dismiss();
                 showResultFail();
                 saveTask(taskSave);
+                showToastError(t.getMessage());
             }
         });
     }
@@ -423,4 +430,21 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         dataSource.deleteTask(taskCode);
 
     }
+
+
+    private void showToastError(String message){
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_data_complete_layout,
+                (ViewGroup) findViewById(R.id.toast_layout_root));
+        Toast toast = new Toast(ResultActivity.this);
+        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 250);
+        toast.setDuration(Toast.LENGTH_SHORT);
+
+        TextView  textView = (TextView) layout.findViewById(R.id.textView1);
+        textView.setText(message);
+
+        toast.setView(layout);
+        toast.show();
+    }
+
 }

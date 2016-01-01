@@ -55,6 +55,7 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
     private LoginData loginData;
     private TaskDataSource dataSource;
     private List<Task> unfinishTasks;
+    private Task incompleteTask;
 
     FragmentTransaction ft;
 
@@ -65,65 +66,52 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
         setContentView(R.layout.activity_service);
         this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
 
+        if (savedInstanceState == null) {
+
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+
+            mTitle = new AtomicReference<>((TextView) toolbar.findViewById(R.id.toolbar_title));
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        mTitle = new AtomicReference<>((TextView) toolbar.findViewById(R.id.toolbar_title));
-
-
-        Bundle bundle = getIntent().getExtras();
-        if(bundle.containsKey(LoginActivity.KEY_LOGIN_DATA)){
-            loginData = bundle.getParcelable(LoginActivity.KEY_LOGIN_DATA);
-        }
-
-
-        if(loginData != null){
-            mTitle.get().setText(loginData.getShopName());
-        }
-
-
-        getUnfinishTask();
-
-        if(unfinishTasks != null && unfinishTasks.size() > 0){
-
-            ft = getSupportFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-            //ft.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down);
-            UnfinishTaskFragment unfinishTaskFragment = UnfinishTaskFragment.newInstance(unfinishTasks);
-            unfinishTaskFragment.setmListener(this);
-            ft.replace(R.id.content, unfinishTaskFragment, "unfinishTaskFragment");
-            //ft.addToBackStack(null);
-            // Start the animated transition.
-            ft.commit();
-        }else{
-
-           /* ServiceFragment newFragment = ServiceFragment.newInstance(loginData, null);
-            //newFragment.setmListener(this);
-            ft.replace(R.id.content, newFragment, "serviceFragment");
-            ft.commit();*/
-
-            displayServiceFragment(null);
-        }
-
-
-/*
-        HomeWatcher mHomeWatcher = new HomeWatcher(this);
-        mHomeWatcher.setOnHomePressedListener(new OnHomePressedListener() {
-            @Override
-            public void onHomePressed() {
-                // do something here...
-
+            Bundle bundle = getIntent().getExtras();
+            if(bundle.containsKey(LoginActivity.KEY_LOGIN_DATA)){
+                loginData = bundle.getParcelable(LoginActivity.KEY_LOGIN_DATA);
             }
 
-            @Override
-            public void onHomeLongPressed() {
-                Toast.makeText(ServiceActivity.this, "Long press", Toast.LENGTH_SHORT).show();
+            if(loginData != null){
+                mTitle.get().setText(loginData.getShopName());
             }
-        });
-        mHomeWatcher.startWatch();
-        */
+
+            if(bundle.containsKey(ServiceFragment.KEY_TASK)){
+                incompleteTask = bundle.getParcelable(ServiceFragment.KEY_TASK);
+
+                if(incompleteTask != null){
+                    displayServiceFragment(incompleteTask);
+                    return;
+                }
+            }
+
+
+            getUnfinishTask();
+
+            if(unfinishTasks != null && unfinishTasks.size() > 0){
+
+                ft = getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+                //ft.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down);
+                UnfinishTaskFragment unfinishTaskFragment = UnfinishTaskFragment.newInstance(unfinishTasks);
+                unfinishTaskFragment.setmListener(this);
+                ft.replace(R.id.content, unfinishTaskFragment, "unfinishTaskFragment");
+                //ft.addToBackStack(null);
+                // Start the animated transition.
+                ft.commit();
+            }else{
+
+                displayServiceFragment(null);
+            }
+
+        }
 
     }
 
@@ -134,18 +122,6 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
         leave = false;
     }
 
-    /* @Override
-    public void onRelayInvokeSignPad() {
-
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        //ft.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down);
-        ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-        SignaturePadFragment fragment = SignaturePadFragment.newInstance();
-        ft.replace(R.id.content, fragment, "signaturePadFragment");
-        ft.addToBackStack(null);
-        // Start the animated transition.
-        ft.commit();
-    }*/
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -197,28 +173,6 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
         super.onBackPressed();
     }
 
-/*
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        //this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if(keyCode == KeyEvent.KEYCODE_HOME || keyCode == KeyEvent.KEYCODE_BACK)
-        {
-            //The Code Want to Perform.
-            if(!leave){
-                buildAlertConfirmLeave();
-                return false;
-            }
-
-        }
-
-        return true;
-    }*/
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

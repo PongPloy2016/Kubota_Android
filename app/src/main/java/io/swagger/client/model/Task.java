@@ -37,6 +37,12 @@ public class Task implements Parcelable, Cloneable {
   
   @SerializedName("complete")
   private Boolean complete = null;
+
+  @SerializedName("currentStep")
+  private Integer currentStep = null;
+
+  @SerializedName("taskId")
+  private String taskId = null;
   
 
   
@@ -88,10 +94,36 @@ public class Task implements Parcelable, Cloneable {
    **/
   @ApiModelProperty(value = "")
   public Boolean getComplete() {
+    if(complete == null){
+      return false;
+    }
     return complete;
   }
   public void setComplete(Boolean complete) {
     this.complete = complete;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public Integer getCurrentStep() {
+    if(currentStep == null){
+      return 1;
+    }
+    return currentStep;
+  }
+  public void setCurrentStep(Integer currentStep) {
+    this.currentStep = currentStep;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public String getTaskId() {
+     return taskId;
+  }
+  public void setTaskId(String taskId) {
+    this.taskId = taskId;
   }
 
   
@@ -111,13 +143,17 @@ public class Task implements Parcelable, Cloneable {
               Objects.equals(taskImages, task.taskImages) &&
               Objects.equals(signature, task.signature) &&
               Objects.equals(answers, task.answers) &&
-              Objects.equals(complete, task.complete);
+              Objects.equals(complete, task.complete) &&
+              Objects.equals(currentStep, task.currentStep) &&
+              Objects.equals(taskId, task.taskId);
     }else{
       return Objects.equals(taskInfo, task.taskInfo) &&
               Objects.equals(taskImages, task.taskImages) &&
               Objects.equals(signature, task.signature) &&
               Objects.equals(answers, task.answers) &&
-              Objects.equals(complete, task.complete);
+              Objects.equals(complete, task.complete) &&
+              Objects.equals(currentStep, task.currentStep) &&
+              Objects.equals(taskId, task.taskId);
     }
 
   }
@@ -137,6 +173,8 @@ public class Task implements Parcelable, Cloneable {
     sb.append("    signature: ").append(StringUtil.toIndentedString(signature)).append("\n");
     sb.append("    answers: ").append(StringUtil.toIndentedString(answers)).append("\n");
     sb.append("    complete: ").append(StringUtil.toIndentedString(complete)).append("\n");
+    sb.append("    currentStep: ").append(StringUtil.toIndentedString(currentStep)).append("\n");
+    sb.append("    taskId: ").append(StringUtil.toIndentedString(taskId)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -156,6 +194,8 @@ public class Task implements Parcelable, Cloneable {
     dest.writeParcelable(this.signature, flags);
     dest.writeList(this.answers);
     dest.writeValue(this.complete);
+    dest.writeValue(this.currentStep);
+    dest.writeString(this.taskId);
   }
 
   public Task() {
@@ -169,6 +209,8 @@ public class Task implements Parcelable, Cloneable {
     this.answers = new ArrayList<Boolean>();
     in.readList(this.answers, List.class.getClassLoader());
     this.complete = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    this.currentStep = (Integer) in.readValue(Integer.class.getClassLoader());
+    this.taskId = in.readString();
   }
 
   public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -199,18 +241,19 @@ public class Task implements Parcelable, Cloneable {
     return cloned;
   }
 
+  public Task(String taskId) {
+    this.taskId = taskId;
+  }
+
   public Task(Task task) {
-   /* this.taskInfo = task.taskInfo;
-    this.taskImages = task.taskImages;
-    this.signature = task.signature;
-    this.answers = task.answers;
-    this.complete = task.complete;*/
 
     setTaskInfo(new TaskInfo());
     setTaskImages(new ArrayList<Image>());
     setSignature(new Signature());
     setAnswers(new ArrayList<Boolean>());
     setComplete(task.getComplete());
+    setCurrentStep(task.getCurrentStep());
+    setTaskId(task.getTaskId());
 
     Copier.copy(task.taskInfo, this.taskInfo);
     Copier.copy(task.signature, this.signature);
@@ -232,7 +275,6 @@ public class Task implements Parcelable, Cloneable {
     for (Boolean b : task.getAnswers()){
       answers.add(b);
     }
-
 
   }
 }
