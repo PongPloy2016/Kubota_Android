@@ -1,13 +1,16 @@
 package th.co.siamkubota.kubota.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,6 +71,9 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
     private Call<UploadResponse> callUpload;
     private Call<io.swagger.client.model.Response> call;
 
+    private  AlertDialog alert;
+    private boolean leave = false;
+
     private LoadingDialogFragment alertLoading;
     private String shopName;
 
@@ -101,16 +107,6 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         if(bundle.containsKey(ResultActivity.KEY_TASK)){
             task = bundle.getParcelable(ResultActivity.KEY_TASK);
             taskSave = new Task(task);
-            /*taskSave.setTaskInfo(new TaskInfo());
-            taskSave.setTaskImages(new ArrayList<Image>());
-            taskSave.setSignature(new Signature());
-            taskSave.setAnswers(new ArrayList<Boolean>());
-            taskSave.setComplete(task.getComplete());*/
-
-
-
-
-
         }
 
 
@@ -138,32 +134,42 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
             uploadImage();
 
         }
-
-
-
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+
+    private  void buildAlertConfirmLeave(final int keyCode)
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ResultActivity.this);
+        builder.setMessage(getString(R.string.service_leave_confirm_message))
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.main_button_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        leave = true;
+
+                        onBackPressed();
+
+                    }
+                })
+                .setNegativeButton(getString(R.string.main_button_no), null);
+
+        alert = builder.create();
+        alert.show();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    @Override
+    public void onBackPressed() {
+
+        if(!leave){
+            buildAlertConfirmLeave(KeyEvent.KEYCODE_BACK);
+            return;
         }
 
-        return super.onOptionsItemSelected(item);
+        super.onBackPressed();
     }
+
+
 
     @Override
     public void onClick(View v) {
@@ -422,12 +428,12 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
     }
 
-    private void deleteTask(String taskCode){
+    private void deleteTask(String taskId){
 
         dataSource = new TaskDataSource(ResultActivity.this);
         dataSource.open();
 
-        dataSource.deleteTask(taskCode);
+        dataSource.deleteTask(taskId);
 
     }
 

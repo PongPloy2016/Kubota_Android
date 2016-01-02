@@ -647,4 +647,15 @@ public class ServiceFragment extends Fragment implements
         dataSource.addIncompleteTask(task, loginData);
 
     }
+
+    public void deleteTask(){
+
+        if(task != null){
+            dataSource = new TaskDataSource(getActivity());
+            dataSource.open();
+
+            dataSource.deleteTask(task.getTaskId());
+        }
+
+    }
 }

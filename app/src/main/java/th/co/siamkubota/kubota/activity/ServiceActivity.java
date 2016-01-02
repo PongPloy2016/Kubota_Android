@@ -170,6 +170,13 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
             return;
         }
 
+        List<Fragment> fragments= getSupportFragmentManager().getFragments();
+        for(Fragment f : fragments){
+            if(f instanceof ServiceFragment){
+                ((ServiceFragment)f).deleteTask();
+            }
+        }
+
         super.onBackPressed();
     }
 

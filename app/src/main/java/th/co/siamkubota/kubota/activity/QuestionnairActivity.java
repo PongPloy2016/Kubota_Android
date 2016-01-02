@@ -2,10 +2,13 @@ package th.co.siamkubota.kubota.activity;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.widget.TextView;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -27,6 +30,9 @@ ContinueQuestionFragment.OnFragmentInteractionListener{
     private LoginData loginData;
     AtomicReference<TextView> mTitle;
     private String shopName;
+
+    private  AlertDialog alert;
+    private boolean leave = false;
 
 
     @Override
@@ -92,5 +98,37 @@ ContinueQuestionFragment.OnFragmentInteractionListener{
 
             alert.show(getSupportFragmentManager(), "finish");
         }
+    }
+
+    private  void buildAlertConfirmLeave(final int keyCode)
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(QuestionnairActivity.this);
+        builder.setMessage(getString(R.string.service_leave_confirm_message))
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.main_button_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        leave = true;
+
+                        onBackPressed();
+
+                    }
+                })
+                .setNegativeButton(getString(R.string.main_button_no), null);
+
+        alert = builder.create();
+        alert.show();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+
+        if(!leave){
+            buildAlertConfirmLeave(KeyEvent.KEYCODE_BACK);
+            return;
+        }
+
+        super.onBackPressed();
     }
 }
