@@ -12,12 +12,13 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.ArrayList;
 
 import th.co.siamkubota.kubota.fragment.ImageViewPageFragment;
+import th.co.siamkubota.kubota.fragment.ImageViewZoomFragment;
 import th.co.siamkubota.kubota.fragment.PhotoPageFragment;
 import th.co.siamkubota.kubota.model.Photo;
 
 public class ImageViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private ArrayList<ImageViewPageFragment> photoPageFragments;
+    private ArrayList<ImageViewZoomFragment> photoPageFragments;
     private ArrayList<Photo> datalist;
 
     private Context context;
@@ -31,10 +32,11 @@ public class ImageViewPagerAdapter extends FragmentStatePagerAdapter {
         this.listener = listener;
 
 
-        photoPageFragments = new ArrayList<ImageViewPageFragment>();
+        photoPageFragments = new ArrayList<ImageViewZoomFragment>();
 
         for(Photo photo : datalist){
-            ImageViewPageFragment fragment = ImageViewPageFragment.newInstance(photo);
+            //ImageViewPageFragment fragment = ImageViewPageFragment.newInstance(photo);
+            ImageViewZoomFragment fragment = ImageViewZoomFragment.newInstance(photo);
             //fragment.setmListener((PhotoPageFragment.OnFragmentInteractionListener) listener);
             photoPageFragments.add(fragment);
         }

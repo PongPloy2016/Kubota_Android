@@ -75,10 +75,10 @@ public class ImageViewActivity extends BaseActivity {
 
     }
 
-    public boolean onTouchEvent(MotionEvent ev) {
-        scaleGestureDetector.onTouchEvent(ev);
+  /*  public boolean onTouchEvent(MotionEvent ev) {
+        //scaleGestureDetector.onTouchEvent(ev);
         return true;
-    }
+    }*/
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener{
         @Override
