@@ -126,7 +126,7 @@ public class ImageViewZoomFragment extends Fragment {
                 public void onResponse(ImageLoader.ImageContainer response, boolean arg1) {
                     if (response.getBitmap() != null) {
                         // load image into imageview
-                        //imageView.setImageBitmap(response.getBitmap());
+                        imageView.setImage(ImageSource.bitmap(response.getBitmap()));
                     }else{
                         //imageView.setImageResource(R.drawable.demo_logo_product);
                     }
