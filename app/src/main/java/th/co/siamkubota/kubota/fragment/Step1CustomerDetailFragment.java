@@ -336,8 +336,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         Ui.setupUI(getActivity(), rootLayout);
 
-        setData();
         setDataChangeListener();
+        setData();
+
         validateInput();
 
 
