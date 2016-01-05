@@ -251,6 +251,14 @@ public class ServiceFragment extends Fragment implements
 
     }
 
+  /*  @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
+        saveTask(task, loginData);
+    }*/
+
     private void setStepComplete(int step, boolean complete){
 
         switch (step){

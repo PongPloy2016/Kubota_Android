@@ -336,11 +336,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         Ui.setupUI(getActivity(), rootLayout);
 
-        setDataChangeListener();
         setData();
-
+        setDataChangeListener();
         validateInput();
-
 
     }
 
@@ -690,6 +688,14 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         private GenericTextWatcher(View view) {
             this.view = view;
+
+            if(this.view instanceof EditText){
+                EditText editText = (EditText) this.view;
+
+                String text = editText.getText().toString();
+
+                checkRequire(text);
+            }
         }
 
         public View getView() {
@@ -710,7 +716,12 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
             String text = editable.toString();
             //save the value for the given tag :
+            checkRequire(text);
 
+            validateInput();
+        }
+
+        public void checkRequire(String text){
             if (!text.isEmpty() && view != null) {
 
                 LinearLayout parent = (LinearLayout) this.view.getParent();
@@ -737,8 +748,6 @@ public class Step1CustomerDetailFragment extends Fragment implements
                     required.setVisibility(View.VISIBLE);
                 }
             }
-
-            validateInput();
         }
     }
 
