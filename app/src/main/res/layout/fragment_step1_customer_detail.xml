@@ -311,12 +311,11 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:id="@+id/editTextCustomerAddress"
                 android:hint="@string/service_hint_addrss_customer"
                 style="@style/EditTextStyle"
-                android:inputType="text"
-                android:tag="required"/>
-            <TextView
-                android:id="@+id/requireCustomerAddress"
-                style="@style/textViewAstericStyle"
-                android:text="*"/>
+                android:inputType="text"/>
+            <!--<TextView-->
+                <!--android:id="@+id/requireCustomerAddress"-->
+                <!--style="@style/textViewAstericStyle"-->
+                <!--android:text="*"/>-->
         </LinearLayout>
 
 

@@ -69,6 +69,9 @@ public class CustomSpinner extends Spinner implements DialogInterface.OnClickLis
 
         this.selected = which;
 
+
+
+
     }
 
     @Override

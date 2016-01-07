@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -862,8 +863,12 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
-            locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                    0, 0, locLsnr);
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            String provider = locMgr.getBestProvider(criteria, true);
+            locMgr.requestLocationUpdates(provider, 0, 0, locLsnr);
+//            locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+//                    0, 0, locLsnr);
         }
 
 
