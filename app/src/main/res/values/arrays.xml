@@ -32,14 +32,15 @@
         <item>B2140 Narrow</item>
         <item>L2808</item>
         <item>L3008</item>
+        <item>L3208SP</item>
         <item>L3408</item>
         <item>L3608</item>
+        <item>L3608SP</item>
         <item>L4508</item>
         <item>L4708</item>
+        <item>L4708SP</item>
         <item>L5018DT</item>
         <item>L5018 DT Vari</item>
-        <item>L4018</item>
-        <item>L5518</item>
         <item>M5000</item>
         <item>M6040</item>
         <item>M7040</item>
@@ -47,6 +48,7 @@
         <item>M9540</item>
         <item>M105S</item>
         <item>M108S</item>
+        <item>M135X</item>
         <item>อื่นๆ</item>
     </array>
 
@@ -54,8 +56,9 @@
     <array name="product_harvester">
         <item>DC-60</item>
         <item>DC-68G</item>
-        <item>DC-70</item>
+        <item>DC-70H</item>
         <item>DC-70G</item>
+        <item>CB-70G</item>
         <item>DC-95GM</item>
         <item>DC-105X</item>
         <item>อื่นๆ</item>
@@ -65,19 +68,17 @@
     <array name="product_digger">
         <item>KX91-3C</item>
         <item>KX91-3S2</item>
-        <item>KX161-3 CSTH</item>
-        <item>KX161-3</item>
-        <item>KX080MC</item>
+        <item>KX91-3S2 AC</item>
+        <item>KX161-3C AC</item>
+        <item>KX161-3C</item>
+        <item>KX080</item>
         <item>U15-3</item>
-        <item>U30</item>
-        <item>U55</item>
         <item>อื่นๆ</item>
     </array>
 
 
     <!--รุ่นรถดำนา-->
     <array name="product_planter">
-        <item>SPU-68C</item>
         <item>NSPU-68C</item>
         <item>NSPU-68C Diesel engine</item>
         <item>NSD8</item>

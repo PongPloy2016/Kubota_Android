@@ -66,7 +66,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
             style="@style/LinearLayoutSpinner">
 
             <ImageView
-                android:src="@drawable/serial_icon"
+                android:src="@drawable/subproduct_icon"
                 style="@style/ImageIconStyle"/>
 
             <th.co.siamkubota.kubota.utils.ui.CustomSpinner
@@ -212,7 +212,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
         <LinearLayout
             style="@style/LinearLayoutTextView">
             <ImageView
-                android:src="@drawable/product_icon"
+                android:src="@drawable/engine_number_icon"
                 style="@style/ImageIconStyle"/>
             <EditText
                 android:id="@+id/editTextCarNumber"
@@ -228,7 +228,7 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
         <LinearLayout
             style="@style/LinearLayoutTextView">
             <ImageView
-                android:src="@drawable/serial_icon"
+                android:src="@drawable/serial_number_icon"
                 style="@style/ImageIconStyle"/>
             <EditText
                 android:id="@+id/editTextEngineNumber"
