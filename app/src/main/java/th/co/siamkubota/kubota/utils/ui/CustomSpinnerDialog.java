@@ -46,9 +46,12 @@ public class CustomSpinnerDialog extends Dialog implements AdapterView.OnItemCli
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
         //getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        /*getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_);*/
+
 
 
         this.setContentView(R.layout.custom_spinner_dialog);

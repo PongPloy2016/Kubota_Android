@@ -36,6 +36,8 @@
     <color name="windowBackground">#e0e0e0</color>
     <color name="navigationBarColor">#f5841f</color>
 
+    <color name="navigationBarColorTransparent">#88f5841f</color>
+
 
     <color name="green_main">#108650</color>
     <color name="green_button">#108650</color>

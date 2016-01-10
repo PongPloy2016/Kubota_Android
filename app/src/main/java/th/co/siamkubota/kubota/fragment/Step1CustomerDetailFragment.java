@@ -880,19 +880,28 @@ public class Step1CustomerDetailFragment extends Fragment implements
         public void onLocationChanged(Location location) {
 //            double myLat = location.getLatitude();
 //            double myLon = location.getLongitude();
-            mLastLocation = location;
 
-            if (mLastLocation != null && mAddressRequested) {
+            //if(location.getAccuracy() < 100.0 && location.getSpeed() < 6.95){
+            double suitableMeter = 100.0; // adjust your need
+            if(location.getAccuracy() < suitableMeter ){
 
-                mAddressRequested = false;
-                // Determine whether a Geocoder is available.
-                if (!Geocoder.isPresent()) {
+                mLastLocation = location;
+
+                if (mLastLocation != null && mAddressRequested) {
+
+                    mAddressRequested = false;
+                    // Determine whether a Geocoder is available.
+                    if (!Geocoder.isPresent()) {
                     /*Toast.makeText(getActivity(), R.string.no_geocoder_available,
                             Toast.LENGTH_LONG).show();*/
-                    return;
-                }
-                startIntentService();
+                        return;
+                    }
+                    startIntentService();
 
+                }
+            }
+            else{
+                //Continue listening for a more accurate location
             }
 
 

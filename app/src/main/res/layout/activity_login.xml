@@ -152,6 +152,8 @@
         android:gravity="center">
         <ProgressBar
             android:id="@+id/spinner"
+            style="@style/ProgressBarStyle"
+            android:indeterminateTint="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true" />

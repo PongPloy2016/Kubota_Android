@@ -13,6 +13,14 @@
         <item name="windowActionBar">false</item>
     </style>
 
+    <style name="AppThemeImageBackground" parent="@style/AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@drawable/login_bg</item>
+        <!--<item name="android:navigationBarColor">@android:color/transparent</item>-->
+        <item name="android:navigationBarColor">@color/navigationBarColorTransparent</item>
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+    </style>
+
     <style name="FullHeightDialog" parent="android:Theme.Dialog">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -20,20 +28,19 @@
         <!--<item name="android:windowBackground">@color/background</item>-->
         <item name="android:windowBackground">@color/background</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
 
         <!--<item name="android:windowFrame">@null</item>-->
         <!--<item name="android:windowContentOverlay">@null</item>-->
         <!--<item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>-->
-        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
 
+        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
 
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <!--<item name="textColorPrimary">@color/textColorPrimary</item>-->
         <item name="android:navigationBarColor">@color/colorPrimary</item>
-
-
+        <item name="android:statusBarColor">@color/transparent</item>
     </style>
-
 </resources>
