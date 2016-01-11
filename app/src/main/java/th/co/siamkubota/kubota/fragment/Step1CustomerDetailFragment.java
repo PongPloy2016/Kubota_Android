@@ -57,6 +57,9 @@ import java.util.Locale;
 
 import io.swagger.client.model.TaskInfo;
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.activity.MapsActivity;
+import th.co.siamkubota.kubota.activity.MapsDragableActivity;
+import th.co.siamkubota.kubota.activity.TestDragMarkerActivity;
 import th.co.siamkubota.kubota.adapter.CustomSpinnerAdapter;
 import th.co.siamkubota.kubota.adapter.SelectNoneSpinnerAdapter;
 import th.co.siamkubota.kubota.service.Constants;
@@ -275,7 +278,6 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
 
             mResultReceiver = new AddressResultReceiver(null);
-
 
             // First we need to check availability of play services
             if (checkPlayServices()) {
@@ -540,34 +542,20 @@ public class Step1CustomerDetailFragment extends Fragment implements
     public void onClick(View v) {
         if (v == locationButton) {
 
-            /*if(!checkLocationServiceEnable(getActivity())){
-                //popupLocationSetting();
-                mAddressRequested = true;
+            //Intent intent = new Intent(getActivity(), MapsActivity.class);
+            //Intent intent = new Intent(getActivity(), TestDragMarkerActivity.class);
+            Intent intent = new Intent(getActivity(), MapsDragableActivity.class);
+            startActivity(intent);
 
-            }else{
-                if (mGoogleApiClient.isConnected() && mLastLocation != null) {
-                    startIntentService();
-                }else{
-                    mAddressRequested = true;
-                }
-            }*/
 
-           /* if (!EnableGPSIfPossible()) {
-                if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && mLastLocation != null) {
-                    startIntentService();
-                } else {
-                    mAddressRequested = true;
-                }
-            }*/
-
-            if (!EnableGPSIfPossible()) {
+            /*if (!EnableGPSIfPossible()) {
                 if (mLastLocation != null) {
                     startIntentService();
                 } else {
                     mAddressRequested = true;
                     getCurrentLocation();
                 }
-            }
+            }*/
         }
     }
 

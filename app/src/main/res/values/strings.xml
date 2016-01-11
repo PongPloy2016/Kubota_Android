@@ -86,8 +86,6 @@
     <!-- "Yout GPS seems to be disabled, do you want to enable it?"-->
 
 
-
-
     <!-- Popup -->
     <string name="service_popup_success_title">สำเร็จ!!</string>
     <string name="service_popup_fail_title">มีข้อผิดพลาด!</string>
@@ -115,6 +113,11 @@
     <string name="hello_service_fragment">Service</string>
     <string name="hello_blank_fragment">Unfinish Task</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_test_drag_marker">TestDragMarkerActivity</string>
+    <string name="title_activity_maps_dragable">MapsDragableActivity</string>
 
+
+    <string name="menu_legalnotices">Legal Notices</string>
 
 </resources>

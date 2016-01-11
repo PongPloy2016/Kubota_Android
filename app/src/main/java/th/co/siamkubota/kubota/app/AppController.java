@@ -117,13 +117,13 @@ public class AppController extends MultiDexApplication {
     }
 
 
-    // broadcast a custom intent.
+   /* // broadcast a custom intent.
     public void broadcastUnreadIntent(int unread){
         Intent intent = new Intent();
         intent.putExtra("unread", unread);
         intent.setAction("com.mimo.greenspot.NEWS_UNREAD_INTENT");
         sendBroadcast(intent);
-    }
+    }*/
 
 
 
