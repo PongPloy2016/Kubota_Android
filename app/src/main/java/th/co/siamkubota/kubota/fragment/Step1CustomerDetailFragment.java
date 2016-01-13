@@ -94,6 +94,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     private static final String KEY_TITLE = "TITLE";
     private static final String KEY_TASK_INFO = "TASK_INFO";
+    private static final String KEY_SERVICE_ADDRESS = "SERVICE_ADDRESS";
+    private static final int REQUEST_CODE_MAP = 200;
 
     private LinearLayout rootLayout;
     private TextView textStepTitle;
@@ -495,15 +497,17 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
             waitGPSSetting = false;
 
-            if (checkLocationServiceEnable(getActivity())) {
+           /* if (checkLocationServiceEnable(getActivity())) {
                 getCurrentLocation();
-            }
+            }*/
+
+            openMaps();
 
         }
 
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
+       /* if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
             startLocationUpdates();
-        }
+        }*/
     }
 
 
@@ -537,15 +541,14 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     ///////////////////////////////////////////////////////////////////////////////  implement method
 
-
     @Override
     public void onClick(View v) {
         if (v == locationButton) {
 
-            //Intent intent = new Intent(getActivity(), MapsActivity.class);
-            //Intent intent = new Intent(getActivity(), TestDragMarkerActivity.class);
-            Intent intent = new Intent(getActivity(), MapsDragableActivity.class);
-            startActivity(intent);
+
+            if (!EnableGPSIfPossible()) {
+                openMaps();
+            }
 
 
             /*if (!EnableGPSIfPossible()) {
@@ -556,6 +559,21 @@ public class Step1CustomerDetailFragment extends Fragment implements
                     getCurrentLocation();
                 }
             }*/
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == Activity.RESULT_OK){
+
+            if(requestCode == REQUEST_CODE_MAP){
+                Bundle bundle = data.getExtras();
+                if(bundle != null){
+                    editTextServiceAddress.setText(bundle.getString(MapsDragableActivity.KEY_ADDRESS,""));
+                }
+            }
         }
     }
 
@@ -1205,6 +1223,12 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         dataSource.deleteTask(taskCode);
 
+    }
+
+    private void openMaps(){
+        Intent intent = new Intent(getActivity(), MapsDragableActivity.class);
+        //startActivity(intent);
+        getActivity().startActivityForResult(intent, REQUEST_CODE_MAP);
     }
 
 }

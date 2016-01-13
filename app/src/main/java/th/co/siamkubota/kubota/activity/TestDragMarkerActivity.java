@@ -50,6 +50,7 @@ public class TestDragMarkerActivity extends FragmentActivity implements OnMapLon
                 .position( new LatLng(19.0216, 72.8646) )
                 .title("Location")
                 .snippet("First Marker")).showInfoWindow();
+
     }
 
 
