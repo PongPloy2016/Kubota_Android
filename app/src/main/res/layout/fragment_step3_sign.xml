@@ -1,252 +1,264 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
     android:background="@color/background"
-    android:id="@+id/rootLayout"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:fillViewport="true"
+    android:scrollbars="none"
     tools:context="th.co.siamkubota.kubota.fragment.Step3SignFragment">
 
-    <TextView
-        style="@style/TextTitleOrangeStyle"
-        android:text="@string/service_title_customer_sign"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.7dp"
-        android:background="@color/light_gray_border"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="10dp"
-        />
-
-
-    <CheckBox
-        android:layout_width="wrap_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp"
-        android:textSize="15dp"
-        android:textColor="@color/dark_gray"
-        android:button="@drawable/radio_button_state"
-        android:drawableLeft="@android:color/transparent"
-        android:drawablePadding="10dp"
-        android:text="@string/service_confirm_suggesttion"
-        android:textIsSelectable="false"
-        android:background="@android:color/transparent"
-        android:id="@+id/checkBoxUserAccept"
-        android:tag="required"/>
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="@color/background"
+        android:id="@+id/rootLayout">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp">
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:layout_marginRight="3dp"
-            android:background="@drawable/rectangle_round_corner_white_gray_border">
+        <TextView
+            style="@style/TextTitleOrangeStyle"
+            android:text="@string/service_title_customer_sign"/>
 
-            <LinearLayout
-                android:id="@+id/signatureCustomerHintLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-               >
-                <ImageView
-                    android:src="@drawable/signature_icon"
-                    style="@style/ImageIconStyle"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_hint_gray"
-                    android:textSize="15dp"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/service_hint_signature"/>
-            </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:background="@color/light_gray_border"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="10dp"
+            />
 
 
-            <com.joooonho.SelectableRoundedImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/imageCustomerSignature"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:minHeight="100dp"
-                android:layout_centerInParent="true"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="false"
-                android:clickable="true"
-                app:sriv_left_top_corner_radius="25dp"
-                app:sriv_right_top_corner_radius="25dp"
-                app:sriv_left_bottom_corner_radius="25dp"
-                app:sriv_right_bottom_corner_radius="25dp"
-                app:sriv_border_width="0dp"
-                app:sriv_border_color="#ffe3e1e1"
-                app:sriv_oval="false"
-                android:visibility="visible"
-                android:layout_margin="1dp"/>
-
-        </RelativeLayout>
-
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:textSize="15dp"
+            android:textColor="@color/dark_gray"
+            android:button="@drawable/radio_button_state"
+            android:drawableLeft="@android:color/transparent"
+            android:drawablePadding="10dp"
+            android:text="@string/service_confirm_suggesttion"
+            android:textIsSelectable="false"
+            android:background="@android:color/transparent"
+            android:id="@+id/checkBoxUserAccept"
+            android:tag="required"/>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:layout_marginLeft="3dp">
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:layout_marginRight="3dp"
+                android:background="@drawable/rectangle_round_corner_white_gray_border">
+
+                <LinearLayout
+                    android:id="@+id/signatureCustomerHintLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    >
+                    <ImageView
+                        android:src="@drawable/signature_icon"
+                        style="@style/ImageIconStyle"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_hint_gray"
+                        android:textSize="15dp"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/service_hint_signature"/>
+                </LinearLayout>
+
+
+                <com.joooonho.SelectableRoundedImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/imageCustomerSignature"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minHeight="100dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="false"
+                    android:clickable="true"
+                    app:sriv_left_top_corner_radius="25dp"
+                    app:sriv_right_top_corner_radius="25dp"
+                    app:sriv_left_bottom_corner_radius="25dp"
+                    app:sriv_right_bottom_corner_radius="25dp"
+                    app:sriv_border_width="0dp"
+                    app:sriv_border_color="#ffe3e1e1"
+                    app:sriv_oval="false"
+                    android:visibility="visible"
+                    android:layout_margin="1dp"/>
+
+            </RelativeLayout>
+
 
             <LinearLayout
-                style="@style/LinearLayoutTextView">
-                <ImageView
-                    android:src="@drawable/signature_type_icon"
-                    style="@style/ImageIconStyle"/>
-                <EditText
-                    android:id="@+id/editTextCustomerName"
-                    android:hint="@string/service_hint_customer_name"
-                    style="@style/EditTextStyle"
-                    android:tag="required"/>
-            </LinearLayout>
-            <LinearLayout
-                style="@style/LinearLayoutTextView"
-                android:layout_marginTop="3dp">
-                <ImageView
-                    android:src="@drawable/date_icon"
-                    style="@style/ImageIconStyle"/>
-                <EditText
-                    android:id="@+id/editTextCustomerSignDate"
-                    android:hint="@string/service_hint_date"
-                    style="@style/EditTextStyle"
-                    android:tag="required"/>
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_marginLeft="3dp">
+
+                <LinearLayout
+                    style="@style/LinearLayoutTextView">
+                    <ImageView
+                        android:src="@drawable/signature_type_icon"
+                        style="@style/ImageIconStyle"/>
+                    <EditText
+                        android:id="@+id/editTextCustomerName"
+                        android:hint="@string/service_hint_customer_name"
+                        style="@style/EditTextStyle"
+                        android:tag="required"/>
+                </LinearLayout>
+                <LinearLayout
+                    style="@style/LinearLayoutTextView"
+                    android:layout_marginTop="3dp">
+                    <ImageView
+                        android:src="@drawable/date_icon"
+                        style="@style/ImageIconStyle"/>
+                    <EditText
+                        android:id="@+id/editTextCustomerSignDate"
+                        android:hint="@string/service_hint_date"
+                        style="@style/EditTextStyle"
+                        android:tag="required"/>
+                </LinearLayout>
+
+
             </LinearLayout>
 
+        </LinearLayout>
+
+        <TextView
+            style="@style/TextTitleOrangeStyle"
+            android:text="@string/service_title_technician_sign"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:background="@color/light_gray_border"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="10dp"
+            />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:textSize="14dp"
+            android:gravity="top"
+            android:textColor="@color/dark_gray"
+            android:button="@drawable/radio_button_state"
+            android:drawableLeft="@android:color/transparent"
+            android:drawablePadding="10dp"
+            android:textIsSelectable="false"
+            android:background="@android:color/transparent"
+            android:text="@string/service_confirm_give_suggesttion"
+            android:id="@+id/checkBoxTecnicianAccept"
+            android:tag="required"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:layout_marginRight="3dp"
+                android:background="@drawable/rectangle_round_corner_white_gray_border">
+
+                <LinearLayout
+                    android:id="@+id/signatureTechnicianHintLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    >
+                    <ImageView
+                        android:src="@drawable/signature_icon"
+                        style="@style/ImageIconStyle"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_hint_gray"
+                        android:textSize="15dp"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/service_hint_signature"/>
+                </LinearLayout>
+
+
+                <com.joooonho.SelectableRoundedImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/imageTechnicianSignature"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minHeight="100dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="false"
+                    android:clickable="true"
+                    app:sriv_left_top_corner_radius="25dp"
+                    app:sriv_right_top_corner_radius="25dp"
+                    app:sriv_left_bottom_corner_radius="25dp"
+                    app:sriv_right_bottom_corner_radius="25dp"
+                    app:sriv_border_width="0dp"
+                    app:sriv_border_color="#ffe3e1e1"
+                    app:sriv_oval="false"
+                    android:visibility="visible"
+                    android:layout_margin="1dp"/>
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_marginLeft="3dp">
+
+                <LinearLayout
+                    style="@style/LinearLayoutTextView">
+                    <ImageView
+                        android:src="@drawable/signature_type_icon"
+                        style="@style/ImageIconStyle"/>
+                    <EditText
+                        android:id="@+id/editTextTechnicianName"
+                        android:hint="@string/service_hint_technician_name"
+                        style="@style/EditTextStyle"
+                        android:tag="required"/>
+                </LinearLayout>
+                <LinearLayout
+                    style="@style/LinearLayoutTextView"
+                    android:layout_marginTop="3dp">
+                    <ImageView
+                        android:src="@drawable/date_icon"
+                        style="@style/ImageIconStyle"/>
+                    <EditText
+                        android:id="@+id/editTextTechnicianSignDate"
+                        android:hint="@string/service_hint_date"
+                        style="@style/EditTextStyle"
+                        android:tag="required"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <TextView
-        style="@style/TextTitleOrangeStyle"
-        android:text="@string/service_title_technician_sign"/>
+</ScrollView>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.7dp"
-        android:background="@color/light_gray_border"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="10dp"
-        />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp"
-        android:textSize="14dp"
-        android:gravity="top"
-        android:textColor="@color/dark_gray"
-        android:button="@drawable/radio_button_state"
-        android:drawableLeft="@android:color/transparent"
-        android:drawablePadding="10dp"
-        android:textIsSelectable="false"
-        android:background="@android:color/transparent"
-        android:text="@string/service_confirm_give_suggesttion"
-        android:id="@+id/checkBoxTecnicianAccept"
-        android:tag="required"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:layout_marginRight="3dp"
-            android:background="@drawable/rectangle_round_corner_white_gray_border">
-
-            <LinearLayout
-                android:id="@+id/signatureTechnicianHintLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                >
-                <ImageView
-                    android:src="@drawable/signature_icon"
-                    style="@style/ImageIconStyle"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_hint_gray"
-                    android:textSize="15dp"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/service_hint_signature"/>
-            </LinearLayout>
-
-
-            <com.joooonho.SelectableRoundedImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/imageTechnicianSignature"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:minHeight="100dp"
-                android:layout_centerInParent="true"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="false"
-                android:clickable="true"
-                app:sriv_left_top_corner_radius="25dp"
-                app:sriv_right_top_corner_radius="25dp"
-                app:sriv_left_bottom_corner_radius="25dp"
-                app:sriv_right_bottom_corner_radius="25dp"
-                app:sriv_border_width="0dp"
-                app:sriv_border_color="#ffe3e1e1"
-                app:sriv_oval="false"
-                android:visibility="visible"
-                android:layout_margin="1dp"/>
-        </RelativeLayout>
-
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:layout_marginLeft="3dp">
-
-            <LinearLayout
-                style="@style/LinearLayoutTextView">
-                <ImageView
-                    android:src="@drawable/signature_type_icon"
-                    style="@style/ImageIconStyle"/>
-                <EditText
-                    android:id="@+id/editTextTechnicianName"
-                    android:hint="@string/service_hint_technician_name"
-                    style="@style/EditTextStyle"
-                    android:tag="required"/>
-            </LinearLayout>
-            <LinearLayout
-                style="@style/LinearLayoutTextView"
-                android:layout_marginTop="3dp">
-                <ImageView
-                    android:src="@drawable/date_icon"
-                    style="@style/ImageIconStyle"/>
-                <EditText
-                    android:id="@+id/editTextTechnicianSignDate"
-                    android:hint="@string/service_hint_date"
-                    style="@style/EditTextStyle"
-                    android:tag="required"/>
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</LinearLayout>

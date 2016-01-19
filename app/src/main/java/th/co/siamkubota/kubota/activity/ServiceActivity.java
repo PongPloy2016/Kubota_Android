@@ -64,7 +64,7 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service);
-        this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
+        //this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
 
         if (savedInstanceState == null) {
 

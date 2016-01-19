@@ -8,13 +8,16 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import io.swagger.client.ServiceGenerator;
 import io.swagger.client.api.DefaultApi;
@@ -76,6 +79,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             passwordEditText.requestFocus();
         }
 
+        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId== EditorInfo.IME_ACTION_DONE){
+                    login();
+                }
+                return false;
+            }
+        });
+
     }
 
     @Override
@@ -103,12 +116,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         if(v == loginButton){
-           /* Intent intent = new Intent(LoginActivity.this, ServiceActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();*/
 
-            View view = Validate.inputValidate(rootLayout, "required");
+            login();
+
+            /*View view = Validate.inputValidate(rootLayout, "required");
             if(view == null){
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
@@ -117,7 +128,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }else{
                 buildAlertInvalidInput(view);
             }
+*/
+        }
+    }
 
+    private void login(){
+
+        View view = Validate.inputValidate(rootLayout, "required");
+        if(view == null){
+            String username = usernameEditText.getText().toString();
+            String password = passwordEditText.getText().toString();
+            loginRequest(username, password);
+
+        }else{
+            buildAlertInvalidInput(view);
         }
     }
 
