@@ -174,12 +174,13 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onClick(View v) {
         if(v == okButton){
-            Intent intent = new Intent(ResultActivity.this, QuestionnairActivity.class);
+            /*Intent intent = new Intent(ResultActivity.this, QuestionnairActivity.class);
             //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             Bundle bundle = new Bundle();
             bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, loginData);
             intent.putExtras(bundle);
-            startActivity(intent);
+            startActivity(intent);*/
+
             finish();
 
         }

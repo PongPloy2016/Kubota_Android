@@ -34,6 +34,7 @@ import th.co.siamkubota.kubota.app.Config;
 import th.co.siamkubota.kubota.model.Photo;
 import th.co.siamkubota.kubota.utils.function.Converter;
 import th.co.siamkubota.kubota.utils.function.ImageFile;
+import th.co.siamkubota.kubota.utils.function.Ui;
 import th.co.siamkubota.kubota.utils.function.Validate;
 
 /**
@@ -187,6 +188,8 @@ public class Step3SignFragment extends Fragment implements
                 editTextTechnicianSignDate.setText(Converter.DateToString(imageTechnician.getDate(),"dd/MM/yyyy"));
                 signatureTechnicianHintLayout.setVisibility(View.GONE);
             }
+
+            Ui.setupUI(getActivity(), rootLayout);
 
         }
 
