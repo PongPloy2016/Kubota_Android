@@ -20,8 +20,12 @@ import io.swagger.annotations.*;
 @ApiModel(description = "")
 public class TaskInfo implements Parcelable, Cloneable {
   
+
   @SerializedName("engineerID")
   private String engineerID = null;
+
+  @SerializedName("shopID")
+  private String shopID = null;
   
   @SerializedName("taskType")
   private String taskType = null;
@@ -62,11 +66,9 @@ public class TaskInfo implements Parcelable, Cloneable {
   @SerializedName("customerAddress")
   private String customerAddress = null;
 
-  @SerializedName("owner")
-  private Boolean owner = null;
+  @SerializedName("isOwner")
+  private Boolean isOwner = null;
 
-  @SerializedName("user")
-  private Boolean user = null;
   
 
   
@@ -79,6 +81,17 @@ public class TaskInfo implements Parcelable, Cloneable {
   public void setEngineerID(String engineerID) {
     this.engineerID = engineerID;
   }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public String getShopID() {
+    return shopID;
+  }
+  public void setshopID(String shopID) {
+    this.shopID = shopID;
+  }
+
 
   
   /**
@@ -227,28 +240,16 @@ public class TaskInfo implements Parcelable, Cloneable {
   /**
    **/
   @ApiModelProperty(value = "")
-  public Boolean getOwner() {
-    if (owner == null )
+  public Boolean getIsOwner() {
+    if (isOwner == null )
       return false;
-    return owner;
+    return isOwner;
   }
-  public void setOwner(Boolean owner) {
-    this.owner = owner;
+  public void setIsOwner(Boolean isOwner) {
+    this.isOwner = isOwner;
   }
 
-  /**
-   **/
-  @ApiModelProperty(value = "")
-  public Boolean getUser() {
 
-    if (user == null )
-      return false;
-
-    return user;
-  }
-  public void setUser(Boolean user) {
-    this.user = user;
-  }
 
 
   @Override
@@ -263,6 +264,7 @@ public class TaskInfo implements Parcelable, Cloneable {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       return Objects.equals(engineerID, taskInfo.engineerID) &&
+              Objects.equals(shopID, taskInfo.shopID) &&
               Objects.equals(taskType, taskInfo.taskType) &&
               Objects.equals(product, taskInfo.product) &&
               Objects.equals(carModel, taskInfo.carModel) &&
@@ -276,10 +278,10 @@ public class TaskInfo implements Parcelable, Cloneable {
               Objects.equals(usageHours, taskInfo.usageHours) &&
               Objects.equals(address, taskInfo.address) &&
               Objects.equals(customerAddress, taskInfo.customerAddress) &&
-              Objects.equals(owner, taskInfo.owner) &&
-              Objects.equals(user, taskInfo.user);
+              Objects.equals(isOwner, taskInfo.isOwner);
     }else{
       return Objects.equals(engineerID, taskInfo.engineerID) &&
+              Objects.equals(shopID, taskInfo.shopID) &&
               Objects.equals(taskType, taskInfo.taskType) &&
               Objects.equals(product, taskInfo.product) &&
               Objects.equals(carModel, taskInfo.carModel) &&
@@ -293,15 +295,14 @@ public class TaskInfo implements Parcelable, Cloneable {
               Objects.equals(usageHours, taskInfo.usageHours) &&
               Objects.equals(address, taskInfo.address) &&
               Objects.equals(customerAddress, taskInfo.customerAddress) &&
-              Objects.equals(owner, taskInfo.owner) &&
-              Objects.equals(user, taskInfo.user);
+              Objects.equals(isOwner, taskInfo.isOwner);
     }
 
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(engineerID, taskType, product, carModel, carModelOther, taskCode, customerName, tel1, tel2, carNo, engineNo, usageHours, address, customerAddress);
+    return Objects.hash(engineerID, shopID, taskType, product, carModel, carModelOther, taskCode, customerName, tel1, tel2, carNo, engineNo, usageHours, address, customerAddress, isOwner);
   }
 
   @Override
@@ -310,6 +311,7 @@ public class TaskInfo implements Parcelable, Cloneable {
     sb.append("class TaskInfo {\n");
     
     sb.append("    engineerID: ").append(StringUtil.toIndentedString(engineerID)).append("\n");
+    sb.append("    shopID: ").append(StringUtil.toIndentedString(shopID)).append("\n");
     sb.append("    taskType: ").append(StringUtil.toIndentedString(taskType)).append("\n");
     sb.append("    product: ").append(StringUtil.toIndentedString(product)).append("\n");
     sb.append("    carModel: ").append(StringUtil.toIndentedString(carModel)).append("\n");
@@ -323,8 +325,7 @@ public class TaskInfo implements Parcelable, Cloneable {
     sb.append("    usageHours: ").append(StringUtil.toIndentedString(usageHours)).append("\n");
     sb.append("    address: ").append(StringUtil.toIndentedString(address)).append("\n");
     sb.append("    customerAddress: ").append(StringUtil.toIndentedString(customerAddress)).append("\n");
-    sb.append("    owner: ").append(StringUtil.toIndentedString(owner)).append("\n");
-    sb.append("    user: ").append(StringUtil.toIndentedString(user)).append("\n");
+    sb.append("    isOwner: ").append(StringUtil.toIndentedString(isOwner)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -340,6 +341,7 @@ public class TaskInfo implements Parcelable, Cloneable {
   @Override
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeString(this.engineerID);
+    dest.writeString(this.shopID);
     dest.writeString(this.taskType);
     dest.writeString(this.product);
     dest.writeString(this.carModel);
@@ -353,8 +355,7 @@ public class TaskInfo implements Parcelable, Cloneable {
     dest.writeString(this.usageHours);
     dest.writeString(this.address);
     dest.writeString(this.customerAddress);
-    dest.writeValue(this.owner);
-    dest.writeValue(this.user);
+    dest.writeValue(this.isOwner);
   }
 
   public TaskInfo() {
@@ -362,6 +363,7 @@ public class TaskInfo implements Parcelable, Cloneable {
 
   protected TaskInfo(Parcel in) {
     this.engineerID = in.readString();
+    this.shopID = in.readString();
     this.taskType = in.readString();
     this.product = in.readString();
     this.carModel = in.readString();
@@ -375,8 +377,7 @@ public class TaskInfo implements Parcelable, Cloneable {
     this.usageHours = in.readString();
     this.address = in.readString();
     this.customerAddress = in.readString();
-    this.owner = (Boolean) in.readValue(Boolean.class.getClassLoader());
-    this.user = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    this.isOwner = (Boolean) in.readValue(Boolean.class.getClassLoader());
 
   }
 

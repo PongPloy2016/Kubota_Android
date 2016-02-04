@@ -386,9 +386,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextServiceAddress.setText(taskInfo.getAddress());
         editTextCustomerAddress.setText(taskInfo.getCustomerAddress());
 
-        if(taskInfo.getOwner()){
+        if(taskInfo.getIsOwner()){
             radioGroupUserType.check(R.id.radioButton1);
-        }else if(taskInfo.getUser()){
+        }else {
             radioGroupUserType.check(R.id.radioButton2);
         }
 
@@ -836,11 +836,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
 
         if(radioGroupUserType.getCheckedRadioButtonId() == R.id.radioButton1){
-            taskInfo.setOwner(true);
-            taskInfo.setUser(false);
+            taskInfo.setIsOwner(true);
         }else  if(radioGroupUserType.getCheckedRadioButtonId() == R.id.radioButton2){
-            taskInfo.setOwner(false);
-            taskInfo.setUser(true);
+            taskInfo.setIsOwner(false);
         }
 
 

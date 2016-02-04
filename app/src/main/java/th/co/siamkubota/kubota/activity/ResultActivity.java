@@ -338,7 +338,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
         final List<Task> taskList = new ArrayList<Task>();
         taskList.add(task);
-       /* Gson gson = new GsonBuilder()
+/*        Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd' 'HH:mm:ss").create();
         String json = gson.toJson(taskList);*/
 
