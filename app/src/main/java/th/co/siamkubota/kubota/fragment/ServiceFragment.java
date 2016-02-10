@@ -188,8 +188,8 @@ public class ServiceFragment extends Fragment implements
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
-        saveTask(task, loginData);
+        /*task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
+        saveTask(task, loginData);*/
     }
 
     @Override
@@ -474,6 +474,9 @@ public class ServiceFragment extends Fragment implements
 
                 Step2PhotoFragment step2PhotoFragmentadapter = (Step2PhotoFragment)adapter.getItem(1);
                 step2PhotoFragmentadapter.setMachineNumber(task.getTaskInfo().getEngineNo());
+
+                Step3SignFragment step3SignFragment = (Step3SignFragment)adapter.getItem(2);
+                step3SignFragment.setCustomerName(task.getTaskInfo().getCustomerName());
 
             }else{
                 nextButton.setEnabled(false);

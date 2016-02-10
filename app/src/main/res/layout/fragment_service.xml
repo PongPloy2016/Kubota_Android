@@ -277,8 +277,7 @@
                 android:text="@string/service_button_next"
                 style="@style/buttonOrangeStyle"
                 android:textColor="@color/button_text_orange_selector"
-                android:background="@drawable/button_orange_selector"
-                android:enabled="false"></Button>
+                android:background="@drawable/button_orange_selector"></Button>
 
         </LinearLayout>
 

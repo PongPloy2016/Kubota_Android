@@ -56,10 +56,12 @@ public class Step3SignFragment extends Fragment implements
     private LinearLayout rootLayout;
     private SelectableRoundedImageView imageCustomerSignature;
     private SelectableRoundedImageView imageTechnicianSignature;
+    private EditText editTextTotalCost;
     private EditText editTextCustomerSignDate;
     private EditText editTextTechnicianSignDate;
     private EditText editTextCustomerName;
     private EditText editTextTechnicianName;
+    private EditText editTextRemark;
     private LinearLayout signatureCustomerHintLayout;
     private LinearLayout signatureTechnicianHintLayout;
     private CheckBox checkBoxUserAccept;
@@ -70,6 +72,7 @@ public class Step3SignFragment extends Fragment implements
     private Photo imageTechnician;
     private boolean dataComplete = false;
     private Signature signature;
+    private String customerName;
 
 
     private OnFragmentInteractionListener mListener;
@@ -93,6 +96,10 @@ public class Step3SignFragment extends Fragment implements
         this.dataComplete = dataComplete;
     }
 
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
     //////////////////////////////////////////////////////////////////// constructor
 
 
@@ -100,7 +107,6 @@ public class Step3SignFragment extends Fragment implements
     public static Step3SignFragment newInstance(Signature signature) {
         Step3SignFragment fragment = new Step3SignFragment();
         Bundle args = new Bundle();
-        //args.putString(ARG_PARAM_TITLE, title);
         args.putParcelable(KEY_SIGNATURE, signature);
         fragment.setArguments(args);
         return fragment;
@@ -167,10 +173,12 @@ public class Step3SignFragment extends Fragment implements
             rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
             imageCustomerSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageCustomerSignature);
             imageTechnicianSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageTechnicianSignature);
+            editTextTotalCost = (EditText) v.findViewById(R.id.editTextTotalCost);
             editTextCustomerSignDate = (EditText) v.findViewById(R.id.editTextCustomerSignDate);
             editTextTechnicianSignDate = (EditText) v.findViewById(R.id.editTextTechnicianSignDate);
             editTextCustomerName = (EditText) v.findViewById(R.id.editTextCustomerName);
             editTextTechnicianName = (EditText) v.findViewById(R.id.editTextTechnicianName);
+            editTextRemark = (EditText) v.findViewById(R.id.editTextRemark);
             signatureCustomerHintLayout = (LinearLayout) v.findViewById(R.id.signatureCustomerHintLayout);
             signatureTechnicianHintLayout = (LinearLayout) v.findViewById(R.id.signatureTechnicianHintLayout);
             checkBoxUserAccept = (CheckBox) v.findViewById(R.id.checkBoxUserAccept);
@@ -205,10 +213,12 @@ public class Step3SignFragment extends Fragment implements
         imageCustomerSignature.setOnClickListener(this);
         imageTechnicianSignature.setOnClickListener(this);
 
+        editTextTotalCost.addTextChangedListener(new GenericTextWatcher(editTextTotalCost));
         editTextCustomerSignDate.addTextChangedListener(new GenericTextWatcher(editTextCustomerSignDate));
         editTextTechnicianSignDate.addTextChangedListener(new GenericTextWatcher(editTextTechnicianSignDate));
         editTextCustomerName.addTextChangedListener(new GenericTextWatcher(editTextCustomerName));
         editTextTechnicianName.addTextChangedListener(new GenericTextWatcher(editTextTechnicianName));
+        editTextRemark.addTextChangedListener(new GenericTextWatcher(editTextRemark));
 
         checkBoxUserAccept.setOnCheckedChangeListener(this);
         checkBoxTecnicianAccept.setOnCheckedChangeListener(this);
@@ -220,29 +230,27 @@ public class Step3SignFragment extends Fragment implements
         signatureCustomerHintLayout.setVisibility(View.GONE);
         signatureTechnicianHintLayout.setVisibility(View.GONE);
 
+        if(signature != null && signature.getTotalCost() != null ){
+            editTextTotalCost.setText(signature.getTotalCost());
+        }
+
+        if(signature != null && signature.getRemark() != null ){
+            editTextRemark.setText(signature.getRemark());
+        }
+
+
         if(signature != null && signature.getCustomerSignatureImage() != null && signature.getCustomerSignatureImage().getImagePath() != null){
-            //imageCustomer.setServerPath(signature.getCustomerSignatureImage().getImage());
             imageCustomer.setPath(signature.getCustomerSignatureImage().getImagePath());
             imageCustomer.setDate(signature.getCustomerSignatureImage().getCapturedAt());
             imageCustomer.setComplete(true);
-       /* }else if(signature.getCustomerSignature() != null && !signature.getCustomerSignature().isEmpty()){
-            imageCustomer.setServerPath(signature.getCustomerSignature());
-            imageCustomer.setDate(signature.getCustomerSignedDate());
-            imageCustomer.setComplete(true);*/
         }else{
             signatureCustomerHintLayout.setVisibility(View.VISIBLE);
-
         }
 
         if(signature != null && signature.getEngineerSignatureImage() != null && signature.getEngineerSignatureImage().getImagePath() != null){
-            //imageTechnician.setServerPath(signature.getEngineerSignatureImage().getImage());
             imageTechnician.setPath(signature.getEngineerSignatureImage().getImagePath());
             imageTechnician.setDate(signature.getEngineerSignatureImage().getCapturedAt());
             imageTechnician.setComplete(true);
-       /* }else if(signature.getEngineerSignature() != null && !signature.getEngineerSignature().isEmpty()){
-            imageTechnician.setServerPath(signature.getEngineerSignature());
-            imageTechnician.setDate(signature.getEngineerSignedDate());
-            imageTechnician.setComplete(true);*/
         }else{
             signatureTechnicianHintLayout.setVisibility(View.VISIBLE);
         }
@@ -250,9 +258,12 @@ public class Step3SignFragment extends Fragment implements
         setImage(imageCustomerSignature,imageCustomer );
         setImage(imageTechnicianSignature, imageTechnician);
 
-        if(signature != null && signature.getCustomerName() != null){
+        if(signature != null && signature.getCustomerName() != null && !signature.getCustomerName().isEmpty()){
             editTextCustomerName.setText(signature.getCustomerName());
+        }else {
+            editTextCustomerName.setText(customerName);
         }
+
 
         if(signature != null && signature.getCustomerSignedDate() != null){
             editTextCustomerSignDate.setText(Converter.DateToString(signature.getCustomerSignedDate(), "dd/MM/yyyy"));
@@ -554,6 +565,15 @@ public class Step3SignFragment extends Fragment implements
 
         signature.setCustomerAccept(checkBoxUserAccept.isChecked());
         signature.setEngineerAccept(checkBoxTecnicianAccept.isChecked());
+
+        if(editTextTotalCost.getText() != null){
+            signature.setTotalCost(editTextTotalCost.getText().toString());
+        }
+
+        if(editTextRemark.getText() != null){
+            signature.setRemark(editTextRemark.getText().toString());
+        }
+
 
         return signature;
     }

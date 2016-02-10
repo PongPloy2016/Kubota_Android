@@ -241,8 +241,6 @@ public class TaskInfo implements Parcelable, Cloneable {
    **/
   @ApiModelProperty(value = "")
   public Boolean getIsOwner() {
-    if (isOwner == null )
-      return false;
     return isOwner;
   }
   public void setIsOwner(Boolean isOwner) {
@@ -360,6 +358,8 @@ public class TaskInfo implements Parcelable, Cloneable {
 
   public TaskInfo() {
   }
+
+
 
   protected TaskInfo(Parcel in) {
     this.engineerID = in.readString();

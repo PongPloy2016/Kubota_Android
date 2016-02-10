@@ -386,10 +386,12 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextServiceAddress.setText(taskInfo.getAddress());
         editTextCustomerAddress.setText(taskInfo.getCustomerAddress());
 
-        if(taskInfo.getIsOwner()){
-            radioGroupUserType.check(R.id.radioButton1);
-        }else {
-            radioGroupUserType.check(R.id.radioButton2);
+        if(taskInfo.getIsOwner() != null){
+            if(taskInfo.getIsOwner()){
+                radioGroupUserType.check(R.id.radioButton1);
+            }else {
+                radioGroupUserType.check(R.id.radioButton2);
+            }
         }
 
     }

@@ -27,12 +27,15 @@ public class Step4ConfirmFragment extends Fragment implements
 View.OnClickListener{
 
     private static final String ARG_PARAM_TITLE = "title";
+    private static final String ARG_PARAM_COMPLETE = "complete";
 
     private Button confirmButton;
     private Button cancelButton;
 
     private String title;
     private boolean dataComplete = false;
+    private boolean complete = false;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,10 +61,10 @@ View.OnClickListener{
     //////////////////////////////////////////////////////////////////// constructor
 
 
-    public static Step4ConfirmFragment newInstance() {
+    public static Step4ConfirmFragment newInstance(boolean complete) {
         Step4ConfirmFragment fragment = new Step4ConfirmFragment();
         Bundle args = new Bundle();
-        //args.putString(ARG_PARAM_TITLE, title);
+        args.putBoolean(ARG_PARAM_COMPLETE,complete);
         fragment.setArguments(args);
         return fragment;
     }
@@ -91,6 +94,10 @@ View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            complete = getArguments().getBoolean(ARG_PARAM_COMPLETE, false);
+        }
     }
 
     @Override
@@ -173,10 +180,13 @@ View.OnClickListener{
             mListener.onConfirmSubmit(this, true);
 
         }else{
-            //mListener.onConfirmFragmentCancel();
-            //mListener.onConfirmSubmit(this, false);
-            dataComplete = false;
-            mListener.onFragmentDataComplete(this,dataComplete, null);
+            if(!complete){
+                dataComplete = false;
+                mListener.onFragmentDataComplete(this,dataComplete, null);
+            }else {
+                cancelButton.setEnabled(false);
+            }
+
         }
     }
 }

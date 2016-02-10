@@ -52,6 +52,12 @@ public class Signature implements Parcelable {
   @SerializedName("engineerAccept")
   private Boolean engineerAccept = null;
 
+  @SerializedName("totalCost")
+  private String totalCost = null;
+
+  @SerializedName("remark")
+  private String remark = null;
+
 
 
   /**
@@ -167,6 +173,27 @@ public class Signature implements Parcelable {
     this.engineerAccept = engineerAccept;
   }
 
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public String getTotalCost() {
+    return totalCost;
+  }
+  public void setTotalCost(String totalCost) {
+    this.totalCost = totalCost;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public String getRemark() {
+    return remark;
+  }
+  public void setRemark(String remark) {
+    this.remark = remark;
+  }
+
   
 
   @Override
@@ -189,7 +216,9 @@ public class Signature implements Parcelable {
               Objects.equals(customerSignatureImage, signature.customerSignatureImage) &&
               Objects.equals(engineerSignatureImage, signature.engineerSignatureImage) &&
               Objects.equals(customerAccept, signature.customerAccept) &&
-              Objects.equals(engineerAccept, signature.engineerAccept);
+              Objects.equals(engineerAccept, signature.engineerAccept) &&
+              Objects.equals(totalCost, signature.totalCost) &&
+              Objects.equals(remark, signature.remark);
     }else{
       return  Objects.equals(customerName, signature.customerName) &&
               Objects.equals(customerSignature, signature.customerSignature) &&
@@ -200,7 +229,9 @@ public class Signature implements Parcelable {
               Objects.equals(customerSignatureImage, signature.customerSignatureImage) &&
               Objects.equals(engineerSignatureImage, signature.engineerSignatureImage) &&
               Objects.equals(customerAccept, signature.customerAccept) &&
-              Objects.equals(engineerAccept, signature.engineerAccept);
+              Objects.equals(engineerAccept, signature.engineerAccept) &&
+              Objects.equals(totalCost, signature.totalCost) &&
+              Objects.equals(remark, signature.remark);
     }
 
   }
@@ -225,6 +256,8 @@ public class Signature implements Parcelable {
     sb.append("    engineerSignatureImage: ").append(StringUtil.toIndentedString(engineerSignatureImage)).append("\n");
     sb.append("    customerAccept: ").append(StringUtil.toIndentedString(customerAccept)).append("\n");
     sb.append("    engineerAccept: ").append(StringUtil.toIndentedString(engineerAccept)).append("\n");
+    sb.append("    totalCost: ").append(StringUtil.toIndentedString(totalCost)).append("\n");
+    sb.append("    remark: ").append(StringUtil.toIndentedString(remark)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -249,6 +282,8 @@ public class Signature implements Parcelable {
     dest.writeParcelable(this.engineerSignatureImage, 0);
     dest.writeValue(this.customerAccept);
     dest.writeValue(this.engineerAccept);
+    dest.writeString(this.totalCost);
+    dest.writeString(this.remark);
   }
 
   public Signature() {
@@ -267,6 +302,8 @@ public class Signature implements Parcelable {
     this.engineerSignatureImage = in.readParcelable(Image.class.getClassLoader());
     this.customerAccept = (Boolean) in.readValue(Boolean.class.getClassLoader());
     this.engineerAccept = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    this.totalCost =  in.readString();
+    this.remark =  in.readString();
   }
 
   public static final Creator<Signature> CREATOR = new Creator<Signature>() {

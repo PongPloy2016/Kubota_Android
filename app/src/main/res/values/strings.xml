@@ -67,10 +67,12 @@
     <string name="service_confirm_suggesttion">ข้าพเจ้าได้รับคำแนะนำเป็นที่เข้าใจอย่างดีแล้ว</string>
     <string name="service_confirm_give_suggesttion">ข้าพเจ้าได้ให้คำแนะนำแก่ลูกค้าให้เป็นที่เข้าใจอย่างดีแล้ว</string>
 
+    <string name="service_hint_total_cost">ยอดค่าอะไหล่</string>
     <string name="service_hint_signature">ลายมือชื่อ</string>
     <string name="service_hint_date">วว/ดด/ปปปป</string>
     <string name="service_hint_customer_name">ชื่อลูกค้า</string>
     <string name="service_hint_technician_name">ชื่อผู้ให้บริการ</string>
+    <string name="service_hint_remark">หมายเหตุ</string>
 
     <string name="service_confirm_text">ระบบจะส่งข้อมูลหลังจากกดปุ่มยืนยัน กรุณาตรวจสอบ ข้อมูลและการเชื่อมต่ออินเตอร์เน็ตของท่าน หากไม่ สามารถเชื่อมต่ออินเตอร์เน็ตได้ ระบบจะทำการบันทึก ข้อมูลอัตโนมัติ และส่งเข้าระบบอีกครั้ง เมื่อมีการเชื่อมต่อ</string>
     <string name="service_toast_complete">complete</string>
@@ -105,8 +107,10 @@
     <!--Sign pad-->
     <string name="sign_pad_clear_button">ลบทั้งหมด</string>
     <string name="sign_pad_save_button">บันทึกลายมือชื่อ</string>
+    <string name="sign_pad_total_sparepart_cost">สรุปยอดค่าอะไหล่</string>
     <string name="sign_pad_customer_signature">ลายมือชื่อลูกค้า</string>
     <string name="sign_pad_technician_signature">ลายมือชื่อผู้ให้บริการ</string>
+    <string name="sign_pad_remark">หมายเหตุ</string>
     <string name="sign_pad_not_complete">กรุณาลงลายมือชื่อให้เรียบร้อยก่อนบันทึก</string>
 
     <!-- TODO: Remove or change this placeholder text -->
