@@ -24,6 +24,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.joooonho.SelectableRoundedImageView;
 
 import java.io.File;
+import java.util.Date;
 
 import io.swagger.client.model.Image;
 import io.swagger.client.model.Signature;
@@ -451,11 +452,14 @@ public class Step3SignFragment extends Fragment implements
                 }
 
                 imageCustomer.setPath(imagePath);
-                imageCustomer.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
+                //imageCustomer.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
+                imageCustomer.setDate(new Date());
                 imageCustomerSignature.setImageURI(Uri.fromFile(new File(imageCustomer.getPath())));
                 //imageView.setVisibility(View.VISIBLE);
-                editTextCustomerSignDate.setText(dateInfo);
+                editTextCustomerSignDate.setText(Converter.DateToString(imageCustomer.getDate(), "dd/MM/yyyy" ));
                 signatureCustomerHintLayout.setVisibility(View.GONE);
+
+                //signature.setCustomerSignedDate(new Date());
 
                 imageCustomer.setComplete(true);
                 validateInput();
@@ -467,11 +471,14 @@ public class Step3SignFragment extends Fragment implements
                 }
 
                 imageTechnician.setPath(imagePath);
-                imageTechnician.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
+                //imageTechnician.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
+                imageTechnician.setDate(new Date());
                 imageTechnicianSignature.setImageURI(Uri.fromFile(new File(imageTechnician.getPath())));
                 //imageView.setVisibility(View.VISIBLE);
-                editTextTechnicianSignDate.setText(dateInfo);
+                editTextTechnicianSignDate.setText(Converter.DateToString(imageTechnician.getDate(), "dd/MM/yyyy"));
                 signatureTechnicianHintLayout.setVisibility(View.GONE);
+
+                //signature.setEngineerSignedDate(new Date());
 
                 imageTechnician.setComplete(true);
                 validateInput();
