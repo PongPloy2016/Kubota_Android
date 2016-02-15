@@ -46,6 +46,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
+import th.co.siamkubota.kubota.fragment.FinishDialogFragment;
 import th.co.siamkubota.kubota.fragment.LoadingDialogFragment;
 import th.co.siamkubota.kubota.sqlite.TaskDataSource;
 import th.co.siamkubota.kubota.utils.function.Copier;
@@ -73,6 +74,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
     private  AlertDialog alert;
     private boolean leave = false;
+    private boolean success = true;
 
     private LoadingDialogFragment alertLoading;
     private String shopName;
@@ -181,7 +183,28 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
             intent.putExtras(bundle);
             startActivity(intent);*/
 
-            finish();
+            //finish();
+
+            if(success){
+                FinishDialogFragment alert = new FinishDialogFragment();
+                alert.setmListener(new FinishDialogFragment.onActionListener() {
+                    @Override
+                    public void onFinishDialog() {
+                        Intent intent = new Intent(ResultActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                alert.show(getSupportFragmentManager(), "finish");
+
+            }else{
+                Intent intent = new Intent(ResultActivity.this, ServiceActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA,loginData);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                finish();
+            }
 
         }
     }
@@ -316,7 +339,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     showResultFail();
                     alertLoading.dismiss();
                     saveTask(taskSave);
-                    showToastError(message);
+                    //showToastError(message);
                 }
 
             }
@@ -419,6 +442,8 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         imageView.setImageResource(R.drawable.failed_icon);
         titleText.setText(getString(R.string.service_popup_fail_title));
         messageText.setText(getString(R.string.service_popup_fail_message));
+
+        success = false;
     }
 
     private void saveTask(Task task){

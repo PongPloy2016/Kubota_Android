@@ -87,7 +87,6 @@ ContinueQuestionFragment.OnFragmentInteractionListener{
 
         }else{
             // alert finish dialog
-
             FinishDialogFragment alert = new FinishDialogFragment();
             alert.setmListener(new FinishDialogFragment.onActionListener() {
                 @Override
