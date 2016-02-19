@@ -323,7 +323,6 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     signature.setCustomerSignatureImage(null);
                     signature.setEngineerSignatureImage(null);
 
-
                     submitTask(task);
 
                 }else{

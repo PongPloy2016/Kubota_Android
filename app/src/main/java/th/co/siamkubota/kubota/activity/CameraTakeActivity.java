@@ -167,6 +167,8 @@ public class CameraTakeActivity extends BaseActivity implements
             //imageView.setImageBitmap(image);
             takenDate = new Date();
             finishWithResult(image);
+
+            bitmap.recycle();
         }
         catch (Exception e)
         {

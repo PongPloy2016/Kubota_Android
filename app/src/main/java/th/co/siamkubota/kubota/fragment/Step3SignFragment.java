@@ -156,6 +156,18 @@ public class Step3SignFragment extends Fragment implements
 
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(signature != null && signature.getCustomerName() != null && !signature.getCustomerName().isEmpty()){
+            editTextCustomerName.setText(signature.getCustomerName());
+        }else if(signature == null ||  signature.getCustomerName() == null || signature.getCustomerName().isEmpty() ){
+            editTextCustomerName.setText(customerName);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -261,7 +273,7 @@ public class Step3SignFragment extends Fragment implements
 
         if(signature != null && signature.getCustomerName() != null && !signature.getCustomerName().isEmpty()){
             editTextCustomerName.setText(signature.getCustomerName());
-        }else {
+        }else if(signature == null ||  signature.getCustomerName() == null || signature.getCustomerName().isEmpty() ){
             editTextCustomerName.setText(customerName);
         }
 

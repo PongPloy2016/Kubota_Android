@@ -188,8 +188,8 @@ public class ServiceFragment extends Fragment implements
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        /*task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
-        saveTask(task, loginData);*/
+        task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
+        saveTask(task, loginData);
     }
 
     @Override
@@ -252,13 +252,13 @@ public class ServiceFragment extends Fragment implements
 
     }
 
-  /*  @Override
+    @Override
     public void onDestroy() {
         super.onDestroy();
 
         task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
         saveTask(task, loginData);
-    }*/
+    }
 
     private void setStepComplete(int step, boolean complete){
 

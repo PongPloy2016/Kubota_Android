@@ -45,6 +45,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private  AlertDialog alert;
     private String username;
+    private String password;
 
     private Call<LoginResponse> call;
 
@@ -73,10 +74,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         getApplicationContext()
                 );
         username = appPref.getString("username", null);
+        password = appPref.getString("password", null);
 
         if(username != null){
             usernameEditText.setText(username);
             passwordEditText.requestFocus();
+        }
+
+        if(password != null){
+            passwordEditText.setText(password);
         }
 
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -136,8 +142,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         View view = Validate.inputValidate(rootLayout, "required");
         if(view == null){
-            String username = usernameEditText.getText().toString();
-            String password = passwordEditText.getText().toString();
+            username = usernameEditText.getText().toString();
+            password = passwordEditText.getText().toString();
             loginRequest(username, password);
 
         }else{
@@ -164,7 +170,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         alert.show();
     }
 
-    private void loginRequest(final String username, String password)
+    private void loginRequest(final String username,final String password)
     {
 
         spinner.setVisibility(View.VISIBLE);
@@ -188,6 +194,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     SharedPreferences.Editor appPrefEditor = appPref.edit();
                     //appPrefEditor.putString("token", loginData.getUser().getToken());
                     appPrefEditor.putString("username", username);
+                    appPrefEditor.putString("password", password);
                     appPrefEditor.commit();
 
 
