@@ -138,6 +138,7 @@ public class ServiceFragment extends Fragment implements
 
     }
 
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -197,6 +198,7 @@ public class ServiceFragment extends Fragment implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //View v = View.inflate(getActivity(), R.layout.tab_product, null);
+
         View v = inflater.inflate(R.layout.fragment_service, container, false);
 
         return v;
@@ -331,7 +333,6 @@ public class ServiceFragment extends Fragment implements
                 break;
         }
     }
-
 
 
     @Override
@@ -470,7 +471,7 @@ public class ServiceFragment extends Fragment implements
 
             if(complete){
 
-                nextButton.setEnabled(true);
+                //nextButton.setEnabled(true);
 
                 Step2PhotoFragment step2PhotoFragmentadapter = (Step2PhotoFragment)adapter.getItem(1);
                 step2PhotoFragmentadapter.setMachineNumber(task.getTaskInfo().getEngineNo());
@@ -479,35 +480,56 @@ public class ServiceFragment extends Fragment implements
                 step3SignFragment.setCustomerName(task.getTaskInfo().getCustomerName());
 
             }else{
-                nextButton.setEnabled(false);
+                //nextButton.setEnabled(false);
+            }
+
+            Fragment currentfragment = adapter.getItem(pageChangeListener.getCurrentPage());
+            if(fragment == currentfragment){
+                nextButton.setEnabled(((Step1CustomerDetailFragment) fragment).isDataComplete());
             }
         }else if(fragment instanceof Step2PhotoFragment){
 
             setStepComplete(2, complete);
             task.setTaskImages((ArrayList<Image>) data);
 
-            if(complete){
+           /* if(complete){
                 nextButton.setEnabled(true);
             }else{
                 nextButton.setEnabled(false);
+            }*/
+
+            Fragment currentfragment = adapter.getItem(pageChangeListener.getCurrentPage());
+            if(fragment == currentfragment){
+                nextButton.setEnabled(((Step2PhotoFragment) fragment).isDataComplete());
             }
         }else if(fragment instanceof Step3SignFragment){
             setStepComplete(3, complete);
             task.setSignature((Signature) data);
 
-            if(complete){
+           /* if(complete){
                 nextButton.setEnabled(true);
             }else{
                 nextButton.setEnabled(false);
+            }*/
+
+            Fragment currentfragment = adapter.getItem(pageChangeListener.getCurrentPage());
+            if(fragment == currentfragment){
+                nextButton.setEnabled(((Step3SignFragment) fragment).isDataComplete());
             }
         }else if(fragment instanceof Step4ConfirmFragment){
             setStepComplete(4, complete);
             if(complete){
-                nextButton.setEnabled(true);
+                //nextButton.setEnabled(true);
             }else{
                 pager.setCurrentItem((pageChangeListener.getCurrentPage() - 1));
             }
+
+            Fragment currentfragment = adapter.getItem(pageChangeListener.getCurrentPage());
+            if(fragment == currentfragment){
+                nextButton.setEnabled(((Step4ConfirmFragment) fragment).isDataComplete());
+            }
         }
+
     }
 
     @Override
