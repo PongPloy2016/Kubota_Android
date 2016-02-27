@@ -163,7 +163,7 @@ public class CameraTakeActivity extends BaseActivity implements
         {
             bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri);
             //image = ImageFile.ImageResize(bitmap, 640, ImageFile.getImageOrientation(mImageUri.getPath()));
-            image = ImageFile.ImageResizeFixWidth(bitmap, 640, ImageFile.getImageOrientation(mImageUri.getPath()));
+            image = ImageFile.ImageResizeFixWidth(bitmap, 960, ImageFile.getImageOrientation(mImageUri.getPath()));
             //imageView.setImageBitmap(image);
             takenDate = new Date();
             finishWithResult(image);

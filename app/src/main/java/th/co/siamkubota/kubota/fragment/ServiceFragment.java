@@ -208,47 +208,51 @@ public class ServiceFragment extends Fragment implements
     @Override
     public void onViewCreated(View v, Bundle savedInstanceState) {
 
-        rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
-        textStepTitle = (TextView) v.findViewById(R.id.textStepTitle);
-        backStep1 = (RelativeLayout) v.findViewById(R.id.backStep1);
-        backStep2 = (RelativeLayout) v.findViewById(R.id.backStep2);
-        backStep3 = (RelativeLayout) v.findViewById(R.id.backStep3);
-        backStep4 = (RelativeLayout) v.findViewById(R.id.backStep4);
-        step1Button = (ImageButton) v.findViewById(R.id.step1Button);
-        step2Button = (ImageButton) v.findViewById(R.id.step2Button);
-        step3Button = (ImageButton) v.findViewById(R.id.step3Button);
-        step4Button = (ImageButton) v.findViewById(R.id.step4Button);
-        divStep1 = (ImageView) v.findViewById(R.id.divStep1);
-        divStep2 = (ImageView) v.findViewById(R.id.divStep2);
-        divStep3 = (ImageView) v.findViewById(R.id.divStep3);
-        pager = (NoneScrollableViewPager) v.findViewById(R.id.pager);
+        if(savedInstanceState == null){
 
-        previousButton = (Button) v.findViewById(R.id.previousButton);
-        nextButton = (Button) v.findViewById(R.id.nextButton);
-        navigationControleLayout = (LinearLayout) v.findViewById(R.id.navigationControleLayout);
+            rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
+            textStepTitle = (TextView) v.findViewById(R.id.textStepTitle);
+            backStep1 = (RelativeLayout) v.findViewById(R.id.backStep1);
+            backStep2 = (RelativeLayout) v.findViewById(R.id.backStep2);
+            backStep3 = (RelativeLayout) v.findViewById(R.id.backStep3);
+            backStep4 = (RelativeLayout) v.findViewById(R.id.backStep4);
+            step1Button = (ImageButton) v.findViewById(R.id.step1Button);
+            step2Button = (ImageButton) v.findViewById(R.id.step2Button);
+            step3Button = (ImageButton) v.findViewById(R.id.step3Button);
+            step4Button = (ImageButton) v.findViewById(R.id.step4Button);
+            divStep1 = (ImageView) v.findViewById(R.id.divStep1);
+            divStep2 = (ImageView) v.findViewById(R.id.divStep2);
+            divStep3 = (ImageView) v.findViewById(R.id.divStep3);
+            pager = (NoneScrollableViewPager) v.findViewById(R.id.pager);
+
+            previousButton = (Button) v.findViewById(R.id.previousButton);
+            nextButton = (Button) v.findViewById(R.id.nextButton);
+            navigationControleLayout = (LinearLayout) v.findViewById(R.id.navigationControleLayout);
 
 
-        previousButton.setOnClickListener(this);
-        nextButton.setOnClickListener(this);
-        nextButton.setEnabled(false);
+            previousButton.setOnClickListener(this);
+            nextButton.setOnClickListener(this);
+            nextButton.setEnabled(false);
 
-        pager.setAdapter(adapter);
-        pager.setOffscreenPageLimit(4);
-        pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
-        pager.setPagingEnabled(false);
+            pager.setAdapter(adapter);
+            pager.setOffscreenPageLimit(4);
+            pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
+            pager.setPagingEnabled(false);
 
-        Ui.setupUI(getActivity(), rootLayout);
+            Ui.setupUI(getActivity(), rootLayout);
 
-        if(task.getComplete() != null && task.getComplete()){
-            setStepComplete(1, true);
-            setStepComplete(2, true);
-            setStepComplete(3, true);
-            //setStepComplete(4, true);
-            pager.setCurrentItem(adapter.getCount() -1);
+            if(task.getComplete() != null && task.getComplete()){
+                setStepComplete(1, true);
+                setStepComplete(2, true);
+                setStepComplete(3, true);
+                //setStepComplete(4, true);
+                pager.setCurrentItem(adapter.getCount() -1);
 
-        }else{
+            }else{
 
-            pager.setCurrentItem(task.getCurrentStep() -1);
+                pager.setCurrentItem(task.getCurrentStep() -1);
+
+            }
 
         }
 
