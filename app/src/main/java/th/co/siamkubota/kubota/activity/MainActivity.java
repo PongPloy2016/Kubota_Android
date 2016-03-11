@@ -125,6 +125,7 @@ public class MainActivity extends BaseActivity  implements
 
         HashMap<String, String>  map = dataSource.getCheckTempTask();
 
+        /*
         List<String> keys = new ArrayList(map.keySet());
 
         for (String key : keys){
@@ -142,7 +143,7 @@ public class MainActivity extends BaseActivity  implements
                 map.remove(key);
             }
         }
-
+*/
 
         if(map.size() > 0){
             return true;

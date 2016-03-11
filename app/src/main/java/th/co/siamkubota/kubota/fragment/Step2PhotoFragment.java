@@ -152,9 +152,21 @@ PhotoPageFragment.OnFragmentInteractionListener{
             photos.add(new Photo(3,getString(R.string.service_image_3_machine)));
             photos.add(new Photo(4,getString(R.string.service_image_4_customer_with_machine)));
 
+            if(Config.showDefault){
+
+                String pathStr1 = ImageFile.createMockupImage(getActivity(), "photo3.jpg", R.drawable.photo3);
+
+                for(Photo p : photos){
+                    p.setPath(pathStr1);
+                    p.setComplete(true);
+                }
+
+            }
+
             if(images == null){
                 images = new ArrayList<Image>();
             }else if(images.size()> 0){
+
 
                 int i = 0;
                 for(Image img : images){

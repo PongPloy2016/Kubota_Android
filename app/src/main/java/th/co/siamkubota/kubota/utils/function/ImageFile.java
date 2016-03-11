@@ -465,7 +465,7 @@ public class ImageFile {
     }
 
 
-    private String createMockupImage(Context context, String fileName, int resource){
+    public static String createMockupImage(Context context, String fileName, int resource){
 
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resource);
 

@@ -610,16 +610,17 @@ public class Step3SignFragment extends Fragment implements
             editTextRemark.setText("รออะไหล่");
 
             Uri path1 = ResourceToUri(getActivity(), R.drawable.signature1);//Uri.parse("android.resource://th.co.siamkubota.kubota/" + R.drawable.signature1);
-            String pathStr1 = path1.toString();
+            //String pathStr1 = path1.toString();
+            String pathStr1 = ImageFile.createMockupImage(getActivity(), "signature1.jpg", R.drawable.signature1);
 
             imageCustomer.setPath(pathStr1);
             imageCustomer.setDate(new Date());
             imageCustomer.setComplete(true);
 
 
-            Uri path2 = ResourceToUri(getActivity(), R.drawable.signature2);//Uri.parse("android.resource://th.co.siamkubota.kubota/" + R.drawable.signature2);
+            //Uri path2 = ResourceToUri(getActivity(), R.drawable.signature2);//Uri.parse("android.resource://th.co.siamkubota.kubota/" + R.drawable.signature2);
+            String pathStr2 = ImageFile.createMockupImage(getActivity(), "signature2.jpg", R.drawable.signature2);
 
-            String pathStr2 = path2.toString();
             imageTechnician.setPath(pathStr2);
             imageTechnician.setDate(new Date());
             imageTechnician.setComplete(true);
@@ -631,6 +632,7 @@ public class Step3SignFragment extends Fragment implements
 
             editTextCustomerSignDate.setText(Converter.DateToString(new Date(), "dd/MM/yyyy"));
             editTextCustomerSignDate.setText(Converter.DateToString(new Date(), "dd/MM/yyyy"));
+            editTextCustomerName.setText("สมชาย ทำไร่ไถนา");
             editTextTechnicianName.setText("ช่าง ชำนาญ");
 
 

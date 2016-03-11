@@ -638,6 +638,10 @@ public class Step1CustomerDetailFragment extends Fragment implements
             spinnerModel.invalidate();
             spinnerModel.setSelection(getIndex(spinnerModel, taskInfo.getCarModel()));
 
+            if(Config.showDefault == true){
+                spinnerModel.setSelection(1);
+            }
+
 
         } else if (parent == spinnerModel) {
             if (position == selectNoneModelSpinnerAdapter.getCount() - 1) {
