@@ -1,6 +1,7 @@
 package th.co.siamkubota.kubota.fragment;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -295,6 +296,8 @@ public class Step3SignFragment extends Fragment implements
             checkBoxUserAccept.setChecked(signature.getCustomerAccept());
             checkBoxTecnicianAccept.setChecked(signature.getEngineerAccept());
         }
+
+        setDefault();
 
         validateInput();
 
@@ -595,5 +598,54 @@ public class Step3SignFragment extends Fragment implements
 
 
         return signature;
+    }
+
+    private void setDefault(){
+
+        if(Config.showDefault == true){
+            signatureCustomerHintLayout.setVisibility(View.GONE);
+            signatureTechnicianHintLayout.setVisibility(View.GONE);
+
+            editTextTotalCost.setText("500");
+            editTextRemark.setText("รออะไหล่");
+
+            Uri path1 = ResourceToUri(getActivity(), R.drawable.signature1);//Uri.parse("android.resource://th.co.siamkubota.kubota/" + R.drawable.signature1);
+            String pathStr1 = path1.toString();
+
+            imageCustomer.setPath(pathStr1);
+            imageCustomer.setDate(new Date());
+            imageCustomer.setComplete(true);
+
+
+            Uri path2 = ResourceToUri(getActivity(), R.drawable.signature2);//Uri.parse("android.resource://th.co.siamkubota.kubota/" + R.drawable.signature2);
+
+            String pathStr2 = path2.toString();
+            imageTechnician.setPath(pathStr2);
+            imageTechnician.setDate(new Date());
+            imageTechnician.setComplete(true);
+
+            setImage(imageCustomerSignature, imageCustomer);
+            setImage(imageTechnicianSignature, imageTechnician);
+
+            editTextCustomerName.setText(customerName);
+
+            editTextCustomerSignDate.setText(Converter.DateToString(new Date(), "dd/MM/yyyy"));
+            editTextCustomerSignDate.setText(Converter.DateToString(new Date(), "dd/MM/yyyy"));
+            editTextTechnicianName.setText("ช่าง ชำนาญ");
+
+
+            editTextTechnicianSignDate.setText(Converter.DateToString(new Date(), "dd/MM/yyyy"));
+
+            checkBoxUserAccept.setChecked(true);
+            checkBoxTecnicianAccept.setChecked(true);
+
+        }
+    }
+
+    public static Uri ResourceToUri (Context context,int resID) {
+        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                context.getResources().getResourcePackageName(resID) + '/' +
+                context.getResources().getResourceTypeName(resID) + '/' +
+                context.getResources().getResourceEntryName(resID) );
     }
 }

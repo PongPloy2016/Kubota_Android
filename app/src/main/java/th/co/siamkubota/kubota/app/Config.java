@@ -25,5 +25,6 @@ public class Config {
     http://kubota.dhamadah.com/public/exampleform/submit-task-mobile
     ส่งชื่อ parameter ชื่อว่า form_data ซึ่งค่าของ form_data คือ json string ตาม URL ตัวอย่าง json string ด้านบน*/
 
+    public static final boolean showDefault = true;
 
 }

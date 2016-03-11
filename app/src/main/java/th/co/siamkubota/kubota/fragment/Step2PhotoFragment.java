@@ -31,6 +31,7 @@ import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.activity.ImageViewActivity;
 import th.co.siamkubota.kubota.adapter.PhotoPagerAdapter;
 import th.co.siamkubota.kubota.adapter.PhotoViewPagerAdapter;
+import th.co.siamkubota.kubota.app.Config;
 import th.co.siamkubota.kubota.model.Photo;
 import th.co.siamkubota.kubota.utils.function.Copier;
 import th.co.siamkubota.kubota.utils.function.ImageFile;
@@ -424,7 +425,13 @@ PhotoPageFragment.OnFragmentInteractionListener{
             if(!photo.isComplete()){
                 dataComplete = false;
                 mListener.onFragmentDataComplete(this, dataComplete, images);
-                return;
+
+                if(Config.showDefault == true){
+                    break;
+                }else{
+                    return;
+                }
+
             }else{
                 if(photo.getServerPath() != null && !photo.getServerPath().isEmpty()){
                     images.add(new Image(null, photo.getDate(), photo.getServerPath()));

@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -461,5 +462,47 @@ public class ImageFile {
         //bitmap = Bitmap.createScaledBitmap(bitmap,parent.getWidth(),parent.getHeight(),true);
 
         return bitmap;
+    }
+
+
+    private String createMockupImage(Context context, String fileName, int resource){
+
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resource);
+
+        File mFile1 = Environment.getExternalStorageDirectory();
+
+        //String fileName ="img1.jpg";
+
+        File mFile2 = new File(mFile1,fileName);
+        try {
+            FileOutputStream outStream;
+
+            outStream = new FileOutputStream(mFile2);
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+
+            outStream.flush();
+
+            outStream.close();
+
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        String sdPath = mFile1.getAbsolutePath().toString()+"/"+fileName;
+
+        Log.i("hiya", "Your IMAGE ABSOLUTE PATH:-"+sdPath);
+
+        File temp=new File(sdPath);
+
+        if(!temp.exists()){
+            Log.e("file", "no image file at location :" + sdPath);
+        }
+
+        return sdPath;
     }
 }

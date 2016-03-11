@@ -4,11 +4,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,6 +32,9 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +53,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
+import th.co.siamkubota.kubota.app.Config;
 import th.co.siamkubota.kubota.fragment.FinishDialogFragment;
 import th.co.siamkubota.kubota.fragment.LoadingDialogFragment;
 import th.co.siamkubota.kubota.sqlite.TaskDataSource;
@@ -235,21 +243,28 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
         List<Image> images = task.getTaskImages();
 
-        if( images.get(0).getImagePath() != null && !images.get(0).getImagePath().isEmpty() ){
-            File image1 = new File(task.getTaskImages().get(0).getImagePath() );
-            image1body = RequestBody.create(MediaType.parse("image/jpeg"), image1);
-        }
-        if( images.get(1).getImagePath() != null && !images.get(1).getImagePath().isEmpty() ){
-            File image2 = new File(task.getTaskImages().get(1).getImagePath());
-            image2body = RequestBody.create(MediaType.parse("image/jpeg"), image2);
-        }
-        if( images.get(2).getImagePath() != null && !images.get(2).getImagePath().isEmpty() ){
-            File image3 = new File(task.getTaskImages().get(2).getImagePath());
-            image3body = RequestBody.create(MediaType.parse("image/jpeg"), image3);
-        }
-        if( images.get(3).getImagePath() != null && !images.get(3).getImagePath().isEmpty() ){
-            File image4 = new File(task.getTaskImages().get(3).getImagePath());
-            image4body = RequestBody.create(MediaType.parse("image/jpeg"), image4);
+        try{
+            if( images.get(0).getImagePath() != null && !images.get(0).getImagePath().isEmpty() ){
+                File image1 = new File(task.getTaskImages().get(0).getImagePath() );
+                image1body = RequestBody.create(MediaType.parse("image/jpeg"), image1);
+            }
+            if( images.get(1).getImagePath() != null && !images.get(1).getImagePath().isEmpty() ){
+                File image2 = new File(task.getTaskImages().get(1).getImagePath());
+                image2body = RequestBody.create(MediaType.parse("image/jpeg"), image2);
+            }
+            if( images.get(2).getImagePath() != null && !images.get(2).getImagePath().isEmpty() ){
+                File image3 = new File(task.getTaskImages().get(2).getImagePath());
+                image3body = RequestBody.create(MediaType.parse("image/jpeg"), image3);
+            }
+            if( images.get(3).getImagePath() != null && !images.get(3).getImagePath().isEmpty() ){
+                File image4 = new File(task.getTaskImages().get(3).getImagePath());
+                image4body = RequestBody.create(MediaType.parse("image/jpeg"), image4);
+            }
+        }catch (IndexOutOfBoundsException e){
+            if(Config.showDefault){
+                File image1 = new File(task.getTaskImages().get(0).getImagePath() );
+                image1body = RequestBody.create(MediaType.parse("image/jpeg"), image1);
+            }
         }
 
 
@@ -477,5 +492,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         toast.setView(layout);
         toast.show();
     }
+
+
 
 }

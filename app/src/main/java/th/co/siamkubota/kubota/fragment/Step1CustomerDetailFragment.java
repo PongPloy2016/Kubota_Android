@@ -62,6 +62,7 @@ import th.co.siamkubota.kubota.activity.MapsDragableActivity;
 import th.co.siamkubota.kubota.activity.TestDragMarkerActivity;
 import th.co.siamkubota.kubota.adapter.CustomSpinnerAdapter;
 import th.co.siamkubota.kubota.adapter.SelectNoneSpinnerAdapter;
+import th.co.siamkubota.kubota.app.Config;
 import th.co.siamkubota.kubota.service.Constants;
 import th.co.siamkubota.kubota.service.FetchAddressIntentService;
 import th.co.siamkubota.kubota.service.GeocodeAddressIntentService;
@@ -394,6 +395,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
             }
         }
 
+        setDefault();
+
     }
 
     private int getIndex(Spinner spinner, String string) {
@@ -625,6 +628,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 selectNoneModelSpinnerAdapter.setPromptText(getString(R.string.service_hint_model));
                 spinnerModel.setEnabled(false);
             }
+
+
 
 
             modelSpinnerAdapter.setItemList(modelDataList);
@@ -1230,5 +1235,33 @@ public class Step1CustomerDetailFragment extends Fragment implements
         //startActivity(intent);
         getActivity().startActivityForResult(intent, REQUEST_CODE_MAP);
     }
+
+
+    private void setDefault(){
+
+        if(Config.showDefault == true){
+            spinnerJobType.setSelection(1);
+            spinnerProduct.setSelection(1);
+
+            spinnerModel.setEnabled(true);
+            spinnerModel.invalidate();
+            spinnerModel.setSelection(1);
+
+            //editTextOtherModel.setText(taskInfo.getCarModelOther());
+            editTextTaskCode.setText("100001");
+            editTextName.setText("สมชาย ทำไร่ไถนา");
+            editTextTel1.setText("0891234567");
+            editTextTel2.setText("");
+            editTextCarNumber.setText("111111");
+            editTextEngineNumber.setText("0844367");
+            editTextWorkHours.setText("10");
+            editTextServiceAddress.setText("บ้านหนองใหญ่ ต.ใหญ่มาก อ.ใหญ่สุดๆ");
+            editTextCustomerAddress.setText("21/43 หมู่6 บ้านหนองใหญ่ ต.ใหญ่มาก อ.ใหญ่สุดๆ");
+
+            radioGroupUserType.check(R.id.radioButton1);
+
+        }
+    }
+
 
 }

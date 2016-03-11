@@ -28,6 +28,7 @@ import retrofit.Response;
 import retrofit.Retrofit;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
+import th.co.siamkubota.kubota.app.Config;
 import th.co.siamkubota.kubota.utils.function.Ui;
 import th.co.siamkubota.kubota.utils.function.Validate;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -94,6 +95,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 return false;
             }
         });
+
+        if(Config.showDefault == true){
+            usernameEditText.setText("40200");
+            passwordEditText.setText("20040");
+        }
 
     }
 
