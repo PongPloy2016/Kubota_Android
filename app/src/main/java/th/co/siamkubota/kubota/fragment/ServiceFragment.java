@@ -463,9 +463,9 @@ public class ServiceFragment extends Fragment implements
     @Override
     public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data) {
 
-        if(complete){
+       /* if(complete){
             showToastComplete();
-        }
+        }*/
 
         if(fragment instanceof Step1CustomerDetailFragment){
 
@@ -482,6 +482,10 @@ public class ServiceFragment extends Fragment implements
 
                 Step3SignFragment step3SignFragment = (Step3SignFragment)adapter.getItem(2);
                 step3SignFragment.setCustomerName(task.getTaskInfo().getCustomerName());
+
+                if(pageChangeListener.getCurrentPage() == 0){
+                    showToastComplete();
+                }
 
             }else{
                 //nextButton.setEnabled(false);
@@ -506,6 +510,13 @@ public class ServiceFragment extends Fragment implements
             if(fragment == currentfragment){
                 nextButton.setEnabled(((Step2PhotoFragment) fragment).isDataComplete());
             }
+
+            if(complete){
+                if(pageChangeListener.getCurrentPage() == 1){
+                    showToastComplete();
+                }
+            }
+
         }else if(fragment instanceof Step3SignFragment){
             setStepComplete(3, complete);
             task.setSignature((Signature) data);
@@ -520,10 +531,19 @@ public class ServiceFragment extends Fragment implements
             if(fragment == currentfragment){
                 nextButton.setEnabled(((Step3SignFragment) fragment).isDataComplete());
             }
+
+            if(complete){
+                if(pageChangeListener.getCurrentPage() == 2){
+                    showToastComplete();
+                }
+            }
         }else if(fragment instanceof Step4ConfirmFragment){
             setStepComplete(4, complete);
             if(complete){
                 //nextButton.setEnabled(true);
+                if(pageChangeListener.getCurrentPage() == 3){
+                    showToastComplete();
+                }
             }else{
                 pager.setCurrentItem((pageChangeListener.getCurrentPage() - 1));
             }
