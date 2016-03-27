@@ -83,14 +83,14 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
                 mTitle.get().setText(loginData.getShopName());
             }
 
-            if(bundle.containsKey(ServiceFragment.KEY_TASK)){
+         /*   if(bundle.containsKey(ServiceFragment.KEY_TASK)){
                 incompleteTask = bundle.getParcelable(ServiceFragment.KEY_TASK);
 
                 if(incompleteTask != null){
                     displayServiceFragment(incompleteTask);
                     return;
                 }
-            }
+            }*/
 
 
             getUnfinishTask();
@@ -103,7 +103,7 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
                 UnfinishTaskFragment unfinishTaskFragment = UnfinishTaskFragment.newInstance(unfinishTasks);
                 unfinishTaskFragment.setmListener(this);
                 ft.replace(R.id.content, unfinishTaskFragment, "unfinishTaskFragment");
-                //ft.addToBackStack(null);
+                ft.addToBackStack(null);
                 // Start the animated transition.
                 ft.commit();
             }else{
@@ -212,6 +212,7 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
         ServiceFragment newFragment = ServiceFragment.newInstance(loginData, task);
         //newFragment.setmListener(this);
         ft.replace(R.id.content, newFragment, "serviceFragment");
+        ft.addToBackStack(null);
         ft.commit();
     }
 

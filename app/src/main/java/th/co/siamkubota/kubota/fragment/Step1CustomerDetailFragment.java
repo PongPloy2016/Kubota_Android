@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AlertDialog;
@@ -227,6 +228,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
             //taskInfo = savedInstanceState.getParcelable(KEY_TASK_INFO);
 
         }
+
+        //validateInput();
     }
 
     @Override
@@ -344,7 +347,10 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         setData();
         setDataChangeListener();
-        validateInput();
+
+        if(getActivity() != null){
+            validateInput();
+        }
 
     }
 
@@ -781,6 +787,35 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         dataComplete = true;
         mListener.onFragmentDataComplete(this, dataComplete, collectData());
+
+        /*
+        try{
+            View view = Validate.inputValidate(rootLayout, "required");
+            if (view != null) {
+                dataComplete = false;
+                mListener.onFragmentDataComplete(this, dataComplete, collectData());
+                return;
+            }
+
+
+            dataComplete = true;
+            mListener.onFragmentDataComplete(this, dataComplete, collectData());
+        }catch (NullPointerException e){
+
+            if(mListener == null){
+                if(getActivity() != null){
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+
+                    if(fm.findFragmentByTag("serviceFragment") != null){
+                        mListener = (Step1CustomerDetailFragment.OnFragmentInteractionListener) fm.findFragmentByTag("serviceFragment");
+                        mListener.onFragmentDataComplete(this, dataComplete, collectData());
+                    }
+
+                }
+            }
+
+        }*/
+
     }
 
     private TaskInfo collectData() {

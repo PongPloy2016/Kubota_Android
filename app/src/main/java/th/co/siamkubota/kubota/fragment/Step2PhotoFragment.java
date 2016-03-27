@@ -466,7 +466,31 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
         }*/
 
+
         dataComplete = true;
         mListener.onFragmentDataComplete(this, dataComplete, images);
+
+     /*   try {
+
+            dataComplete = true;
+            mListener.onFragmentDataComplete(this, dataComplete, images);
+
+        }catch (NullPointerException e){
+
+            if(mListener == null){
+                if(getActivity() != null){
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+
+                    if(fm.findFragmentByTag("serviceFragment") != null){
+                        mListener = (Step2PhotoFragment.OnFragmentInteractionListener) fm.findFragmentByTag("serviceFragment");
+
+                        mListener.onFragmentDataComplete(this, dataComplete, images);
+                    }
+
+                }
+            }
+
+        }*/
+
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -175,6 +176,7 @@ View.OnClickListener{
 
     @Override
     public void onClick(View v) {
+
         if(v == confirmButton){
 
             mListener.onConfirmSubmit(this, true);
@@ -188,5 +190,37 @@ View.OnClickListener{
             }
 
         }
+
+        /*
+        try {
+
+            if(v == confirmButton){
+
+                mListener.onConfirmSubmit(this, true);
+
+            }else{
+                if(!complete){
+                    dataComplete = false;
+                    mListener.onFragmentDataComplete(this,dataComplete, null);
+                }else {
+                    cancelButton.setEnabled(false);
+                }
+
+            }
+
+        }catch (NullPointerException e){
+            if(mListener == null){
+                if(getActivity() != null){
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+
+                    if(fm.findFragmentByTag("serviceFragment") != null){
+                        mListener = (Step4ConfirmFragment.OnFragmentInteractionListener) fm.findFragmentByTag("serviceFragment");
+
+                    }
+
+                }
+            }
+        }*/
+
     }
 }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -556,6 +557,43 @@ public class Step3SignFragment extends Fragment implements
 
         dataComplete = true;
         mListener.onFragmentDataComplete(this, dataComplete, collectData());
+
+     /*   try {
+
+            if((imageCustomer == null || (imageCustomer != null && !imageCustomer.isComplete())) ||
+                    (imageTechnician == null || (imageTechnician != null && !imageTechnician.isComplete())) ){
+                dataComplete = false;
+                mListener.onFragmentDataComplete(this, dataComplete, collectData());
+                return;
+            }
+
+            View view = Validate.inputValidate(rootLayout, "required");
+            if(view != null ){
+                dataComplete = false;
+                mListener.onFragmentDataComplete(this, dataComplete, collectData());
+                return;
+            }
+
+            dataComplete = true;
+            mListener.onFragmentDataComplete(this, dataComplete, collectData());
+
+        }catch (NullPointerException e){
+
+            if(mListener == null){
+                if(getActivity() != null){
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+
+                    if(fm.findFragmentByTag("serviceFragment") != null){
+                        mListener = (Step3SignFragment.OnFragmentInteractionListener) fm.findFragmentByTag("serviceFragment");
+
+                        mListener.onFragmentDataComplete(this, dataComplete, collectData());
+                    }
+
+                }
+            }
+
+        }*/
+
     }
 
     private Signature collectData(){
