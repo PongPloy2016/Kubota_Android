@@ -136,6 +136,8 @@ public class Step3SignFragment extends Fragment implements
 
         }
 
+        mListener = (Step3SignFragment.OnFragmentInteractionListener) getParentFragment();
+
     }
 
     @Override
@@ -215,6 +217,8 @@ public class Step3SignFragment extends Fragment implements
             Ui.setupUI(getActivity(), rootLayout);
 
         }
+
+        mListener = (Step3SignFragment.OnFragmentInteractionListener) getParentFragment();
 
         setData();
         setDataChangeListener();

@@ -49,10 +49,12 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         step3SignFragment = Step3SignFragment.newInstance(task.getSignature());
         step4ConfirmFragment = Step4ConfirmFragment.newInstance(task.getComplete());
 
+        /*
         step1CustomerDetailFragment.setmListener((Step1CustomerDetailFragment.OnFragmentInteractionListener) listener);
         step2PhotoFragment.setmListener((Step2PhotoFragment.OnFragmentInteractionListener) listener);
         step3SignFragment.setmListener((Step3SignFragment.OnFragmentInteractionListener) listener);
         step4ConfirmFragment.setmListener((Step4ConfirmFragment.OnFragmentInteractionListener) listener);
+        */
 
     }
 

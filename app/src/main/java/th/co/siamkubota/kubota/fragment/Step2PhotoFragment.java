@@ -134,6 +134,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
             //images = savedInstanceState.getParcelableArrayList(KEY_IMAGES);
 
         }
+        mListener = (Step2PhotoFragment.OnFragmentInteractionListener) getParentFragment();
     }
 
     @Override
@@ -188,7 +189,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
             adapter = new PhotoPagerAdapter(getActivity(), cfManager, photos , Step2PhotoFragment.this);
             pageChangeListener = new CustomOnPageChangeListener();
 
-            validateInput();
+            //validateInput();
         }
 
     }
@@ -225,6 +226,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
         previousButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
 
+        mListener = (Step2PhotoFragment.OnFragmentInteractionListener) getParentFragment();
 
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(4);
@@ -233,6 +235,8 @@ PhotoPageFragment.OnFragmentInteractionListener{
         pager.setCurrentItem(0);
 
         setSelectPhoto();
+
+        validateInput();
 
     }
 

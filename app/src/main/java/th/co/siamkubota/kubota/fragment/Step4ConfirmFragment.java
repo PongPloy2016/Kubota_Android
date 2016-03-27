@@ -89,6 +89,8 @@ View.OnClickListener{
 
         }
 
+        mListener = (Step4ConfirmFragment.OnFragmentInteractionListener) getParentFragment();
+
     }
 
 
@@ -121,6 +123,8 @@ View.OnClickListener{
 
             confirmButton.setOnClickListener(this);
             cancelButton.setOnClickListener(this);
+
+            mListener = (Step4ConfirmFragment.OnFragmentInteractionListener) getParentFragment();
         }
 
     }

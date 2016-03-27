@@ -229,7 +229,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         }
 
-        //validateInput();
+        mListener = (Step1CustomerDetailFragment.OnFragmentInteractionListener) getParentFragment();
+
     }
 
     @Override
@@ -344,6 +345,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
         spinnerModel.setPrompt(getString(R.string.service_hint_model));
 
         Ui.setupUI(getActivity(), rootLayout);
+
+        mListener = (Step1CustomerDetailFragment.OnFragmentInteractionListener) getParentFragment();
 
         setData();
         setDataChangeListener();
