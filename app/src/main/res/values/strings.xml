@@ -5,6 +5,7 @@
 
     <!-- Main -->
     <string name="main_enter_store_button">เข้าระบบร้าน</string>
+    <string name="main_ofline_button">เริ่มงานใหม่แบบไม่มีอินเตอร์เน็ต</string>
     <string name="main_button_yes">ใช่</string>
     <string name="main_button_no">ไม่ใช่</string>
 
