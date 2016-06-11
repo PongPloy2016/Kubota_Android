@@ -39,6 +39,19 @@
             fontPath="fonts/SukhumvitSet.ttc"
             />
 
+        <Button
+            android:id="@+id/offlineBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/main_enter_store_button"
+            android:background="@drawable/button_orange_selector"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/textColorPrimary"
+            fontPath="fonts/SukhumvitSet.ttc"
+            />
+
     </LinearLayout>
 
     <TextView
