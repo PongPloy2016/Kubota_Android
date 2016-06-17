@@ -31,6 +31,7 @@ public class MainActivity extends BaseActivity  implements
         View.OnClickListener{
 
     private Button enterBtn;
+    private Button offlineBtn;
     private TextView versionName;
 
     private String tVersionNameApp;
@@ -60,6 +61,16 @@ public class MainActivity extends BaseActivity  implements
 
             if(mapTask.size() > 0){
 
+            /*    List<Task> tasks = new ArrayList(mapTask.keySet());
+                Intent intent = new Intent(MainActivity.this, ServiceActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(ServiceFragment.KEY_TASK, tasks.get(0));
+                bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA, mapTask.get(tasks.get(0)));
+                intent.putExtras(bundle);
+
+                startActivity(intent);
+                finish();*/
+
                 List<Task> tasks = new ArrayList(mapTask.keySet());
                 Intent intent = new Intent(MainActivity.this, ServiceActivity.class);
                 Bundle bundle = new Bundle();
@@ -79,6 +90,9 @@ public class MainActivity extends BaseActivity  implements
 
             enterBtn = (Button) findViewById(R.id.enterBtn);
             enterBtn.setOnClickListener(this);
+
+            offlineBtn = (Button) findViewById(R.id.offlineBtn);
+            offlineBtn.setOnClickListener(this);
 
             try {
                 PackageInfo pinfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -112,6 +126,8 @@ public class MainActivity extends BaseActivity  implements
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
+        }else if(v == offlineBtn){
+
         }
     }
 

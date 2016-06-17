@@ -240,9 +240,8 @@ public class TaskDataSource {
         HashMap<Task, LoginData> map = new HashMap<Task, LoginData>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + DatabaseInfo.KEY_TABLE_TASK ;
-        String whereClause = " WHERE " + DatabaseInfo.KEY_COL_COMPLETE +" = ? ";
-
-        selectQuery += whereClause;
+//        String whereClause = " WHERE " + DatabaseInfo.KEY_COL_COMPLETE +" = ? ";
+//        selectQuery += whereClause;
 
         String[] args = new String[]{String.valueOf(false)};
 

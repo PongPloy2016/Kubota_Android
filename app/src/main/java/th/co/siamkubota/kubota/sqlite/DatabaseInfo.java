@@ -6,7 +6,7 @@ package th.co.siamkubota.kubota.sqlite;
 public class DatabaseInfo {
 
     public static final String DATABASE_NAME = "Kubota";
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
 
     public static final String KEY_TABLE_TASK = "task";
 
