@@ -103,7 +103,10 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                 android:id="@+id/editTextTaskCode"
                 android:hint="@string/service_hint_job_id"
                 style="@style/EditTextStyle"
-                android:tag="required"/>
+                android:digits="0123456789"
+                android:inputType="number"
+                android:nextFocusDown="@+id/editTextName"
+                android:tag="required formatted"/>
             <TextView
                 android:id="@+id/requireTaskCode"
                 style="@style/textViewAstericStyle"

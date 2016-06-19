@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -16,16 +15,16 @@ import io.swagger.client.model.Task;
 import th.co.siamkubota.kubota.R;
 
 /**
- * Created by sipangka on 15/11/2558.
+ * Created by sipangka on 20/06/2559.
  */
-public class UnfinishTaskAdapter extends BaseAdapter {
+public class UnsendTaskAdapter extends BaseAdapter {
 
     Context context;
 
     ArrayList<Task> data;
     private static LayoutInflater inflater = null;
 
-    public UnfinishTaskAdapter(Context context, ArrayList<Task> data) {
+    public UnsendTaskAdapter(Context context, ArrayList<Task> data) {
         // TODO Auto-generated constructor stub
         this.context = context;
         this.data = data;
@@ -69,12 +68,13 @@ public class UnfinishTaskAdapter extends BaseAdapter {
 
         View view = convertView;
         if (view == null) {
-            view = View.inflate(context, R.layout.item_unfinish_task, null);
+            view = View.inflate(context, R.layout.item_unsend_task, null);
             holder = new ViewHolder();
 
             holder.statusImage = (ImageView) view.findViewById(R.id.statusImage);
             holder.titleText = (TextView) view.findViewById(R.id.titleText);
             holder.viewButton = (ImageButton) view.findViewById(R.id.viewButton);
+            holder.sendButton = (ImageButton) view.findViewById(R.id.sendButton);
             holder.deleteButton = (ImageButton) view.findViewById(R.id.deleteButton);
 
             view.setTag(holder);
@@ -99,6 +99,7 @@ public class UnfinishTaskAdapter extends BaseAdapter {
         view.setClickable(false);
         view.setFocusable(false);
 
+
         return view;
     }
 
@@ -114,6 +115,7 @@ public class UnfinishTaskAdapter extends BaseAdapter {
         TextView titleText;
         ImageView statusImage;
         ImageButton viewButton;
+        ImageButton sendButton;
         ImageButton deleteButton;
     }
 

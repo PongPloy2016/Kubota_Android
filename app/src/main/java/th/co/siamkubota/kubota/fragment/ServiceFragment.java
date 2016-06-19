@@ -128,7 +128,11 @@ public class ServiceFragment extends Fragment implements
                 task.setAnswers(answers);
 
                 //task.getTaskInfo().setEngineerID(loginData.getUserId());
-                task.getTaskInfo().setshopID(loginData.getUserId());
+
+                if(loginData != null){
+                    task.getTaskInfo().setshopID(loginData.getUserId());
+                }
+
             }
 
             FragmentManager cfManager = getChildFragmentManager();

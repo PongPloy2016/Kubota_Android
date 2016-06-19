@@ -24,6 +24,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -127,6 +128,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private EditText editTextServiceAddress;
     private EditText editTextCustomerAddress;
 
+    private GenericTextWatcher editTextTaskCodeWatcher;
+
 
     private ImageButton locationButton;
 
@@ -174,6 +177,49 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private TaskInfo taskInfo;
 
     private TaskDataSource dataSource;
+
+    private View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if(v == editTextTaskCode && hasFocus ){
+                EditText editText = (EditText) v;
+
+                //if(editText.getText().toString().length() == 14){
+                    editText.setOnFocusChangeListener(null);
+                    editText.removeTextChangedListener(editTextTaskCodeWatcher);
+
+                    String text = editText.getText().toString();
+                    text = text.replace("OJ","").replace("-","");
+                    editText.setText(text);
+                    editText.setSelection(text.length());
+                    editText.setCursorVisible(true);
+
+                    int maxLength = 10;
+                    editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
+
+                    editText.setOnFocusChangeListener(focusChangeListener);
+                    editText.addTextChangedListener(editTextTaskCodeWatcher);
+                //}
+
+            //}else if(v == editTextTaskCode && !hasFocus){
+            }else{
+                EditText editText = (EditText) v;
+
+                int maxLength = 14;
+                editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
+
+                editText.setOnFocusChangeListener(null);
+                editText.removeTextChangedListener(editTextTaskCodeWatcher);
+
+                String text = editText.getText().toString();
+                String textFormatted = new StringBuilder(text).insert(0,"OJ").insert(4, "-").insert(9,"-").toString();
+                editText.setText(textFormatted);
+
+                editText.setOnFocusChangeListener(focusChangeListener);
+                editText.addTextChangedListener(editTextTaskCodeWatcher);
+            }
+        }
+    };
 
 
     //////////////////////////////////////////////////////////////////// getter setter
@@ -364,7 +410,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
         spinnerModel.setOnItemSelectedListener(this);
 
         editTextOtherModel.addTextChangedListener(new GenericTextWatcher(editTextOtherModel));
-        editTextTaskCode.addTextChangedListener(new GenericTextWatcher(editTextTaskCode));
+        editTextTaskCodeWatcher = new GenericTextWatcher(editTextTaskCode);
+        editTextTaskCode.addTextChangedListener(editTextTaskCodeWatcher);
         editTextName.addTextChangedListener(new GenericTextWatcher(editTextName));
         editTextTel1.addTextChangedListener(new GenericTextWatcher(editTextTel1));
         editTextTel2.addTextChangedListener(new GenericTextWatcher(editTextTel2));
@@ -377,6 +424,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
         locationButton.setOnClickListener(this);
 
         radioGroupUserType.setOnCheckedChangeListener(this);
+
+
+        editTextTaskCode.setOnFocusChangeListener(focusChangeListener);
     }
 
     private void setData() {
@@ -734,18 +784,61 @@ public class Step1CustomerDetailFragment extends Fragment implements
         }
 
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            /*
+            EditText editText = (EditText) this.view;
+            String text = editText.getText().toString();
+
+            if(text.length()>= 10){
+
+                charSequence = "";
+            }*/
+            /*
+            editText.clearFocus();
+            editText.setCursorVisible(false);
+            EditText nextfocus = (EditText)  rootLayout.findViewById(editText.getNextFocusDownId());
+            nextfocus.requestFocus();
+            nextfocus.setCursorVisible(true);
+            */
         }
 
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
         }
 
         public void afterTextChanged(Editable editable) {
 
             String text = editable.toString();
+            int textlength = editable.toString().length();
             //save the value for the given tag :
             checkRequire(text);
 
             validateInput();
+
+            if(this.view.getTag() != null && this.view.getTag().toString().contains("formatted")){
+
+                EditText editText = (EditText) this.view;
+
+                if(textlength == 10)
+                {
+
+                    editText.clearFocus();
+                    editText.setCursorVisible(false);
+                    EditText nextfocus = (EditText)  rootLayout.findViewById(editText.getNextFocusDownId());
+                    nextfocus.requestFocus();
+                    nextfocus.setCursorVisible(true);
+
+                    /*
+                    editText.setOnFocusChangeListener(null);
+                    String textFormatted = new StringBuilder(text).insert(0,"OJ").insert(4, "-").insert(9,"-").toString();
+                    editText.setText(textFormatted);
+                    editText.clearFocus();
+                    editText.setCursorVisible(false);
+                    EditText nextfocus = (EditText)  rootLayout.findViewById(editText.getNextFocusDownId());
+                    nextfocus.requestFocus();
+                    //nextfocus.setCursorVisible(true);
+                    editText.setOnFocusChangeListener(focusChangeListener);*/
+                }
+            }
         }
 
         public void checkRequire(String text){
@@ -780,7 +873,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     private void validateInput() {
 
-        View view = Validate.inputValidate(rootLayout, "required");
+        View view = Validate.inputValidateOptions(rootLayout, "required");
         if (view != null) {
             dataComplete = false;
             mListener.onFragmentDataComplete(this, dataComplete, collectData());
@@ -851,7 +944,13 @@ public class Step1CustomerDetailFragment extends Fragment implements
         }*/
 
         if(editTextTaskCode.getText() != null){
-            taskInfo.setTaskCode(editTextTaskCode.getText().toString());
+            String text = editTextTaskCode.getText().toString();
+            if(text.length() == 10){
+                String textFormatted = new StringBuilder(text).insert(0,"OJ").insert(4, "-").insert(9,"-").toString();
+                taskInfo.setTaskCode(textFormatted);
+            }else {
+                taskInfo.setTaskCode(editTextTaskCode.getText().toString());
+            }
         }
 
         if(editTextName.getText() != null){
@@ -1290,7 +1389,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             spinnerModel.setSelection(1);
 
             //editTextOtherModel.setText(taskInfo.getCarModelOther());
-            editTextTaskCode.setText("100001");
+            editTextTaskCode.setText("OJ12-3456-7890");
             editTextName.setText("สมชาย ทำไร่ไถนา");
             editTextTel1.setText("0891234567");
             editTextTel2.setText("");

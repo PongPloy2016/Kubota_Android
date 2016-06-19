@@ -22,6 +22,8 @@ import java.util.List;
 import io.swagger.client.model.Task;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.adapter.UnfinishTaskAdapter;
+import th.co.siamkubota.kubota.adapter.UnfinishTaskSectionAdapter;
+import th.co.siamkubota.kubota.adapter.UnsendTaskAdapter;
 import th.co.siamkubota.kubota.utils.function.Converter;
 
 /**
@@ -46,7 +48,10 @@ public class UnfinishTaskFragment extends Fragment implements
     private ListView listView;
     private Button startNewTaskButton;
     private ArrayList<Task> datalist;
-    private UnfinishTaskAdapter adapter;
+    //private UnfinishTaskAdapter adapter;
+    private UnfinishTaskSectionAdapter adapter;
+    private UnfinishTaskAdapter unfinishTaskAdapter;
+    private UnsendTaskAdapter unsendTaskAdapter;
 
 
     private OnFragmentInteractionListener mListener;
@@ -96,7 +101,17 @@ public class UnfinishTaskFragment extends Fragment implements
         listView = (ListView) rootView.findViewById(R.id.listView);
 
         if(datalist != null){
-            adapter = new UnfinishTaskAdapter(getActivity(), datalist);
+            //adapter = new UnfinishTaskAdapter(getActivity(), datalist);
+
+            adapter = new UnfinishTaskSectionAdapter(getActivity(), R.layout.item_unfinish_header);
+
+            unsendTaskAdapter = new UnsendTaskAdapter(getActivity(),datalist );
+            unfinishTaskAdapter = new UnfinishTaskAdapter(getActivity(),datalist );
+
+            adapter.addSection(getString(R.string.unfinish_task_unsend), unsendTaskAdapter);
+            adapter.addSection(getString(R.string.unfinish_task), unfinishTaskAdapter);
+
+
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(this);
 
@@ -106,6 +121,7 @@ public class UnfinishTaskFragment extends Fragment implements
 //            LinearLayout listFooterView = (LinearLayout)View.inflate(getActivity(),
 //                    R.layout.footer_listview, null);
 
+            /*
             LinearLayout listHeaderView  = new LinearLayout(getActivity());
             listHeaderView.setGravity(Gravity.CENTER);
             //LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -117,6 +133,8 @@ public class UnfinishTaskFragment extends Fragment implements
                     R.layout.textview_title, null);
 
             listHeaderView.addView(listTitle);
+
+            */
 
             LinearLayout listFooterView = new LinearLayout(getActivity());
             AbsListView.LayoutParams paramsfooter = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Converter.dpTopx(getActivity(), 120));
@@ -130,7 +148,7 @@ public class UnfinishTaskFragment extends Fragment implements
 
             listFooterView.addView(startNewTaskButton);
 
-            listView.addHeaderView(listHeaderView);
+            //listView.addHeaderView(listHeaderView);
             listView.addFooterView(listFooterView);
         }
 

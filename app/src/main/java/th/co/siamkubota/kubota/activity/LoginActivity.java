@@ -36,6 +36,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String KEY_LOGIN_DATA = "LOGIN_DATA";
+    public static final String KEY_REQUEST_LOGIN_FROM = "REQUEST_LOGIN_FROM";
 
     private AppController app;
     private RelativeLayout rootLayout;

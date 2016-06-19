@@ -18,8 +18,9 @@
     <string name="login_invalid_username_password">กรุณากรอกชื่อผู้ใช้และรหัสผ่านให้ครบ</string>
 
     <!-- UnfinishTask -->ServiceFragment
-    <string name="unfinish_task">งานที่ยังไม่ส่ง</string>
+    <string name="unfinish_task">งานที่ยังทำไม่เสร็จ</string>
     <string name="unfinish_task_button_start_new_job">เริ่มงานใหม่</string>
+    <string name="unfinish_task_unsend">งานที่เสร็จแล้วแต่ยังค้างส่ง</string>
 
 
     <!-- Service -->
@@ -49,7 +50,7 @@
     <string name="service_hint_job_type">ประเภทงาน</string>
     <string name="service_hint_product">สินค้า</string>
     <string name="service_hint_model">รุ่นรถ</string>
-    <string name="service_hint_job_id">รหัสงาน</string>
+    <string name="service_hint_job_id">เลขที่งานบริการ</string>
     <string name="service_hint_other">อื่นๆโปรดระบุ</string>
     <string name="service_hint_name">ชื่อ - นามสกุล</string>
     <string name="service_hint_tel_1">เบอร์โทรศัพท์ 1</string>

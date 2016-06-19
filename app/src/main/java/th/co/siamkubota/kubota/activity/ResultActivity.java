@@ -59,6 +59,7 @@ import th.co.siamkubota.kubota.fragment.LoadingDialogFragment;
 import th.co.siamkubota.kubota.sqlite.TaskDataSource;
 import th.co.siamkubota.kubota.utils.function.Copier;
 import th.co.siamkubota.kubota.utils.function.ImageFile;
+import th.co.siamkubota.kubota.utils.function.Network;
 import th.co.siamkubota.kubota.utils.function.Ui;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -128,22 +129,32 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
             shopName = bundle.getString("shopName");
         }
 
-        if(task != null){
-            //alertLoading = new LoadingDialogFragment(); // loginData.getShopName()
-            alertLoading = LoadingDialogFragment.newInstance(loginData.getShopName());
-            alertLoading.setmListener(new LoadingDialogFragment.onActionListener() {
-                @Override
-                public void onFinishDialog() {
-                    //finish();
-                    //alertLoading.updateProgress(100);
-                }
-            });
 
-            handler = new Handler();
+        submitData();
 
-            uploadImage();
 
+        /*
+        if(loginData == null && Network.isNetworkEnabled(this)){
+            //go to login page
+
+            Intent intent = new Intent(ResultActivity.this, LoginActivity.class);
+            Bundle loginbundle = new Bundle();
+            loginbundle.putString(LoginActivity.KEY_REQUEST_LOGIN_FROM,"ResultActivity");
+            intent.putExtras(loginbundle);
+            startActivityForResult(intent, 0);
+
+        }else if(loginData != null){
+
+            submitData();
+
+
+        }else{
+
+            //save data offline
         }
+
+        */
+
     }
 
 
@@ -494,5 +505,63 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
     }
 
 
+    private void submitData(){
 
+        //check internet and login data
+
+        if(loginData == null && Network.isNetworkEnabled(this)){
+            //go to login page
+
+            Intent intent = new Intent(ResultActivity.this, LoginActivity.class);
+            Bundle loginbundle = new Bundle();
+            loginbundle.putString(LoginActivity.KEY_REQUEST_LOGIN_FROM,"ResultActivity");
+            intent.putExtras(loginbundle);
+            startActivityForResult(intent, 0);
+
+        }else if(loginData != null){
+
+            if(task != null){
+                //alertLoading = new LoadingDialogFragment(); // loginData.getShopName()
+                alertLoading = LoadingDialogFragment.newInstance(loginData.getShopName());
+                alertLoading.setmListener(new LoadingDialogFragment.onActionListener() {
+                    @Override
+                    public void onFinishDialog() {
+                        //finish();
+                        //alertLoading.updateProgress(100);
+                    }
+                });
+
+                handler = new Handler();
+
+                uploadImage();
+            }
+
+        }else{
+
+            //save data offline
+        }
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 0){
+
+            Bundle bundle = data.getExtras();
+
+            if(bundle.containsKey(ResultActivity.KEY_LOGIN_DATA)){
+                loginData = bundle.getParcelable(ResultActivity.KEY_LOGIN_DATA);
+            }
+
+            if(bundle.containsKey("shopName")){
+                shopName = bundle.getString("shopName");
+            }
+
+            submitData();
+
+        }
+    }
 }

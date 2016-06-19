@@ -178,4 +178,52 @@ public class Validate {
         return null;
 
     }
+
+    public static View inputValidateOptions(View view, Object required){
+
+        if(view.getVisibility() == View.VISIBLE && (view instanceof EditText || view instanceof RadioGroup || view instanceof Spinner || view instanceof CheckBox)) {
+
+            if(view instanceof EditText ) {
+                EditText editText = (EditText) view;
+
+                if ((editText.getTag() != null && editText.getTag().toString().contains(required.toString()))
+                        && (editText.length() <= 0 || editText.getText().toString().isEmpty())  ) {
+                    return editText;
+                }
+            }else if(view instanceof RadioGroup){
+                RadioGroup radioGroup = (RadioGroup) view;
+
+                int id = radioGroup.getCheckedRadioButtonId();
+                if (id == -1 &&  radioGroup.getTag() != null && radioGroup.getTag().toString().contains(required.toString())){
+                    return radioGroup;
+                }
+
+            }else if(view instanceof Spinner){
+                Spinner spinner = (Spinner) view;
+
+                if(spinner.getSelectedItem() == null &&  spinner.getTag() != null && spinner.getTag().toString().contains(required.toString()) ){
+                    return spinner;
+                }
+            }else if(view instanceof CheckBox){
+                CheckBox checkBox = (CheckBox) view;
+                if(!checkBox.isChecked() &&  checkBox.getTag() != null && checkBox.getTag().toString().contains(required.toString())){
+                    return checkBox;
+                }
+            }
+
+        }else if (view instanceof ViewGroup) {
+
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                View resultView = inputValidateOptions(innerView, required);
+                if(resultView != null){
+                    return resultView;
+                }
+            }
+        }
+
+        return null;
+
+    }
 }

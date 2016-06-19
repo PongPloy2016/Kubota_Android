@@ -47,6 +47,8 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
 
     private AppController app;
 
+    public static final String KEY_MODE = "MODE";
+
     AtomicReference<TextView> mTitle;
 
     private  AlertDialog alert;
@@ -75,13 +77,18 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
 
 
             Bundle bundle = getIntent().getExtras();
-            if(bundle.containsKey(LoginActivity.KEY_LOGIN_DATA)){
-                loginData = bundle.getParcelable(LoginActivity.KEY_LOGIN_DATA);
-            }
 
-            if(loginData != null){
-                mTitle.get().setText(loginData.getShopName());
-            }
+            if(bundle.containsKey(ServiceActivity.KEY_MODE) && bundle.getString(ServiceActivity.KEY_MODE).equals("offline")){
+                displayServiceFragment(null);
+            }else{
+
+                if(bundle.containsKey(LoginActivity.KEY_LOGIN_DATA)){
+                    loginData = bundle.getParcelable(LoginActivity.KEY_LOGIN_DATA);
+                }
+
+                if(loginData != null){
+                    mTitle.get().setText(loginData.getShopName());
+                }
 
          /*   if(bundle.containsKey(ServiceFragment.KEY_TASK)){
                 incompleteTask = bundle.getParcelable(ServiceFragment.KEY_TASK);
@@ -93,22 +100,24 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
             }*/
 
 
-            getUnfinishTask();
+                getUnfinishTask();
 
-            if(unfinishTasks != null && unfinishTasks.size() > 0){
+                if(unfinishTasks != null && unfinishTasks.size() > 0){
 
-                ft = getSupportFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-                //ft.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down);
-                UnfinishTaskFragment unfinishTaskFragment = UnfinishTaskFragment.newInstance(unfinishTasks);
-                unfinishTaskFragment.setmListener(this);
-                ft.replace(R.id.content, unfinishTaskFragment, "unfinishTaskFragment");
-                //ft.addToBackStack(null);
-                // Start the animated transition.
-                ft.commit();
-            }else{
+                    ft = getSupportFragmentManager().beginTransaction();
+                    ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+                    //ft.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down);
+                    UnfinishTaskFragment unfinishTaskFragment = UnfinishTaskFragment.newInstance(unfinishTasks);
+                    unfinishTaskFragment.setmListener(this);
+                    ft.replace(R.id.content, unfinishTaskFragment, "unfinishTaskFragment");
+                    //ft.addToBackStack(null);
+                    // Start the animated transition.
+                    ft.commit();
+                }else{
 
-                displayServiceFragment(null);
+                    displayServiceFragment(null);
+                }
+
             }
 
         }

@@ -51,6 +51,8 @@ public class MainActivity extends BaseActivity  implements
             return;
         }
 
+        /*
+
         if(checkIncompleteTask()){
 
             if(dataSource == null){
@@ -60,8 +62,7 @@ public class MainActivity extends BaseActivity  implements
             HashMap<Task,LoginData> mapTask = dataSource.getIncompleteTask();
 
             if(mapTask.size() > 0){
-
-            /*    List<Task> tasks = new ArrayList(mapTask.keySet());
+                List<Task> tasks = new ArrayList(mapTask.keySet());
                 Intent intent = new Intent(MainActivity.this, ServiceActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(ServiceFragment.KEY_TASK, tasks.get(0));
@@ -69,7 +70,7 @@ public class MainActivity extends BaseActivity  implements
                 intent.putExtras(bundle);
 
                 startActivity(intent);
-                finish();*/
+                finish();
 
                 List<Task> tasks = new ArrayList(mapTask.keySet());
                 Intent intent = new Intent(MainActivity.this, ServiceActivity.class);
@@ -106,6 +107,31 @@ public class MainActivity extends BaseActivity  implements
             } catch (Exception e) {
 
             }
+        }*/
+
+        ///////////////////////////////////////////////////////////////////////
+
+        setContentView(R.layout.activity_main);
+
+        getWindow().setBackgroundDrawableResource(R.drawable.login_bg);
+
+        enterBtn = (Button) findViewById(R.id.enterBtn);
+        enterBtn.setOnClickListener(this);
+
+        offlineBtn = (Button) findViewById(R.id.offlineBtn);
+        offlineBtn.setOnClickListener(this);
+
+        try {
+            PackageInfo pinfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            tVersionNameApp = pinfo.versionName; // 1.0
+            versionCode = pinfo.versionCode;
+
+            versionName = (TextView) findViewById(R.id.versionName);
+            versionName.setText("v " + tVersionNameApp);
+            versionName.setVisibility(View.VISIBLE);
+
+        } catch (Exception e) {
+
         }
 
     }
@@ -127,7 +153,12 @@ public class MainActivity extends BaseActivity  implements
             startActivity(intent);
             finish();
         }else if(v == offlineBtn){
-
+            Intent intent = new Intent(MainActivity.this, ServiceActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(ServiceActivity.KEY_MODE, "offline");
+            intent.putExtras(bundle);
+            startActivity(intent);
+            finish();
         }
     }
 
