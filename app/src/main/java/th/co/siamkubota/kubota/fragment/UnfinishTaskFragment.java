@@ -48,6 +48,8 @@ public class UnfinishTaskFragment extends Fragment implements
     private ListView listView;
     private Button startNewTaskButton;
     private ArrayList<Task> datalist;
+    private ArrayList<Task> unfinishdatalist;
+    private ArrayList<Task> unsenddatalist;
     //private UnfinishTaskAdapter adapter;
     private UnfinishTaskSectionAdapter adapter;
     private UnfinishTaskAdapter unfinishTaskAdapter;

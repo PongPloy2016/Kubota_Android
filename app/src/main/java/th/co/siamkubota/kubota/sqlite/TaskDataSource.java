@@ -203,9 +203,9 @@ public class TaskDataSource {
         List<Task> tasktList = new ArrayList<Task>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + DatabaseInfo.KEY_TABLE_TASK;
-        String whereClause = " WHERE " + DatabaseInfo.KEY_COL_COMPLETE +" = ? ";
+        //String whereClause = " WHERE " + DatabaseInfo.KEY_COL_COMPLETE +" = ? ";
 
-        selectQuery += whereClause;
+        //selectQuery += whereClause;
 
         String[] args = new String[]{String.valueOf(true)};
 
@@ -240,10 +240,46 @@ public class TaskDataSource {
         HashMap<Task, LoginData> map = new HashMap<Task, LoginData>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + DatabaseInfo.KEY_TABLE_TASK ;
-//        String whereClause = " WHERE " + DatabaseInfo.KEY_COL_COMPLETE +" = ? ";
-//        selectQuery += whereClause;
+        String whereClause = " WHERE " + DatabaseInfo.KEY_COL_COMPLETE +" = ? ";
+        selectQuery += whereClause;
 
         String[] args = new String[]{String.valueOf(false)};
+
+        database = dbHelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, args);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+
+                String jsonData = cursor.getString(2);
+                Gson gson = new Gson();
+                Task task = gson.fromJson(jsonData, Task.class);
+
+                String jsonData2 = cursor.getString(4);
+                LoginData loginData = gson.fromJson(jsonData2, LoginData.class);
+
+                map.put(task, loginData);
+
+                // Adding contact to list
+            } while (cursor.moveToNext());
+        }
+
+        // return store list
+        return map;
+    }
+
+    public HashMap<Task, LoginData> getCompleteTask() {
+
+        //List<HashMap<Task, LoginData>> mapList = new ArrayList<HashMap<Task, LoginData>>();
+        HashMap<Task, LoginData> map = new HashMap<Task, LoginData>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + DatabaseInfo.KEY_TABLE_TASK ;
+        String whereClause = " WHERE " + DatabaseInfo.KEY_COL_COMPLETE +" = ? ";
+        selectQuery += whereClause;
+
+        String[] args = new String[]{String.valueOf(true)};
 
         database = dbHelper.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, args);

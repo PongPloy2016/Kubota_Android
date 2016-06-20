@@ -43,6 +43,9 @@ public class Task implements Parcelable, Cloneable {
 
   @SerializedName("taskId")
   private String taskId = null;
+
+  @SerializedName("offline")
+  private Boolean offline = null;
   
 
   

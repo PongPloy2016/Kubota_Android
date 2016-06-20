@@ -16,6 +16,7 @@ public class DatabaseInfo {
     public static final String KEY_COL_CREATE_DATE = "create_date";
     public static final String KEY_COL_LOGIN_DETAIL = "login_detail";
     public static final String KEY_COL_COMPLETE = "complete";
+    public static final String KEY_COL_OFFLINE = "offline";
 
 
     // Table Task
@@ -25,5 +26,6 @@ public class DatabaseInfo {
             DatabaseInfo.KEY_COL_TASK_DETAIL + " TEXT NOT NULL," +
             DatabaseInfo.KEY_COL_CREATE_DATE + " TEXT NOT NULL," +
             DatabaseInfo.KEY_COL_LOGIN_DETAIL + " TEXT," +
-            DatabaseInfo.KEY_COL_COMPLETE + " TEXT NOT NULL);" ;
+            DatabaseInfo.KEY_COL_COMPLETE + " TEXT NOT NULL," +
+            DatabaseInfo.KEY_COL_OFFLINE + " TEXT NOT NULL DEFAULT false);" ;
 }

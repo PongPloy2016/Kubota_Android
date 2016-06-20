@@ -45,7 +45,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="30dp"
             android:text="@string/main_ofline_button"
-            android:background="@drawable/button_orange_selector"
+            android:background="@drawable/button_black_alpha_selector"
             android:textSize="20dp"
             android:textStyle="bold"
             android:textColor="@color/textColorPrimary"
