@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 import io.swagger.client.model.Task;
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.fragment.UnfinishTaskFragment;
+import th.co.siamkubota.kubota.model.OfflineTask;
 
 /**
  * Created by sipangka on 15/11/2558.
@@ -22,10 +24,16 @@ public class UnfinishTaskAdapter extends BaseAdapter {
 
     Context context;
 
-    ArrayList<Task> data;
+    ArrayList<OfflineTask> data;
     private static LayoutInflater inflater = null;
 
-    public UnfinishTaskAdapter(Context context, ArrayList<Task> data) {
+    private View.OnClickListener onClickListener;
+
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
+    public UnfinishTaskAdapter(Context context, ArrayList<OfflineTask> data) {
         // TODO Auto-generated constructor stub
         this.context = context;
         this.data = data;
@@ -33,11 +41,11 @@ public class UnfinishTaskAdapter extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public ArrayList<Task> getData() {
+    public ArrayList<OfflineTask> getData() {
         return data;
     }
 
-    public void setData(ArrayList<Task> data) {
+    public void setData(ArrayList<OfflineTask> data) {
         this.data = data;
         notifyDataSetChanged();
     }
@@ -84,16 +92,28 @@ public class UnfinishTaskAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        Task task = data.get(position);
+        OfflineTask task = data.get(position);
 
-        if(task.getComplete()){
+        if(task.getTask().getComplete()){
             //holder.rootLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.rectangle_round_corner_gray));
             holder.statusImage.setImageResource(R.drawable.bullet_active);
         }else{
             holder.statusImage.setImageResource(R.drawable.bullet_inactive);
         }
 
-        holder.titleText.setText(task.getTaskInfo().getTaskCode());
+        String title = task.getTask().getTaskInfo().getTaskCode();
+
+        if( title != null && !title.isEmpty()  ){
+            holder.titleText.setText(title);
+        }else{
+            holder.titleText.setText(context.getText(R.string.unfinish_task_number) + " " + (position + 1));
+        }
+
+
+
+        holder.deleteButton.setTag(R.id.key, UnfinishTaskFragment.KEY_DELETE);
+        holder.deleteButton.setTag(R.id.value, data.get(position));
+        holder.deleteButton.setOnClickListener(onClickListener);
 
 
         view.setClickable(false);

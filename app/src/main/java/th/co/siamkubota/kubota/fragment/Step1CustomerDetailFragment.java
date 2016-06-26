@@ -49,6 +49,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -61,6 +62,7 @@ import io.swagger.client.model.TaskInfo;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.activity.MapsActivity;
 import th.co.siamkubota.kubota.activity.MapsDragableActivity;
+import th.co.siamkubota.kubota.activity.MapsFixPointActivity;
 import th.co.siamkubota.kubota.activity.TestDragMarkerActivity;
 import th.co.siamkubota.kubota.adapter.CustomSpinnerAdapter;
 import th.co.siamkubota.kubota.adapter.SelectNoneSpinnerAdapter;
@@ -635,7 +637,11 @@ public class Step1CustomerDetailFragment extends Fragment implements
             if(requestCode == REQUEST_CODE_MAP){
                 Bundle bundle = data.getExtras();
                 if(bundle != null){
-                    editTextServiceAddress.setText(bundle.getString(MapsDragableActivity.KEY_ADDRESS,""));
+                    editTextServiceAddress.setText(bundle.getString(MapsFixPointActivity.KEY_ADDRESS,""));
+
+                    if(bundle.containsKey(MapsFixPointActivity.KEY_POSITION)){
+                        taskInfo.setAddressPosition((LatLng) bundle.getParcelable(MapsFixPointActivity.KEY_POSITION));
+                    }
                 }
             }
         }
@@ -1372,8 +1378,18 @@ public class Step1CustomerDetailFragment extends Fragment implements
     }
 
     private void openMaps(){
-        Intent intent = new Intent(getActivity(), MapsDragableActivity.class);
+        //Intent intent = new Intent(getActivity(), MapsDragableActivity.class);
+        Intent intent = new Intent(getActivity(), MapsFixPointActivity.class);
         //startActivity(intent);
+
+        if(taskInfo.getAddressPosition() != null){
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(MapsFixPointActivity.KEY_POSITION, taskInfo.getAddressPosition());
+            intent.putExtras(bundle);
+        }
+
+
+
         getActivity().startActivityForResult(intent, REQUEST_CODE_MAP);
     }
 

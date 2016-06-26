@@ -566,14 +566,39 @@ public class ServiceFragment extends Fragment implements
 
             task.setComplete(complete);
 
+            /*
+            if(loginData != null){
+                Intent intent = new Intent(getActivity(), ResultActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(ResultActivity.KEY_TASK, task);
+
+                //bundle.putString("shopName", loginData.getShopName());
+                intent.putExtras(bundle);
+                getActivity().startActivity(intent);
+                getActivity().finish();
+            }else{
+
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(ResultActivity.KEY_TASK, task);
+
+                //bundle.putString("shopName", loginData.getShopName());
+                intent.putExtras(bundle);
+                getActivity().startActivity(intent);
+                getActivity().finish();
+            }*/
+
             Intent intent = new Intent(getActivity(), ResultActivity.class);
             Bundle bundle = new Bundle();
             bundle.putParcelable(ResultActivity.KEY_TASK, task);
             bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, loginData);
+
             //bundle.putString("shopName", loginData.getShopName());
             intent.putExtras(bundle);
             getActivity().startActivity(intent);
             getActivity().finish();
+
+
 
         }else{
             pager.setCurrentItem((pageChangeListener.getCurrentPage() - 1));

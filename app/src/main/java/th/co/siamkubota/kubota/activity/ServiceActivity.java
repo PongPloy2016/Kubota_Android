@@ -37,6 +37,7 @@ import th.co.siamkubota.kubota.fragment.ServiceFragment;
 import th.co.siamkubota.kubota.fragment.SignaturePadFragment;
 import th.co.siamkubota.kubota.fragment.UnfinishTaskFragment;
 import th.co.siamkubota.kubota.interfaces.OnHomePressedListener;
+import th.co.siamkubota.kubota.model.OfflineTask;
 import th.co.siamkubota.kubota.service.Constants;
 import th.co.siamkubota.kubota.service.GeocodeAddressIntentService;
 import th.co.siamkubota.kubota.sqlite.TaskDataSource;
@@ -56,7 +57,7 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
 
     private LoginData loginData;
     private TaskDataSource dataSource;
-    private List<Task> unfinishTasks;
+    private List<OfflineTask> unfinishTasks;
     private Task incompleteTask;
 
     FragmentTransaction ft;
@@ -89,15 +90,6 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
                 if(loginData != null){
                     mTitle.get().setText(loginData.getShopName());
                 }
-
-         /*   if(bundle.containsKey(ServiceFragment.KEY_TASK)){
-                incompleteTask = bundle.getParcelable(ServiceFragment.KEY_TASK);
-
-                if(incompleteTask != null){
-                    displayServiceFragment(incompleteTask);
-                    return;
-                }
-            }*/
 
 
                 getUnfinishTask();
@@ -211,14 +203,20 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
 
         dataSource = new TaskDataSource(ServiceActivity.this);
         dataSource.open();
-        unfinishTasks = dataSource.getAllTasks();
+        //unfinishTasks = dataSource.getAllTasks();
+        unfinishTasks = (ArrayList<OfflineTask>) dataSource.getOfflineTasks();
 
     }
 
-    private void displayServiceFragment(Task task){
+    private void displayServiceFragment(OfflineTask task){
         ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-        ServiceFragment newFragment = ServiceFragment.newInstance(loginData, task);
+        ServiceFragment newFragment;
+        if(task != null){
+            newFragment = ServiceFragment.newInstance(task.getLoginData(), task.getTask());
+        }else{
+            newFragment = ServiceFragment.newInstance(loginData, null);
+        }
         //newFragment.setmListener(this);
         ft.replace(R.id.content, newFragment, "serviceFragment");
         //ft.addToBackStack(null);
@@ -226,7 +224,7 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
     }
 
     @Override
-    public void onDisplayTask(Task task) {
+    public void onDisplayTask(OfflineTask task) {
         displayServiceFragment(task);
     }
 }

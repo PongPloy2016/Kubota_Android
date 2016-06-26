@@ -5,4 +5,6 @@
     <item type="id" name="promotionItemAdapter" />
     <item type="id" name="holder" />
     <item type="id" name="item" />
+    <item type="id" name="key" />
+    <item type="id" name="value" />
 </resources>

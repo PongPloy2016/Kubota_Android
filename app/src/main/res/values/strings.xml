@@ -16,11 +16,14 @@
     <string name="login_password_hint">รหัสผ่าน</string>
     <string name="login_button">เข้าสู่ระบบ</string>
     <string name="login_invalid_username_password">กรุณากรอกชื่อผู้ใช้และรหัสผ่านให้ครบ</string>
+    <string name="login_before_submit">กรุณาล็อกอินเข้าสู่ระบบร้านก่อนส่งงาน</string>
 
     <!-- UnfinishTask -->ServiceFragment
     <string name="unfinish_task">งานที่ยังทำไม่เสร็จ</string>
     <string name="unfinish_task_button_start_new_job">เริ่มงานใหม่</string>
     <string name="unfinish_task_unsend">งานที่เสร็จแล้วแต่ยังค้างส่ง</string>
+    <string name="unfinish_task_confirm_delete">คุณต้องการลบหรือไม่?</string>
+    <string name="unfinish_task_number">งานที่</string>
 
 
     <!-- Service -->

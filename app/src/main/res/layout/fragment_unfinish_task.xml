@@ -5,11 +5,12 @@
     android:background="@color/background"
     tools:context="th.co.siamkubota.kubota.fragment.UnfinishTaskFragment">
 
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/list_divider"
+        android:divider="@color/transparent"
         android:headerDividersEnabled="false"
         android:footerDividersEnabled="false"
         android:dividerHeight="1dp"

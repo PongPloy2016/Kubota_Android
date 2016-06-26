@@ -13,6 +13,9 @@ import java.util.ArrayList;
 
 import io.swagger.client.model.Task;
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.fragment.UnfinishTaskFragment;
+import th.co.siamkubota.kubota.model.OfflineTask;
+import th.co.siamkubota.kubota.sqlite.TaskDataSource;
 
 /**
  * Created by sipangka on 20/06/2559.
@@ -21,10 +24,17 @@ public class UnsendTaskAdapter extends BaseAdapter {
 
     Context context;
 
-    ArrayList<Task> data;
+    private ArrayList<OfflineTask> data;
     private static LayoutInflater inflater = null;
 
-    public UnsendTaskAdapter(Context context, ArrayList<Task> data) {
+    private View.OnClickListener onClickListener;
+
+
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
+    public UnsendTaskAdapter(Context context, ArrayList<OfflineTask> data) {
         // TODO Auto-generated constructor stub
         this.context = context;
         this.data = data;
@@ -32,11 +42,11 @@ public class UnsendTaskAdapter extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public ArrayList<Task> getData() {
+    public ArrayList<OfflineTask> getData() {
         return data;
     }
 
-    public void setData(ArrayList<Task> data) {
+    public void setData(ArrayList<OfflineTask> data) {
         this.data = data;
         notifyDataSetChanged();
     }
@@ -84,16 +94,24 @@ public class UnsendTaskAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        Task task = data.get(position);
+        OfflineTask task = data.get(position);
 
-        if(task.getComplete()){
+        if(task.getTask().getComplete()){
             //holder.rootLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.rectangle_round_corner_gray));
             holder.statusImage.setImageResource(R.drawable.bullet_active);
         }else{
             holder.statusImage.setImageResource(R.drawable.bullet_inactive);
         }
 
-        holder.titleText.setText(task.getTaskInfo().getTaskCode());
+        holder.titleText.setText(task.getTask().getTaskInfo().getTaskCode());
+
+        holder.deleteButton.setTag(R.id.key, UnfinishTaskFragment.KEY_DELETE);
+        holder.deleteButton.setTag(R.id.value, data.get(position));
+        holder.deleteButton.setOnClickListener(onClickListener);
+
+        holder.sendButton.setTag(R.id.key, UnfinishTaskFragment.KEY_SEND);
+        holder.sendButton.setTag(R.id.value, data.get(position));
+        holder.sendButton.setOnClickListener(onClickListener);
 
 
         view.setClickable(false);
@@ -102,6 +120,7 @@ public class UnsendTaskAdapter extends BaseAdapter {
 
         return view;
     }
+
 
 
 

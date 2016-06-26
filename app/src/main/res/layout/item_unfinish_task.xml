@@ -1,64 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:minHeight="60dp"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
     android:gravity="center">
 
-    <ImageView
-        android:id="@+id/statusImage"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginLeft="0dp"
-        android:padding="0dp"
-        android:src="@drawable/bullet_active"
-        android:scaleType="fitCenter"
-        android:layout_centerHorizontal="true"
-        android:adjustViewBounds="true"
-        android:layout_centerInParent="true"
-        android:clickable="false"
-        android:descendantFocusability="blocksDescendants"
-        android:focusable="false"
-        android:focusableInTouchMode="false"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:minHeight="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center">
 
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:singleLine="true"
-        android:text="งานที่ 1"
-        android:textSize="18dp"
-        android:ellipsize="end"
-        android:layout_marginLeft="15dp"
-        android:clickable="false"
-        android:descendantFocusability="blocksDescendants"
-        android:focusable="false"
-        android:focusableInTouchMode="false"/>
+        <ImageView
+            android:id="@+id/statusImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="0dp"
+            android:padding="0dp"
+            android:src="@drawable/bullet_active"
+            android:scaleType="fitCenter"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:layout_centerInParent="true"
+            android:clickable="false"
+            android:descendantFocusability="blocksDescendants"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
 
-    <ImageButton
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginLeft="20dp"
-        android:id="@+id/viewButton"
-        android:src="@drawable/work_icon"
-        android:scaleType="fitCenter"
-        android:layout_centerHorizontal="true"
-        android:adjustViewBounds="true"
-        android:layout_centerInParent="true"
-        android:background="@android:color/transparent"/>
-    <ImageButton
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginLeft="20dp"
-        android:id="@+id/deleteButton"
-        android:src="@drawable/pending_work_delete_btn"
-        android:scaleType="fitCenter"
-        android:layout_centerHorizontal="true"
-        android:adjustViewBounds="true"
-        android:layout_centerInParent="true"
-        android:background="@android:color/transparent"/>
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:text="งานที่ 1"
+            android:textSize="18dp"
+            android:ellipsize="end"
+            android:layout_marginLeft="15dp"
+            android:clickable="false"
+            android:descendantFocusability="blocksDescendants"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
 
-</LinearLayout>
+        <ImageButton
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/viewButton"
+            android:src="@drawable/work_icon"
+            android:scaleType="fitCenter"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"/>
+        <ImageButton
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/deleteButton"
+            android:src="@drawable/pending_work_delete_btn"
+            android:scaleType="fitCenter"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"/>
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/list_divider"
+        android:layout_alignParentBottom="true"></View>
+
+</RelativeLayout>

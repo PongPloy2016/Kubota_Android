@@ -47,7 +47,6 @@
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeImageBackground"
             android:windowSoftInputMode="stateHidden" />
@@ -77,7 +76,6 @@
         <activity
             android:name=".activity.ResultActivity"
             android:label="@string/title_activity_service"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
@@ -129,7 +127,8 @@
             android:label="@string/title_activity_test_drag_marker" />
         <activity
             android:name=".activity.MapsDragableActivity"
-            android:label="@string/title_activity_maps_dragable"></activity>
+            android:label="@string/title_activity_maps_dragable" />
+        <activity android:name=".activity.MapsFixPointActivity"></activity>
     </application>
 
 </manifest>

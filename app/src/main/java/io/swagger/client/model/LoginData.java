@@ -33,6 +33,9 @@ public class LoginData  implements Parcelable {
   
   @SerializedName("questions")
   private List<Question> questions = new ArrayList<Question>();
+
+  @SerializedName("username")
+  private String username = null;
   
 
   
@@ -82,6 +85,15 @@ public class LoginData  implements Parcelable {
     this.questions = questions;
   }
 
+
+  @ApiModelProperty(value = "username")
+  public String getUsername() {
+    return username;
+  }
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
   
 
   @Override
@@ -98,19 +110,21 @@ public class LoginData  implements Parcelable {
       return Objects.equals(userId, loginData.userId) &&
               Objects.equals(shopId, loginData.shopId) &&
               Objects.equals(shopName, loginData.shopName) &&
-              Objects.equals(questions, loginData.questions);
+              Objects.equals(questions, loginData.questions) &&
+              Objects.equals(username, loginData.username)  ;
     }else{
       return Objects.equals(userId, loginData.userId) &&
               Objects.equals(shopId, loginData.shopId) &&
               Objects.equals(shopName, loginData.shopName) &&
-              Objects.equals(questions, loginData.questions);
+              Objects.equals(questions, loginData.questions)&&
+              Objects.equals(username, loginData.username)  ;
     }
 
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(userId, shopId, shopName, questions);
+    return Objects.hash(userId, shopId, shopName, questions, username);
   }
 
   @Override
@@ -122,6 +136,7 @@ public class LoginData  implements Parcelable {
     sb.append("    shopId: ").append(StringUtil.toIndentedString(shopId)).append("\n");
     sb.append("    shopName: ").append(StringUtil.toIndentedString(shopName)).append("\n");
     sb.append("    questions: ").append(StringUtil.toIndentedString(questions)).append("\n");
+    sb.append("    username: ").append(StringUtil.toIndentedString(username)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -141,6 +156,7 @@ public class LoginData  implements Parcelable {
     dest.writeString(this.shopName);
     //dest.writeList(this.questions);
     dest.writeTypedList(this.questions);
+    dest.writeString(this.username);
   }
 
   public LoginData() {
@@ -156,6 +172,7 @@ public class LoginData  implements Parcelable {
     }
     in.readTypedList(this.questions, Question.CREATOR);
     //in.readList(this.questions, List.class.getClassLoader());
+    this.username = in.readString();
   }
 
   public static final Creator<LoginData> CREATOR = new Creator<LoginData>() {

@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import io.swagger.client.StringUtil;
 
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
 
@@ -69,7 +70,8 @@ public class TaskInfo implements Parcelable, Cloneable {
   @SerializedName("isOwner")
   private Boolean isOwner = null;
 
-  
+  @SerializedName("addressPosition")
+  private LatLng addressPosition = null;
 
   
   /**
@@ -248,6 +250,17 @@ public class TaskInfo implements Parcelable, Cloneable {
   }
 
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public LatLng getAddressPosition() {
+    return addressPosition;
+  }
+  public void setAddressPosition(LatLng addressPosition) {
+    this.addressPosition = addressPosition;
+  }
+
+
 
 
   @Override
@@ -276,7 +289,8 @@ public class TaskInfo implements Parcelable, Cloneable {
               Objects.equals(usageHours, taskInfo.usageHours) &&
               Objects.equals(address, taskInfo.address) &&
               Objects.equals(customerAddress, taskInfo.customerAddress) &&
-              Objects.equals(isOwner, taskInfo.isOwner);
+              Objects.equals(isOwner, taskInfo.isOwner) &&
+              Objects.equals(addressPosition, taskInfo.addressPosition);
     }else{
       return Objects.equals(engineerID, taskInfo.engineerID) &&
               Objects.equals(shopID, taskInfo.shopID) &&
@@ -293,14 +307,15 @@ public class TaskInfo implements Parcelable, Cloneable {
               Objects.equals(usageHours, taskInfo.usageHours) &&
               Objects.equals(address, taskInfo.address) &&
               Objects.equals(customerAddress, taskInfo.customerAddress) &&
-              Objects.equals(isOwner, taskInfo.isOwner);
+              Objects.equals(isOwner, taskInfo.isOwner) &&
+              Objects.equals(addressPosition, taskInfo.addressPosition);
     }
 
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(engineerID, shopID, taskType, product, carModel, carModelOther, taskCode, customerName, tel1, tel2, carNo, engineNo, usageHours, address, customerAddress, isOwner);
+    return Objects.hash(engineerID, shopID, taskType, product, carModel, carModelOther, taskCode, customerName, tel1, tel2, carNo, engineNo, usageHours, address, customerAddress, isOwner, addressPosition);
   }
 
   @Override
@@ -324,6 +339,7 @@ public class TaskInfo implements Parcelable, Cloneable {
     sb.append("    address: ").append(StringUtil.toIndentedString(address)).append("\n");
     sb.append("    customerAddress: ").append(StringUtil.toIndentedString(customerAddress)).append("\n");
     sb.append("    isOwner: ").append(StringUtil.toIndentedString(isOwner)).append("\n");
+    sb.append("    addressPosition: ").append(StringUtil.toIndentedString(addressPosition)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -354,6 +370,7 @@ public class TaskInfo implements Parcelable, Cloneable {
     dest.writeString(this.address);
     dest.writeString(this.customerAddress);
     dest.writeValue(this.isOwner);
+    dest.writeParcelable(this.addressPosition,flags);
   }
 
   public TaskInfo() {
@@ -378,6 +395,7 @@ public class TaskInfo implements Parcelable, Cloneable {
     this.address = in.readString();
     this.customerAddress = in.readString();
     this.isOwner = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    this.addressPosition = (LatLng) in.readParcelable(LatLng.class.getClassLoader());
 
   }
 

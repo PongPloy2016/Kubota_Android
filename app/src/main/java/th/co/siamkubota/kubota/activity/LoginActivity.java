@@ -8,19 +8,24 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import io.swagger.client.ServiceGenerator;
 import io.swagger.client.api.DefaultApi;
+import io.swagger.client.model.LoginData;
 import io.swagger.client.model.LoginResponse;
 import retrofit.Call;
 import retrofit.Callback;
@@ -51,11 +56,24 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private Call<LoginResponse> call;
 
+    private String requestLoginFrom;
+    private LoginData loginData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null){
+            if(bundle.containsKey(KEY_REQUEST_LOGIN_FROM)){
+                requestLoginFrom = bundle.getString(KEY_REQUEST_LOGIN_FROM);
+            }
+
+            if(bundle.containsKey(KEY_LOGIN_DATA)){
+                loginData = (LoginData) bundle.getParcelable(KEY_LOGIN_DATA);
+            }
+        }
 
 
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
@@ -78,14 +96,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         username = appPref.getString("username", null);
         password = appPref.getString("password", null);
 
-        if(username != null){
-            usernameEditText.setText(username);
-            passwordEditText.requestFocus();
+        if(loginData != null){
+            if(loginData.getUsername() != null ){
+                usernameEditText.setText(loginData.getUsername());
+            }
+        }else{
+            if(username != null){
+                usernameEditText.setText(username);
+                passwordEditText.requestFocus();
+            }
+
+            if(password != null){
+                passwordEditText.setText(password);
+            }
         }
 
-        if(password != null){
-            passwordEditText.setText(password);
-        }
+
 
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -100,6 +126,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         if(Config.showDefault == true){
             usernameEditText.setText("40200");
             passwordEditText.setText("20040");
+        }
+
+        if(requestLoginFrom != null || loginData != null){
+            showToast();
         }
 
     }
@@ -204,18 +234,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     appPrefEditor.putString("password", password);
                     appPrefEditor.commit();
 
+                    loginData.getParameter().setUsername(username);
 
 
+                    Intent intent;
 
-                    Intent intent = new Intent(LoginActivity.this, ServiceActivity.class);
-                    //intent.putExtra(LoginActivity.KEY_ARGS, bundle);
-                    // Create Bundle & Add user
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA,loginData.getParameter());
+                    if(requestLoginFrom == null ){
 
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    finish();
+                        intent = new Intent(LoginActivity.this, ServiceActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA,loginData.getParameter());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        finish();
+
+                    }else{
+                        finishWithResult(loginData.getParameter());
+                    }
 
 
                 }else{
@@ -242,5 +277,31 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
         });
 
+    }
+
+    private void finishWithResult(LoginData loginData){
+        Intent intent = new Intent();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA,loginData);
+
+        intent.putExtras(bundle);
+
+        intent.putExtras(bundle);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    private void showToast(){
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_login_warning,
+                (ViewGroup) findViewById(R.id.toast_layout_root));
+        Toast toast = new Toast(this);
+        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 400);
+        toast.setDuration(Toast.LENGTH_LONG);
+
+
+        toast.setView(layout);
+        toast.show();
     }
 }

@@ -282,7 +282,8 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
                     android:hint="@string/service_hint_addrss_service"
                     style="@style/EditTextStyle"
                     android:layout_weight="1"
-                    android:tag="required"/>
+                    android:tag="required"
+                    android:enabled="false"/>
                 <TextView
                     android:id="@+id/requireServiceAddress"
                     style="@style/textViewAstericStyle"

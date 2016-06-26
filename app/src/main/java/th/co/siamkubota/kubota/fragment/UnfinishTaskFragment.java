@@ -1,10 +1,13 @@
 package th.co.siamkubota.kubota.fragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +24,13 @@ import java.util.List;
 
 import io.swagger.client.model.Task;
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.activity.MainActivity;
+import th.co.siamkubota.kubota.activity.ResultActivity;
 import th.co.siamkubota.kubota.adapter.UnfinishTaskAdapter;
 import th.co.siamkubota.kubota.adapter.UnfinishTaskSectionAdapter;
 import th.co.siamkubota.kubota.adapter.UnsendTaskAdapter;
+import th.co.siamkubota.kubota.model.OfflineTask;
+import th.co.siamkubota.kubota.sqlite.TaskDataSource;
 import th.co.siamkubota.kubota.utils.function.Converter;
 
 /**
@@ -44,12 +51,18 @@ public class UnfinishTaskFragment extends Fragment implements
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    public static int KEY = 1;
+    public static int VALUE = 2;
+
+    public static int KEY_VIEW = 1;
+    public static int KEY_SEND = 2;
+    public static int KEY_DELETE = 3;
 
     private ListView listView;
     private Button startNewTaskButton;
-    private ArrayList<Task> datalist;
-    private ArrayList<Task> unfinishdatalist;
-    private ArrayList<Task> unsenddatalist;
+    private ArrayList<OfflineTask> datalist;
+    private ArrayList<OfflineTask> unfinishdatalist;
+    private ArrayList<OfflineTask> unsenddatalist;
     //private UnfinishTaskAdapter adapter;
     private UnfinishTaskSectionAdapter adapter;
     private UnfinishTaskAdapter unfinishTaskAdapter;
@@ -58,22 +71,15 @@ public class UnfinishTaskFragment extends Fragment implements
 
     private OnFragmentInteractionListener mListener;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment UnfinishTaskFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static UnfinishTaskFragment newInstance(List<Task> datalist) {
+    private TaskDataSource dataSource;
+    private  AlertDialog alert;
+
+
+    public static UnfinishTaskFragment newInstance(List<OfflineTask> datalist) {
         UnfinishTaskFragment fragment = new UnfinishTaskFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM_DATA, (ArrayList<Task>)datalist);
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+        //Bundle args = new Bundle();
+        //args.putParcelableArrayList(ARG_PARAM_DATA, (ArrayList<OfflineTask>)datalist);
+        //fragment.setArguments(args);
         return fragment;
     }
 
@@ -89,10 +95,10 @@ public class UnfinishTaskFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            datalist = getArguments().getParcelableArrayList(ARG_PARAM_DATA);
+            //datalist = getArguments().getParcelableArrayList(ARG_PARAM_DATA);
         }
 
-
+        dataSource = new TaskDataSource(getActivity());
     }
 
     @Override
@@ -102,13 +108,19 @@ public class UnfinishTaskFragment extends Fragment implements
 
         listView = (ListView) rootView.findViewById(R.id.listView);
 
-        if(datalist != null){
+        getOfflineTask();
+
+
+       // if(datalist != null){
             //adapter = new UnfinishTaskAdapter(getActivity(), datalist);
 
+            /*
             adapter = new UnfinishTaskSectionAdapter(getActivity(), R.layout.item_unfinish_header);
 
             unsendTaskAdapter = new UnsendTaskAdapter(getActivity(),datalist );
             unfinishTaskAdapter = new UnfinishTaskAdapter(getActivity(),datalist );
+
+            unsendTaskAdapter.setOnClickListener(this);
 
             adapter.addSection(getString(R.string.unfinish_task_unsend), unsendTaskAdapter);
             adapter.addSection(getString(R.string.unfinish_task), unfinishTaskAdapter);
@@ -116,6 +128,8 @@ public class UnfinishTaskFragment extends Fragment implements
 
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(this);
+
+            */
 
 
 //            LinearLayout listHeaderView = (LinearLayout)View.inflate(getActivity(),
@@ -152,7 +166,7 @@ public class UnfinishTaskFragment extends Fragment implements
 
             //listView.addHeaderView(listHeaderView);
             listView.addFooterView(listFooterView);
-        }
+        //}
 
         return rootView;
     }
@@ -194,7 +208,7 @@ public class UnfinishTaskFragment extends Fragment implements
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         //public void onFragmentInteraction(Uri uri);
-        public void onDisplayTask(Task task);
+        public void onDisplayTask(OfflineTask task);
     }
 
     //////////////////////////////////////////////////////////// Implement method
@@ -216,6 +230,118 @@ public class UnfinishTaskFragment extends Fragment implements
             //getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             //getActivity().getSupportFragmentManager().popBackStack();
             mListener.onDisplayTask(null);
+        }else{
+            int key = (int)v.getTag(R.id.key);
+            if(key == KEY_DELETE){
+                OfflineTask task = (OfflineTask) v.getTag(R.id.value);
+
+//                dataSource.deleteTask(task.getTaskId());
+//                getAllTask();
+
+                buildAlertConfirmDelete(task);
+
+            }else if(key == KEY_SEND){
+
+                OfflineTask task = (OfflineTask) v.getTag(R.id.value);
+
+                Intent intent = new Intent(getActivity(), ResultActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(ResultActivity.KEY_TASK, task.getTask());
+                bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, task.getLoginData());
+                bundle.putString(ResultActivity.KEY_FROM, ResultActivity.class.getSimpleName());
+
+                intent.putExtras(bundle);
+                getActivity().startActivity(intent);
+                getActivity().finish();
+
+            }
+
         }
     }
+
+    private void getOfflineTask(){
+        datalist = (ArrayList<OfflineTask>) dataSource.getOfflineTasks();
+
+        if(unsenddatalist == null){
+            unsenddatalist = new ArrayList<OfflineTask>();
+        }else{
+            unsenddatalist.clear();
+        }
+
+        if(unfinishdatalist == null){
+            unfinishdatalist = new ArrayList<OfflineTask>();
+        }else{
+            unfinishdatalist.clear();
+        }
+
+        for(OfflineTask t : datalist){
+
+            if(t.getTask().getComplete()){
+                unsenddatalist.add(t);
+            }else{
+                unfinishdatalist.add(t);
+            }
+        }
+
+        if(datalist.size() > 0){
+            setAdapter();
+        }else{
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+        }
+    }
+
+    private void setAdapter(){
+        if(adapter == null){
+            adapter = new UnfinishTaskSectionAdapter(getActivity(), R.layout.item_unfinish_header);
+        }
+
+        if(unsendTaskAdapter == null){
+            unsendTaskAdapter = new UnsendTaskAdapter(getActivity(),unsenddatalist );
+            unsendTaskAdapter.setOnClickListener(this);
+        }else{
+            unsendTaskAdapter.setData(unsenddatalist);
+        }
+
+        if(unfinishTaskAdapter == null){
+            unfinishTaskAdapter = new UnfinishTaskAdapter(getActivity(),unfinishdatalist );
+           unfinishTaskAdapter.setOnClickListener(this);
+        }else{
+            unfinishTaskAdapter.setData(unfinishdatalist);
+        }
+
+
+        if(unsenddatalist.size() > 0){
+            adapter.addSection(getString(R.string.unfinish_task_unsend), unsendTaskAdapter);
+        }
+
+        if(unfinishdatalist.size() > 0){
+            adapter.addSection(getString(R.string.unfinish_task), unfinishTaskAdapter);
+        }
+
+        listView.setAdapter(adapter);
+        //listView.setOnItemClickListener(this);
+    }
+
+    private  void buildAlertConfirmDelete(final OfflineTask task)
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(getString(R.string.unfinish_task_confirm_delete))
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.main_button_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dataSource.deleteTask(task.getTask().getTaskId());
+                        getOfflineTask();
+
+                    }
+                })
+                .setNegativeButton(getString(R.string.main_button_no), null);
+
+        alert = builder.create();
+        alert.show();
+    }
+
 }

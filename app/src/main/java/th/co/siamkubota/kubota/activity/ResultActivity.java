@@ -56,6 +56,7 @@ import th.co.siamkubota.kubota.app.AppController;
 import th.co.siamkubota.kubota.app.Config;
 import th.co.siamkubota.kubota.fragment.FinishDialogFragment;
 import th.co.siamkubota.kubota.fragment.LoadingDialogFragment;
+import th.co.siamkubota.kubota.model.OfflineTask;
 import th.co.siamkubota.kubota.sqlite.TaskDataSource;
 import th.co.siamkubota.kubota.utils.function.Copier;
 import th.co.siamkubota.kubota.utils.function.ImageFile;
@@ -67,6 +68,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
     public static final String KEY_TASK = "TASK";
     public static final String KEY_LOGIN_DATA = "LOGIN_DATA";
+    public static final String KEY_FROM = "FROM";
 
     private AppController app;
     private RelativeLayout rootLayout;
@@ -98,6 +100,8 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
     private long delay_time;
     private long time = limitTime;
 
+    private String from;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +131,11 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
         if(bundle.containsKey("shopName")){
             shopName = bundle.getString("shopName");
+        }
+
+
+        if(bundle.containsKey(KEY_FROM)){
+            from = bundle.getString(KEY_FROM);
         }
 
 
@@ -209,20 +218,28 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                 alert.setmListener(new FinishDialogFragment.onActionListener() {
                     @Override
                     public void onFinishDialog() {
+
+                        /*
                         Intent intent = new Intent(ResultActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
+                        */
+
+                        getUnfinishTask();
                     }
                 });
                 alert.show(getSupportFragmentManager(), "finish");
 
             }else{
+                /*
                 Intent intent = new Intent(ResultActivity.this, ServiceActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA,loginData);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
+                */
+                getUnfinishTask();
             }
 
         }
@@ -363,7 +380,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     //Ui.showAlertError(ResultActivity.this, message);
                     showResultFail();
                     alertLoading.dismiss();
-                    saveTask(taskSave);
+                    saveTask(taskSave, loginData);
                     //showToastError(message);
                 }
 
@@ -375,7 +392,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                 handler.removeCallbacks(runnable);
                 showResultFail();
                 alertLoading.dismiss();
-                saveTask(taskSave);
+                saveTask(taskSave, loginData);
                 showToastError(t.getMessage());
             }
         });
@@ -444,7 +461,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     }
 
                     showResultFail();
-                    saveTask(taskSave);
+                    saveTask(taskSave, loginData);
                     showToastError(message);
 
                 }
@@ -457,7 +474,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                 handler.removeCallbacks(runnable);
                 alertLoading.dismiss();
                 showResultFail();
-                saveTask(taskSave);
+                saveTask(taskSave, loginData);
                 showToastError(t.getMessage());
             }
         });
@@ -476,6 +493,14 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         dataSource = new TaskDataSource(ResultActivity.this);
         dataSource.open();
         dataSource.addTask(task);
+
+    }
+
+    private void saveTask(Task task, LoginData loginData){
+
+        dataSource = new TaskDataSource(ResultActivity.this);
+        dataSource.open();
+        dataSource.addTask(task, loginData);
 
     }
 
@@ -509,16 +534,22 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
         //check internet and login data
 
-        if(loginData == null && Network.isNetworkEnabled(this)){
+        if((loginData == null && Network.isNetworkAvailable(this) || (from != null && !from.isEmpty()))){
             //go to login page
 
             Intent intent = new Intent(ResultActivity.this, LoginActivity.class);
             Bundle loginbundle = new Bundle();
             loginbundle.putString(LoginActivity.KEY_REQUEST_LOGIN_FROM,"ResultActivity");
-            intent.putExtras(loginbundle);
-            startActivityForResult(intent, 0);
 
-        }else if(loginData != null){
+            if(loginData != null){
+                loginbundle.putParcelable(LoginActivity.KEY_LOGIN_DATA, loginData);
+            }
+
+            intent.putExtras(loginbundle);
+            intent.setFlags(0);
+            startActivityForResult(intent, 118);
+
+        }else if(loginData != null && Network.isNetworkAvailable(this)){
 
             if(task != null){
                 //alertLoading = new LoadingDialogFragment(); // loginData.getShopName()
@@ -539,6 +570,9 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         }else{
 
             //save data offline
+            saveTask(taskSave, loginData);
+            getUnfinishTask();
+
         }
 
     }
@@ -548,7 +582,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 0){
+        if(requestCode == 118 && resultCode == RESULT_OK){
 
             Bundle bundle = data.getExtras();
 
@@ -560,8 +594,42 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                 shopName = bundle.getString("shopName");
             }
 
+            from = null;
+
             submitData();
 
         }
+    }
+
+    private void getUnfinishTask(){
+
+        dataSource = new TaskDataSource(ResultActivity.this);
+        dataSource.open();
+        ArrayList<OfflineTask> unfinishTasks;
+        unfinishTasks = (ArrayList<OfflineTask>) dataSource.getOfflineTasks();
+
+        navigateToUnfinishTaskList(unfinishTasks);
+
+    }
+
+    private void navigateToUnfinishTaskList(List<OfflineTask> unfinishList){
+
+        if(unfinishList != null && unfinishList.size()>0){
+            Intent intent = new Intent(ResultActivity.this, ServiceActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA,loginData);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            finish();
+        }else{
+            Intent intent = new Intent(ResultActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

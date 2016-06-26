@@ -16,6 +16,7 @@ import java.util.List;
 
 import io.swagger.client.model.LoginData;
 import io.swagger.client.model.Task;
+import th.co.siamkubota.kubota.model.OfflineTask;
 import th.co.siamkubota.kubota.utils.function.Converter;
 
 
@@ -207,7 +208,8 @@ public class TaskDataSource {
 
         //selectQuery += whereClause;
 
-        String[] args = new String[]{String.valueOf(true)};
+        //String[] args = new String[]{String.valueOf(true)};
+        String[] args = new String[]{};
 
         database = dbHelper.getWritableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, args);
@@ -227,6 +229,46 @@ public class TaskDataSource {
                 Task store = gson.fromJson(jsonData, Task.class);
                 // Adding contact to list
                 tasktList.add(store);
+            } while (cursor.moveToNext());
+        }
+
+        // return store list
+        return tasktList;
+    }
+
+    public List<OfflineTask> getOfflineTasks() {
+        List<OfflineTask> tasktList = new ArrayList<OfflineTask>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + DatabaseInfo.KEY_TABLE_TASK;
+        //String whereClause = " WHERE " + DatabaseInfo.KEY_COL_COMPLETE +" = ? ";
+
+        //selectQuery += whereClause;
+
+        //String[] args = new String[]{String.valueOf(true)};
+        String[] args = new String[]{};
+
+        database = dbHelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, args);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+                OfflineTask offlineTask = new OfflineTask();
+
+                String jsonData = cursor.getString(2);
+                Gson gson = new Gson();
+                Task task = gson.fromJson(jsonData, Task.class);
+                // Adding contact to list
+
+                String jsonLoginData = cursor.getString(4);
+                LoginData loginData = gson.fromJson(jsonLoginData, LoginData.class);
+
+                offlineTask.setTask(task);
+                offlineTask.setLoginData(loginData);
+
+                tasktList.add(offlineTask);
+
             } while (cursor.moveToNext());
         }
 
@@ -351,6 +393,28 @@ public class TaskDataSource {
         values.put(DatabaseInfo.KEY_COL_TASK_DETAIL, jsonData);
         values.put(DatabaseInfo.KEY_COL_CREATE_DATE, Converter.DateToString(new Date(), "dd/MM/yyyy HH:mm:ss"));
         values.put(DatabaseInfo.KEY_COL_COMPLETE, task.getComplete().toString());
+
+        // Inserting Row
+//		db.insert(DatabaseInfo.KEY_TABLE_STORE, null, values);
+//		db.close(); // Closing database connection
+
+        InsertData(DatabaseInfo.KEY_TABLE_TASK, values);
+    }
+
+    public void addTask(Task task, LoginData loginData) {
+
+        Gson gson = new Gson();
+        String jsonData = gson.toJson(task, Task.class);
+        String jsonDataLogin = gson.toJson(loginData, LoginData.class);
+        String task_id = task.getTaskId();
+
+
+        ContentValues values = new ContentValues();
+        values.put(DatabaseInfo.KEY_COL_TASK_ID, task_id);
+        values.put(DatabaseInfo.KEY_COL_TASK_DETAIL, jsonData);
+        values.put(DatabaseInfo.KEY_COL_CREATE_DATE, Converter.DateToString(new Date(), "dd/MM/yyyy HH:mm:ss"));
+        values.put(DatabaseInfo.KEY_COL_COMPLETE, task.getComplete().toString());
+        values.put(DatabaseInfo.KEY_COL_LOGIN_DETAIL, jsonDataLogin);
 
         // Inserting Row
 //		db.insert(DatabaseInfo.KEY_TABLE_STORE, null, values);
