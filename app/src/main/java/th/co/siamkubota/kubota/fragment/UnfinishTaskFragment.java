@@ -224,6 +224,7 @@ public class UnfinishTaskFragment extends Fragment implements
         }
     }
 
+
     @Override
     public void onClick(View v) {
         if(v == startNewTaskButton){
@@ -231,13 +232,11 @@ public class UnfinishTaskFragment extends Fragment implements
             //getActivity().getSupportFragmentManager().popBackStack();
             mListener.onDisplayTask(null);
         }else{
+
             int key = (int)v.getTag(R.id.key);
             if(key == KEY_DELETE){
+
                 OfflineTask task = (OfflineTask) v.getTag(R.id.value);
-
-//                dataSource.deleteTask(task.getTaskId());
-//                getAllTask();
-
                 buildAlertConfirmDelete(task);
 
             }else if(key == KEY_SEND){
@@ -254,6 +253,9 @@ public class UnfinishTaskFragment extends Fragment implements
                 getActivity().startActivity(intent);
                 getActivity().finish();
 
+            }else if(key == KEY_VIEW){
+                OfflineTask task = (OfflineTask) v.getTag(R.id.value);
+                mListener.onDisplayTask(task);
             }
 
         }

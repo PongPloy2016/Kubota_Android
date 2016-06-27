@@ -37,6 +37,7 @@ import th.co.siamkubota.kubota.activity.LoginActivity;
 import th.co.siamkubota.kubota.activity.ResultActivity;
 import th.co.siamkubota.kubota.adapter.ViewPagerAdapter;
 import th.co.siamkubota.kubota.app.AppController;
+import th.co.siamkubota.kubota.model.OfflineTask;
 import th.co.siamkubota.kubota.sqlite.TaskDataSource;
 import th.co.siamkubota.kubota.utils.function.Converter;
 import th.co.siamkubota.kubota.utils.function.Ui;
@@ -75,6 +76,7 @@ public class ServiceFragment extends Fragment implements
     private RelativeLayout backStep1, backStep2, backStep3, backStep4;
     private ImageButton step1Button, step2Button, step3Button, step4Button;
     private ImageView divStep1, divStep2, divStep3, divStep4;
+    private Button saveButton;
     private Button previousButton, nextButton;
     private LinearLayout navigationControleLayout;
     private int Numboftabs;
@@ -229,11 +231,13 @@ public class ServiceFragment extends Fragment implements
             divStep3 = (ImageView) v.findViewById(R.id.divStep3);
             pager = (NoneScrollableViewPager) v.findViewById(R.id.pager);
 
+            saveButton = (Button) v.findViewById(R.id.saveButton);
             previousButton = (Button) v.findViewById(R.id.previousButton);
             nextButton = (Button) v.findViewById(R.id.nextButton);
             navigationControleLayout = (LinearLayout) v.findViewById(R.id.navigationControleLayout);
 
 
+            saveButton.setOnClickListener(this);
             previousButton.setOnClickListener(this);
             nextButton.setOnClickListener(this);
             nextButton.setEnabled(false);
@@ -251,6 +255,8 @@ public class ServiceFragment extends Fragment implements
                 setStepComplete(3, true);
                 //setStepComplete(4, true);
                 pager.setCurrentItem(adapter.getCount() -1);
+
+                //saveButton.setVisibility(View.GONE);
 
             }else{
 
@@ -372,9 +378,7 @@ public class ServiceFragment extends Fragment implements
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        //public void onFragmentInteraction(Uri uri);
-//        public void onRelayInvokeSignPad();
-//        public void onRelayRequestAddress(Fragment fragment);
+        public void onSaveTask(OfflineTask task);
     }
 
     public void setStepTitle(String title){
@@ -443,6 +447,12 @@ public class ServiceFragment extends Fragment implements
             int currentPage = pageChangeListener.getCurrentPage();
             ++currentPage;
             pager.setCurrentItem(currentPage = (currentPage < adapter.getCount() ? currentPage : (adapter.getCount() - 1)));
+        }else if(v == saveButton){
+
+            OfflineTask offlineTask = new OfflineTask();
+            offlineTask.setTask(task);
+            offlineTask.setLoginData(loginData);
+            mListener.onSaveTask(offlineTask);
         }
     }
 
@@ -548,6 +558,7 @@ public class ServiceFragment extends Fragment implements
                 if(pageChangeListener.getCurrentPage() == 3){
                     showToastComplete();
                 }
+                pager.setCurrentItem((pageChangeListener.getCurrentPage() - 1));
             }else{
                 pager.setCurrentItem((pageChangeListener.getCurrentPage() - 1));
             }
@@ -563,6 +574,11 @@ public class ServiceFragment extends Fragment implements
     @Override
     public void onConfirmSubmit(Fragment fragment, boolean complete) {
         if(complete){
+
+            String from = "";
+            if(task.getComplete()){
+                from = getActivity().getClass().getSimpleName();
+            }
 
             task.setComplete(complete);
 
@@ -592,6 +608,10 @@ public class ServiceFragment extends Fragment implements
             Bundle bundle = new Bundle();
             bundle.putParcelable(ResultActivity.KEY_TASK, task);
             bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, loginData);
+
+            if(!from.isEmpty()){
+                bundle.putString(ResultActivity.KEY_FROM, ResultActivity.class.getSimpleName());
+            }
 
             //bundle.putString("shopName", loginData.getShopName());
             intent.putExtras(bundle);
@@ -700,10 +720,10 @@ public class ServiceFragment extends Fragment implements
                     }
 
                     step4 = (Step4ConfirmFragment)adapter.getItem(position +1);
-                    if(!step4.isDataComplete()){
+                    //if(!step4.isDataComplete()){
                         backStep4.setBackgroundResource(R.drawable.rectangle_right_round_corner_gray);
                         step4Button.setImageResource(R.drawable.lightgrey_number04);
-                    }
+                    //}
 
                     break;
                 case 3:

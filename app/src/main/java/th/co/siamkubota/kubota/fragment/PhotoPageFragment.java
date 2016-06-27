@@ -43,6 +43,7 @@ import th.co.siamkubota.kubota.utils.function.ImageFile;
 public class PhotoPageFragment extends Fragment implements View.OnClickListener{
 
     private static final String ARG_PARAM_DATA = "data";
+    private static final String ARG_PARAM_EDITABLED = "editable";
 
     private Photo data;
 
@@ -53,6 +54,8 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
     private ImageButton imageZoomButton;
 
     private OnFragmentInteractionListener mListener;
+
+    private boolean editabled;
 
 
     //////////////////////////////////////////////////////////////////// getter setter
@@ -68,10 +71,11 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
     //////////////////////////////////////////////////////////////////// constructor
 
 
-    public static PhotoPageFragment newInstance(Photo photo) {
+    public static PhotoPageFragment newInstance(Photo photo, boolean editabled) {
         PhotoPageFragment fragment = new PhotoPageFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_PARAM_DATA, photo);
+        args.putBoolean(ARG_PARAM_EDITABLED, editabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -103,6 +107,7 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
         if(savedInstanceState == null){
             if (getArguments() != null) {
                 data = getArguments().getParcelable(ARG_PARAM_DATA);
+                editabled = getArguments().getBoolean(ARG_PARAM_EDITABLED);
             }
         }
 
@@ -134,8 +139,11 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
 
 
             cameraButton.setText(data.getTitle());
-            cameraButton.setOnClickListener(this);
-            imageView.setOnClickListener(this);
+            if(editabled){
+                cameraButton.setOnClickListener(this);
+                imageView.setOnClickListener(this);
+            }
+
             imageZoomButton.setOnClickListener(this);
 
         /*    if(savedInstanceState != null && savedInstanceState.containsKey(ARG_PARAM_DATA)) {

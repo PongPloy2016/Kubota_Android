@@ -115,6 +115,10 @@ public class UnfinishTaskAdapter extends BaseAdapter {
         holder.deleteButton.setTag(R.id.value, data.get(position));
         holder.deleteButton.setOnClickListener(onClickListener);
 
+        holder.viewButton.setTag(R.id.key, UnfinishTaskFragment.KEY_VIEW);
+        holder.viewButton.setTag(R.id.value, data.get(position));
+        holder.viewButton.setOnClickListener(onClickListener);
+
 
         view.setClickable(false);
         view.setFocusable(false);

@@ -33,6 +33,7 @@
     <string name="service_step_3">ขั้นตอนที่3 : รับรองงาน</string>
     <string name="service_step_4">ขั้นตอนที่4 : ยืนยันการส่งข้อมูล</string>
 
+    <string name="service_button_save">บันทึกข้อมูล</string>
     <string name="service_button_previous">ส่วนก่อนหน้านี้</string>
     <string name="service_button_next">ส่วนถัดไป</string>
     <string name="service_button_confirm">ยืนยัน</string>
@@ -53,7 +54,7 @@
     <string name="service_hint_job_type">ประเภทงาน</string>
     <string name="service_hint_product">สินค้า</string>
     <string name="service_hint_model">รุ่นรถ</string>
-    <string name="service_hint_job_id">เลขที่งานบริการ</string>
+    <string name="service_hint_job_id">เลขที่งานบริการ : OJxx-xxxx-xxxx</string>
     <string name="service_hint_other">อื่นๆโปรดระบุ</string>
     <string name="service_hint_name">ชื่อ - นามสกุล</string>
     <string name="service_hint_tel_1">เบอร์โทรศัพท์ 1</string>
@@ -66,7 +67,7 @@
 
     <string name="service_image_1_engine_number">หมายเลขเครื่อง</string>
     <string name="service_image_2_working_hours">ชั่วโมงการทำงาน</string>
-    <string name="service_image_3_machine">รถลูกค้า</string>
+    <string name="service_image_3_machine">ช่างกับรถลูกค้า</string>
     <string name="service_image_4_customer_with_machine">ลูกค้ากับรถลูกค้า</string>
 
     <string name="service_confirm_suggesttion">ข้าพเจ้าได้รับคำแนะนำเป็นที่เข้าใจอย่างดีแล้ว</string>
@@ -89,6 +90,9 @@
     <string name="address_found">address found</string>
     <string name="service_setting_gps">การเข้าถึงตำแหน่ง GPS ของคุณถูกปิดอยู่ กรุณาเปิดการเข้าถึงตำแหน่ง</string>
     <string name="service_leave_confirm_message">คุณต้องการออกจากระบบหรือไม่</string>
+    <string name="service_save_task">คุณต้องการบันทึกงานใหม่นี้หรือไม่</string>
+    <string name="service_add_address">+เพิ่มที่อยู่</string>
+    <string name="service_remove_address">-ลบที่อยู่</string>
 
     <!-- "Yout GPS seems to be disabled, do you want to enable it?"-->
 

@@ -113,6 +113,10 @@ public class UnsendTaskAdapter extends BaseAdapter {
         holder.sendButton.setTag(R.id.value, data.get(position));
         holder.sendButton.setOnClickListener(onClickListener);
 
+        holder.viewButton.setTag(R.id.key, UnfinishTaskFragment.KEY_VIEW);
+        holder.viewButton.setTag(R.id.value, data.get(position));
+        holder.viewButton.setOnClickListener(onClickListener);
+
 
         view.setClickable(false);
         view.setFocusable(false);

@@ -51,6 +51,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
     private static final String KEY_TITLE = "title";
     private static final String KEY_IMAGES = "images";
+    private static final String KEY_EDITABLED = "editabled";
 
     private ViewPager pager;
     private Button button1, button2, button3, button4;
@@ -70,6 +71,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
     private FragmentManager mRetainedChildFragmentManager;
 
     private boolean dataComplete = false;
+    private boolean editabled = true;
 
     //////////////////////////////////////////////////////////////////// getter setter
 
@@ -105,11 +107,12 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
     //////////////////////////////////////////////////////////////////// constructor
 
-    public static Step2PhotoFragment newInstance(ArrayList<Image> images) {
+    public static Step2PhotoFragment newInstance(ArrayList<Image> images, boolean editabled) {
         Step2PhotoFragment fragment = new Step2PhotoFragment();
         Bundle args = new Bundle();
         //args.putString(KEY_TITLE, title);
         args.putParcelableArrayList(KEY_IMAGES, images);
+        args.putBoolean(KEY_EDITABLED, editabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -145,6 +148,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
             if (getArguments() != null) {
                 //title = getArguments().getString(ARG_PARAM_TITLE);
                 images = getArguments().getParcelableArrayList(KEY_IMAGES);
+                editabled =  getArguments().getBoolean(KEY_EDITABLED);
             }
 
             photos = new ArrayList<Photo>();
@@ -186,7 +190,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
             }
 
             FragmentManager cfManager = getChildFragmentManager();
-            adapter = new PhotoPagerAdapter(getActivity(), cfManager, photos , Step2PhotoFragment.this);
+            adapter = new PhotoPagerAdapter(getActivity(), cfManager, photos , Step2PhotoFragment.this, editabled);
             pageChangeListener = new CustomOnPageChangeListener();
 
             //validateInput();
@@ -237,6 +241,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
         setSelectPhoto();
 
         validateInput();
+
 
     }
 

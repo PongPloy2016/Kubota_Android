@@ -25,19 +25,21 @@ public class PhotoPagerAdapter extends FragmentStatePagerAdapter {
 
     private Context context;
     private Fragment listener;
+    private boolean editabled;
 
-    public PhotoPagerAdapter(Context context, FragmentManager fm, ArrayList<Photo> photos, Fragment listener) {
+    public PhotoPagerAdapter(Context context, FragmentManager fm, ArrayList<Photo> photos, Fragment listener, boolean editabled) {
         super(fm);
 
         this.context = context;
         this.datalist = photos;
         this.listener = listener;
+        this.editabled = editabled;
 
 
         photoPageFragments = new ArrayList<PhotoPageFragment>();
 
         for(Photo photo : datalist){
-            PhotoPageFragment fragment = PhotoPageFragment.newInstance(photo);
+            PhotoPageFragment fragment = PhotoPageFragment.newInstance(photo, this.editabled);
             fragment.setmListener((PhotoPageFragment.OnFragmentInteractionListener) listener);
             photoPageFragments.add(fragment);
         }

@@ -44,7 +44,9 @@ import th.co.siamkubota.kubota.sqlite.TaskDataSource;
 import th.co.siamkubota.kubota.utils.ui.HomeWatcher;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class ServiceActivity extends BaseActivity implements UnfinishTaskFragment.OnFragmentInteractionListener{
+public class ServiceActivity extends BaseActivity implements
+        UnfinishTaskFragment.OnFragmentInteractionListener,
+        ServiceFragment.OnFragmentInteractionListener{
 
     private AppController app;
 
@@ -162,12 +164,44 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
         alert.show();
     }
 
+    private  void buildAlertSaveTask(final OfflineTask task)
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ServiceActivity.this);
+        builder.setMessage(getString(R.string.service_save_task))
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.service_button_ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        saveTask(task.getTask(), task.getLoginData());
+
+                        getUnfinishTask();
+
+                        ft = getSupportFragmentManager().beginTransaction();
+                        ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+                        //ft.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down);
+                        UnfinishTaskFragment unfinishTaskFragment = UnfinishTaskFragment.newInstance(unfinishTasks);
+                        unfinishTaskFragment.setmListener(ServiceActivity.this);
+                        ft.replace(R.id.content, unfinishTaskFragment, "unfinishTaskFragment");
+                        //ft.addToBackStack(null);
+                        // Start the animated transition.
+                        ft.commit();
+
+                    }
+                })
+                .setNegativeButton(getString(R.string.service_button_cancel), null);
+
+        alert = builder.create();
+        alert.show();
+    }
+
     @Override
     public void onBackPressed() {
 
 
         if(!leave){
             buildAlertConfirmLeave(KeyEvent.KEYCODE_BACK);
+            //buildAlertSaveTask(KeyEvent.KEYCODE_BACK);
             return;
         }
 
@@ -199,6 +233,14 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
 
     }
 
+    private void saveTask(Task task, LoginData loginData){
+
+        dataSource = new TaskDataSource(ServiceActivity.this);
+        dataSource.open();
+        dataSource.addTask(task, loginData);
+
+    }
+
     private void getUnfinishTask(){
 
         dataSource = new TaskDataSource(ServiceActivity.this);
@@ -212,11 +254,15 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
         ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
         ServiceFragment newFragment;
+
         if(task != null){
             newFragment = ServiceFragment.newInstance(task.getLoginData(), task.getTask());
         }else{
             newFragment = ServiceFragment.newInstance(loginData, null);
         }
+
+        newFragment.setmListener(this);
+
         //newFragment.setmListener(this);
         ft.replace(R.id.content, newFragment, "serviceFragment");
         //ft.addToBackStack(null);
@@ -226,5 +272,10 @@ public class ServiceActivity extends BaseActivity implements UnfinishTaskFragmen
     @Override
     public void onDisplayTask(OfflineTask task) {
         displayServiceFragment(task);
+    }
+
+    @Override
+    public void onSaveTask(OfflineTask task) {
+        buildAlertSaveTask( task);
     }
 }

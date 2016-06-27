@@ -307,7 +307,32 @@ tools:context="th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment">
         </LinearLayout>
 
         <LinearLayout
-            style="@style/LinearLayoutTextView">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right">
+            <!--<TextView-->
+            <!--android:id="@+id/requireCustomerAddress"-->
+            <!--style="@style/textViewAstericStyle"-->
+            <!--android:text="+เพิ่มที่อยู่"/>-->
+            <Button
+                android:id="@+id/addButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:textColor="@color/blue"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:layout_gravity="right"
+                android:text="@string/service_add_address"
+
+                />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/customerAddressBlock"
+            style="@style/LinearLayoutTextView"
+            android:visibility="gone">
             <ImageView
                 android:src="@drawable/address_icon"
                 style="@style/ImageIconStyle"/>

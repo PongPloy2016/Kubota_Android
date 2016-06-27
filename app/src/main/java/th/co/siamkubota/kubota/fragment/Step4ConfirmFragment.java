@@ -29,6 +29,7 @@ View.OnClickListener{
 
     private static final String ARG_PARAM_TITLE = "title";
     private static final String ARG_PARAM_COMPLETE = "complete";
+    private static final String KEY_EDITABLED = "EDITABLED";
 
     private Button confirmButton;
     private Button cancelButton;
@@ -39,6 +40,8 @@ View.OnClickListener{
 
 
     private OnFragmentInteractionListener mListener;
+
+    private boolean editabled = true;
 
 
     //////////////////////////////////////////////////////////////////// getter setter
@@ -62,10 +65,11 @@ View.OnClickListener{
     //////////////////////////////////////////////////////////////////// constructor
 
 
-    public static Step4ConfirmFragment newInstance(boolean complete) {
+    public static Step4ConfirmFragment newInstance(boolean complete, boolean editabled) {
         Step4ConfirmFragment fragment = new Step4ConfirmFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_PARAM_COMPLETE,complete);
+        args.putBoolean(KEY_EDITABLED, editabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -100,6 +104,7 @@ View.OnClickListener{
 
         if (getArguments() != null) {
             complete = getArguments().getBoolean(ARG_PARAM_COMPLETE, false);
+            editabled = getArguments().getBoolean(KEY_EDITABLED);
         }
     }
 
@@ -190,7 +195,9 @@ View.OnClickListener{
                 dataComplete = false;
                 mListener.onFragmentDataComplete(this,dataComplete, null);
             }else {
-                cancelButton.setEnabled(false);
+                //cancelButton.setEnabled(false);
+                dataComplete = true;
+                mListener.onFragmentDataComplete(this,dataComplete, null);
             }
 
         }

@@ -70,6 +70,8 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
     public static final String KEY_LOGIN_DATA = "LOGIN_DATA";
     public static final String KEY_FROM = "FROM";
 
+    public static final int REQUEST_CODE_LOGIN = 118;
+
     private AppController app;
     private RelativeLayout rootLayout;
     private ImageView imageView;
@@ -547,7 +549,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
             intent.putExtras(loginbundle);
             intent.setFlags(0);
-            startActivityForResult(intent, 118);
+            startActivityForResult(intent, REQUEST_CODE_LOGIN);
 
         }else if(loginData != null && Network.isNetworkAvailable(this)){
 
@@ -582,7 +584,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 118 && resultCode == RESULT_OK){
+        if(requestCode == REQUEST_CODE_LOGIN && resultCode == RESULT_OK){
 
             Bundle bundle = data.getExtras();
 

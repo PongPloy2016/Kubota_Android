@@ -54,6 +54,7 @@ public class Step3SignFragment extends Fragment implements
 
     //private static final String ARG_PARAM_TITLE = "title";
     private static final String KEY_SIGNATURE = "signature";
+    private static final String KEY_EDITABLED = "EDITABLED";
 
 
     private LinearLayout rootLayout;
@@ -79,6 +80,8 @@ public class Step3SignFragment extends Fragment implements
 
 
     private OnFragmentInteractionListener mListener;
+
+    private boolean editabled = true;
 
 
     //////////////////////////////////////////////////////////////////// getter setter
@@ -107,10 +110,11 @@ public class Step3SignFragment extends Fragment implements
 
 
 
-    public static Step3SignFragment newInstance(Signature signature) {
+    public static Step3SignFragment newInstance(Signature signature, boolean editabled) {
         Step3SignFragment fragment = new Step3SignFragment();
         Bundle args = new Bundle();
         args.putParcelable(KEY_SIGNATURE, signature);
+        args.putBoolean(KEY_EDITABLED, editabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -147,6 +151,7 @@ public class Step3SignFragment extends Fragment implements
         if(savedInstanceState == null){
             if (getArguments() != null) {
                 signature = getArguments().getParcelable(KEY_SIGNATURE);
+                editabled = getArguments().getBoolean(KEY_EDITABLED);
             }
 
             if(imageCustomer == null){
@@ -223,7 +228,7 @@ public class Step3SignFragment extends Fragment implements
         setData();
         setDataChangeListener();
         validateInput();
-
+        setEnabled(editabled);
 
     }
 
@@ -682,6 +687,32 @@ public class Step3SignFragment extends Fragment implements
 
             checkBoxUserAccept.setChecked(true);
             checkBoxTecnicianAccept.setChecked(true);
+
+        }
+    }
+
+    private void setEnabled(boolean enabled){
+
+        if(!enabled){
+
+            editTextTotalCost.setEnabled(enabled);
+            editTextRemark.setEnabled(enabled);
+
+            editTextCustomerName.setEnabled(enabled);
+
+            editTextCustomerSignDate.setEnabled(enabled);
+            editTextCustomerSignDate.setEnabled(enabled);
+            editTextCustomerName.setEnabled(enabled);
+            editTextTechnicianName.setEnabled(enabled);
+
+
+            editTextTechnicianSignDate.setEnabled(enabled);
+
+            checkBoxUserAccept.setEnabled(enabled);
+            checkBoxTecnicianAccept.setEnabled(enabled);
+
+            imageCustomerSignature.setOnClickListener(null);
+            imageTechnicianSignature.setOnClickListener(null);
 
         }
     }

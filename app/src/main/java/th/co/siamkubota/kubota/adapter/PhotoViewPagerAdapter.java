@@ -78,7 +78,7 @@ public class PhotoViewPagerAdapter extends FragmentPagerAdapter {
                 break;
         }*/
 
-        PhotoPageFragment fragment = PhotoPageFragment.newInstance(datalist.get(position));
+        PhotoPageFragment fragment = PhotoPageFragment.newInstance(datalist.get(position), true);
         fragment.setmListener((PhotoPageFragment.OnFragmentInteractionListener) listener);
         result = (Fragment)fragment;
 

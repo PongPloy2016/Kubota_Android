@@ -14,6 +14,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -31,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -100,6 +102,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private static final String KEY_TITLE = "TITLE";
     private static final String KEY_TASK_INFO = "TASK_INFO";
     private static final String KEY_SERVICE_ADDRESS = "SERVICE_ADDRESS";
+    private static final String KEY_EDITABLED = "EDITABLED";
     private static final int REQUEST_CODE_MAP = 200;
 
     private LinearLayout rootLayout;
@@ -132,10 +135,14 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     private GenericTextWatcher editTextTaskCodeWatcher;
 
-
     private ImageButton locationButton;
 
     private RadioGroup radioGroupUserType;
+    private RadioButton radioButton1 ;
+    private RadioButton radioButton2 ;
+
+    private Button addButton;
+    private LinearLayout customerAddressBlock;
 
     //protected Location mLastLocation;
     private AddressResultReceiver mResultReceiver;
@@ -180,6 +187,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     private TaskDataSource dataSource;
 
+    private boolean editabled = true;
+
     private View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
@@ -214,7 +223,10 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 editText.removeTextChangedListener(editTextTaskCodeWatcher);
 
                 String text = editText.getText().toString();
-                String textFormatted = new StringBuilder(text).insert(0,"OJ").insert(4, "-").insert(9,"-").toString();
+                String textFormatted = text;
+                if(text.length() >= 10){
+                    textFormatted = new StringBuilder(text).insert(0,"OJ").insert(4, "-").insert(9,"-").toString();
+                }
                 editText.setText(textFormatted);
 
                 editText.setOnFocusChangeListener(focusChangeListener);
@@ -244,11 +256,12 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     //////////////////////////////////////////////////////////////////// constructor
 
-    public static Step1CustomerDetailFragment newInstance(TaskInfo taskInfo) {
+    public static Step1CustomerDetailFragment newInstance(TaskInfo taskInfo, boolean editabled) {
         Step1CustomerDetailFragment fragment = new Step1CustomerDetailFragment();
         Bundle args = new Bundle();
         //args.putString(KEY_TITLE, title);
         args.putParcelable(KEY_TASK_INFO, taskInfo);
+        args.putBoolean(KEY_EDITABLED, editabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -289,6 +302,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
             if (getArguments() != null) {
                 taskInfo = getArguments().getParcelable(KEY_TASK_INFO);
+                editabled = getArguments().getBoolean(KEY_EDITABLED);
             }
             //taskInfo = new TaskInfo();
 
@@ -380,8 +394,15 @@ public class Step1CustomerDetailFragment extends Fragment implements
         locationButton = (ImageButton) v.findViewById(R.id.locationButton);
 
         radioGroupUserType = (RadioGroup) v.findViewById(R.id.radioGroupUserType);
-        RadioButton radioButton1 = (RadioButton) v.findViewById(R.id.radioButton1);
-        RadioButton radioButton2 = (RadioButton) v.findViewById(R.id.radioButton2);
+//        RadioButton radioButton1 = (RadioButton) v.findViewById(R.id.radioButton1);
+//        RadioButton radioButton2 = (RadioButton) v.findViewById(R.id.radioButton2);
+
+        radioButton1 = (RadioButton) v.findViewById(R.id.radioButton1);
+        radioButton2 = (RadioButton) v.findViewById(R.id.radioButton2);
+
+        addButton = (Button)  v.findViewById(R.id.addButton);
+
+        customerAddressBlock = (LinearLayout) v.findViewById(R.id.customerAddressBlock);
 
         radioButton1.getCompoundDrawables()[0].setBounds(0, 0, 10, 10);
 
@@ -402,6 +423,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
         if(getActivity() != null){
             validateInput();
         }
+
+
 
     }
 
@@ -424,12 +447,15 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextCustomerAddress.addTextChangedListener(new GenericTextWatcher(editTextCustomerAddress));
 
         locationButton.setOnClickListener(this);
+        addButton.setOnClickListener(this);
 
         radioGroupUserType.setOnCheckedChangeListener(this);
 
-
         editTextTaskCode.setOnFocusChangeListener(focusChangeListener);
+
     }
+
+
 
     private void setData() {
 
@@ -448,6 +474,14 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextServiceAddress.setText(taskInfo.getAddress());
         editTextCustomerAddress.setText(taskInfo.getCustomerAddress());
 
+        if(taskInfo != null && taskInfo.getCustomerAddress() != null && !taskInfo.getCustomerAddress().isEmpty()){
+            customerAddressBlock.setVisibility(View.VISIBLE);
+            addButton.setText(getText(R.string.service_remove_address));
+        }else{
+            customerAddressBlock.setVisibility(View.GONE);
+            addButton.setText(getText(R.string.service_add_address));
+        }
+
         if(taskInfo.getIsOwner() != null){
             if(taskInfo.getIsOwner()){
                 radioGroupUserType.check(R.id.radioButton1);
@@ -457,6 +491,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         }
 
         setDefault();
+        setEnabled(editabled);
 
     }
 
@@ -612,7 +647,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         if (v == locationButton) {
 
 
-            if (!EnableGPSIfPossible()) {
+            if ( taskInfo.getAddressPosition() != null || !EnableGPSIfPossible() ) {
                 openMaps();
             }
 
@@ -625,6 +660,14 @@ public class Step1CustomerDetailFragment extends Fragment implements
                     getCurrentLocation();
                 }
             }*/
+        }else if(v == addButton){
+            if(customerAddressBlock.getVisibility() == View.GONE){
+                customerAddressBlock.setVisibility(View.VISIBLE);
+                addButton.setText(getText(R.string.service_remove_address));
+            }else{
+                customerAddressBlock.setVisibility(View.GONE);
+                addButton.setText(getText(R.string.service_add_address));
+            }
         }
     }
 
@@ -686,7 +729,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
             if (position != 0) {
                 //spinnerModel.setPrompt(productDataList[position - 1]);
                 //selectNoneModelSpinnerAdapter.setPromptText(productDataList[position - 1]);
-                spinnerModel.setEnabled(true);
+
+                //spinnerModel.setEnabled(true);
+                spinnerModel.setEnabled(editabled);
                 spinnerModel.invalidate();
             } else {
                 spinnerModel.setPrompt(getString(R.string.service_hint_model));
@@ -1400,7 +1445,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
             spinnerJobType.setSelection(1);
             spinnerProduct.setSelection(1);
 
-            spinnerModel.setEnabled(true);
+            //spinnerModel.setEnabled(true);
+            spinnerModel.setEnabled(editabled);
             spinnerModel.invalidate();
             spinnerModel.setSelection(1);
 
@@ -1417,6 +1463,36 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
             radioGroupUserType.check(R.id.radioButton1);
 
+            setEnabled(editabled);
+
+        }
+    }
+
+    private void setEnabled(boolean enabled){
+
+        if(!enabled){
+            spinnerJobType.setEnabled(enabled);
+            spinnerProduct.setEnabled(enabled);
+
+            spinnerModel.setEnabled(enabled);
+
+            //editTextOtherModel.setText(taskInfo.getCarModelOther());
+            editTextTaskCode.setEnabled(enabled);
+            editTextName.setEnabled(enabled);
+            editTextTel1.setEnabled(enabled);
+            editTextTel2.setEnabled(enabled);
+            editTextCarNumber.setEnabled(enabled);
+            editTextEngineNumber.setEnabled(enabled);
+            editTextWorkHours.setEnabled(enabled);
+            editTextServiceAddress.setEnabled(enabled);
+            editTextCustomerAddress.setEnabled(enabled);
+
+            radioGroupUserType.setEnabled(enabled);
+
+            radioButton1.setEnabled(enabled);
+            radioButton2.setEnabled(enabled);
+
+            addButton.setVisibility(View.GONE);
         }
     }
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -23,6 +24,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import io.swagger.client.ServiceGenerator;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.LoginData;
@@ -34,6 +37,7 @@ import retrofit.Retrofit;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
 import th.co.siamkubota.kubota.app.Config;
+import th.co.siamkubota.kubota.fragment.ServiceFragment;
 import th.co.siamkubota.kubota.utils.function.Ui;
 import th.co.siamkubota.kubota.utils.function.Validate;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -106,9 +110,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 passwordEditText.requestFocus();
             }
 
+            /*
             if(password != null){
                 passwordEditText.setText(password);
-            }
+            }*/
         }
 
 
@@ -303,5 +308,28 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         toast.setView(layout);
         toast.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
+
+        if(requestLoginFrom != null && !requestLoginFrom.isEmpty()){
+            if(requestLoginFrom.equals("ResultActivity")){
+
+                finishActivity(ResultActivity.REQUEST_CODE_LOGIN);
+                Intent intent = new Intent(LoginActivity.this, ServiceActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA,loginData);
+                intent.putExtras(bundle);
+
+                startActivity(intent);
+
+            }
+
+        }
+
     }
 }

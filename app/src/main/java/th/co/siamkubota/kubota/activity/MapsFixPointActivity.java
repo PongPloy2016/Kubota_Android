@@ -502,7 +502,11 @@ public class MapsFixPointActivity extends BaseActivity
             if(location.getAccuracy() < suitableMeter ){
                 mWaitLocation = false;
                 mLastLocation = location;
-                pinPoint(new LatLng(location.getLatitude(), location.getLongitude()), true);
+
+                if(markerPosition == null){
+                    pinPoint(new LatLng(location.getLatitude(), location.getLongitude()), true);
+                }
+
             }
 
         }
@@ -589,7 +593,11 @@ public class MapsFixPointActivity extends BaseActivity
         if(location.getAccuracy() < suitableMeter ){
             mWaitLocation = false;
             mLastLocation = location;
-            pinPoint(new LatLng(location.getLatitude(), location.getLongitude()), true);
+
+            if(markerPosition == null){
+                pinPoint(new LatLng(location.getLatitude(), location.getLongitude()), true);
+            }
+
         }
 
 

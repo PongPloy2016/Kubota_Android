@@ -44,10 +44,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         this.NumbOfTabs = mNumbOfTabsumb;
         this.listener = listener;
 
-        step1CustomerDetailFragment = Step1CustomerDetailFragment.newInstance(task.getTaskInfo());
-        step2PhotoFragment = Step2PhotoFragment.newInstance( (ArrayList<Image>)task.getTaskImages());
-        step3SignFragment = Step3SignFragment.newInstance(task.getSignature());
-        step4ConfirmFragment = Step4ConfirmFragment.newInstance(task.getComplete());
+        step1CustomerDetailFragment = Step1CustomerDetailFragment.newInstance(task.getTaskInfo(), (!task.getComplete()));
+        step2PhotoFragment = Step2PhotoFragment.newInstance( (ArrayList<Image>)task.getTaskImages(), (!task.getComplete()));
+        step3SignFragment = Step3SignFragment.newInstance(task.getSignature() , (!task.getComplete()));
+        step4ConfirmFragment = Step4ConfirmFragment.newInstance(task.getComplete() , (!task.getComplete()));
 
         /*
         step1CustomerDetailFragment.setmListener((Step1CustomerDetailFragment.OnFragmentInteractionListener) listener);
