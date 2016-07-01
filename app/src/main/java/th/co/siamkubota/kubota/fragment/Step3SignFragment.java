@@ -104,6 +104,10 @@ public class Step3SignFragment extends Fragment implements
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+
+        if(editTextCustomerName != null){
+            editTextCustomerName.setText(customerName);
+        }
     }
 
     //////////////////////////////////////////////////////////////////// constructor

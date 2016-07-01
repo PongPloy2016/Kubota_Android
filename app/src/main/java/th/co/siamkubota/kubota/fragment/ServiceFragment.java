@@ -86,6 +86,8 @@ public class ServiceFragment extends Fragment implements
     private Task task;
     private TaskDataSource dataSource;
 
+    private boolean newTask = false;
+
 
     public void setmListener(OnFragmentInteractionListener mListener) {
         this.mListener = mListener;
@@ -134,6 +136,8 @@ public class ServiceFragment extends Fragment implements
                 if(loginData != null){
                     task.getTaskInfo().setshopID(loginData.getUserId());
                 }
+
+                newTask = true;
 
             }
 
@@ -632,7 +636,13 @@ public class ServiceFragment extends Fragment implements
         saveTask(task, loginData);
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void onCustomerNameChange(String name) {
+        ((Step3SignFragment)adapter.getItem(2)).setCustomerName(name);
+    }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 
     /**

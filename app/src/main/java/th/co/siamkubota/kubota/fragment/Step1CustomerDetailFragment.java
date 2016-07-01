@@ -633,7 +633,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         // TODO: Update argument type and name
         public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data);
         public void onFragmentSaveInstanceState(Fragment fragment);
-
+        public void onCustomerNameChange(String name);
     }
 
     public void setResultAddress(String address) {
@@ -719,7 +719,28 @@ public class Step1CustomerDetailFragment extends Fragment implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+
         if (parent == spinnerJobType) {
+
+            boolean productWasSelected = false;
+
+            String product = (String) spinnerProduct.getSelectedItem();
+            if(product != null){
+                for (String s : modelDataList) {
+                    int i = s.indexOf(spinnerModel.getSelectedItem().toString());
+                    if (i >= 0) {
+                        // found a match to "software" at offset i
+                        productWasSelected = true;
+                        break;
+                    }
+                }
+            }
+
+            if(spinnerJobType.getSelectedItemPosition() > 0 && spinnerProduct.getSelectedItem() == null && editabled &&
+                    ((taskInfo.getTaskType() == null || taskInfo.getTaskType().isEmpty()) ) ){
+                spinnerProduct.requestFocus();
+                spinnerProduct.performClick();
+            }
 
         } else if (parent == spinnerProduct) {
 
@@ -748,9 +769,32 @@ public class Step1CustomerDetailFragment extends Fragment implements
             spinnerModel.invalidate();
             spinnerModel.setSelection(getIndex(spinnerModel, taskInfo.getCarModel()));
 
+
+            boolean modelWasSelected = false;
+
+            String model = (String) spinnerModel.getSelectedItem();
+            if(model != null){
+                for (String s : modelDataList) {
+                    int i = s.indexOf(spinnerModel.getSelectedItem().toString());
+                    if (i >= 0) {
+                        // found a match to "software" at offset i
+                        modelWasSelected = true;
+                        break;
+                    }
+                }
+            }
+
+
             if(Config.showDefault == true){
                 spinnerModel.setSelection(1);
+            }else if(spinnerProduct.getSelectedItemPosition() > 0 && editabled && !modelWasSelected){
+
+                spinnerModel.setPrompt(spinnerProduct.getSelectedItem().toString());
+
+                spinnerModel.requestFocus();
+                spinnerModel.performClick();
             }
+
 
 
         } else if (parent == spinnerModel) {
@@ -1005,6 +1049,10 @@ public class Step1CustomerDetailFragment extends Fragment implements
         }
 
         if(editTextName.getText() != null){
+
+            if(!editTextName.getText().equals(taskInfo.getCustomerName())){
+
+            }
             taskInfo.setCustomerName(editTextName.getText().toString());
         }
         if(editTextTel1.getText() != null){
