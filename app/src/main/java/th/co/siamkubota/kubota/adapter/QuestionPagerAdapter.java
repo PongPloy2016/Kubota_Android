@@ -25,7 +25,7 @@ public class QuestionPagerAdapter extends FragmentStatePagerAdapter {
     private Context context;
     private Fragment listener;
 
-    public QuestionPagerAdapter(Context context, FragmentManager fm, ArrayList<Question> photos, Fragment listener) {
+    public QuestionPagerAdapter(Context context, FragmentManager fm, ArrayList<Question> photos, Fragment listener, boolean editabled) {
         super(fm);
 
         this.context = context;
@@ -36,7 +36,7 @@ public class QuestionPagerAdapter extends FragmentStatePagerAdapter {
         questionItemFragments = new ArrayList<Fragment>();
 
         for(Question item : datalist){
-            QuestionItemFragment fragment = QuestionItemFragment.newInstance(item);
+            QuestionItemFragment fragment = QuestionItemFragment.newInstance(item, editabled);
             fragment.setmListener((QuestionItemFragment.OnFragmentInteractionListener) listener);
             questionItemFragments.add(fragment);
         }

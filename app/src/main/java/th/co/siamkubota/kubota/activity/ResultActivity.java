@@ -536,7 +536,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
         //check internet and login data
 
-        if((loginData == null && Network.isNetworkAvailable(this) || (from != null && !from.isEmpty()))){
+        if( Network.isNetworkAvailable(this) && (loginData == null || (from != null && !from.isEmpty()))){
             //go to login page
 
             Intent intent = new Intent(ResultActivity.this, LoginActivity.class);
@@ -590,6 +590,10 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
             if(bundle.containsKey(ResultActivity.KEY_LOGIN_DATA)){
                 loginData = bundle.getParcelable(ResultActivity.KEY_LOGIN_DATA);
+
+                if(loginData != null){
+                    task.getTaskInfo().setshopID(loginData.getUserId());
+                }
             }
 
             if(bundle.containsKey("shopName")){

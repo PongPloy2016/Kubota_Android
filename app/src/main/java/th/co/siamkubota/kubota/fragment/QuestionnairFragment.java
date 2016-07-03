@@ -86,7 +86,7 @@ QuestionItemFragment.OnFragmentInteractionListener{
         datalist.add(new Question("แบบสอบถามที่ 3"));
 
 
-        adapter = new QuestionPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), datalist, QuestionnairFragment.this);
+        adapter = new QuestionPagerAdapter(getActivity(), getActivity().getSupportFragmentManager(), datalist, QuestionnairFragment.this, true);
         pager.setAdapter(adapter);
         pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
         pager.setPagingEnabled(false);

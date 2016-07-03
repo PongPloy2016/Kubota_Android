@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,18 +27,23 @@ import th.co.siamkubota.kubota.model.Question;
  * Use the {@link QuestionItemFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QuestionItemFragment extends Fragment implements View.OnClickListener {
+public class QuestionItemFragment extends Fragment implements
+        RadioGroup.OnCheckedChangeListener{
 
     private static final String ARG_PARAM_DATA = "data";
+    private static final String ARG_PARAM_EDITABLED = "editable";
 
     private Question data;
 
     private LinearLayout rootLayout;
     private TextView titleTextView;
-    private Button yesButton;
-    private Button noButton;
+    private TextView detailTextView;
+    private RadioGroup choicesGroup;
+    private RadioButton yesButton;
+    private RadioButton noButton;
 
     private OnFragmentInteractionListener mListener;
+    private boolean editabled;
 
 
     //////////////////////////////////////////////////////////////////// getter setter
@@ -52,10 +59,11 @@ public class QuestionItemFragment extends Fragment implements View.OnClickListen
     //////////////////////////////////////////////////////////////////// constructor
 
 
-    public static QuestionItemFragment newInstance(Question data) {
+    public static QuestionItemFragment newInstance(Question data, boolean editabled) {
         QuestionItemFragment fragment = new QuestionItemFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_PARAM_DATA, data);
+        args.putBoolean(ARG_PARAM_EDITABLED, editabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,6 +77,7 @@ public class QuestionItemFragment extends Fragment implements View.OnClickListen
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             data = getArguments().getParcelable(ARG_PARAM_DATA);
+            editabled = getArguments().getBoolean(ARG_PARAM_EDITABLED);
         }
 
     }
@@ -78,17 +87,34 @@ public class QuestionItemFragment extends Fragment implements View.OnClickListen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //View v = View.inflate(getActivity(), R.layout.tab_product, null);
-        View v = inflater.inflate(R.layout.item_page_question, container, false);
+        View v = inflater.inflate(R.layout.fragment_question_item, container, false);
 
-        rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
+        //rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
         titleTextView = (TextView) v.findViewById(R.id.titleTextView);
-        yesButton = (Button) v.findViewById(R.id.yesButton);
-        noButton = (Button) v.findViewById(R.id.noButton);
+        detailTextView = (TextView) v.findViewById(R.id.detailTextView);
+        choicesGroup = (RadioGroup) v.findViewById(R.id.choicesGroup);
+        yesButton = (RadioButton) v.findViewById(R.id.yesButton);
+        noButton = (RadioButton) v.findViewById(R.id.noButton);
 
         titleTextView.setText(data.getTitle());
+        detailTextView.setText(data.getDetail());
 
-        yesButton.setOnClickListener(this);
-        noButton.setOnClickListener(this);
+        yesButton.setEnabled(editabled);
+        noButton.setEnabled(editabled);
+
+        if(data.isComplete()){
+            if(data.isAnswer()){
+                yesButton.setChecked(true);
+            }else{
+                noButton.setChecked(true);
+            }
+        }
+
+        choicesGroup.setOnCheckedChangeListener(this);
+
+
+       /* yesButton.setOnClickListener(this);
+        noButton.setOnClickListener(this);*/
 
         return v;
     }
@@ -142,16 +168,18 @@ public class QuestionItemFragment extends Fragment implements View.OnClickListen
         public void onChoiceSelected(Fragment fragment, Question question);
     }
 
+
     @Override
-    public void onClick(View v) {
-        boolean answer = false;
-        if(v == yesButton){
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+        if(checkedId == R.id.yesButton){
             data.setAnswer(true);
-        }else if(v == noButton){
+        }else{
             data.setAnswer(false);
         }
 
-        mListener.onChoiceSelected(this, data);
+        data.setComplete(true);
 
+        mListener.onChoiceSelected(this, data);
     }
 }

@@ -16,13 +16,14 @@ import th.co.siamkubota.kubota.R;
  */
 public class CenterRadioButton extends RadioButton {
 
+    Drawable buttonDrawable;
+
     public CenterRadioButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CompoundButton, 0, 0);
-        buttonDrawable = a.getDrawable(1);
+        buttonDrawable = a.getDrawable(R.styleable.CompoundButton_android_button);
         setButtonDrawable(android.R.color.transparent);
     }
-    Drawable buttonDrawable;
 
 
     @Override

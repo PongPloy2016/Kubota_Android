@@ -6,7 +6,7 @@ package th.co.siamkubota.kubota.sqlite;
 public class DatabaseInfo {
 
     public static final String DATABASE_NAME = "Kubota";
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
 
     public static final String KEY_TABLE_TASK = "task";
 
@@ -16,7 +16,7 @@ public class DatabaseInfo {
     public static final String KEY_COL_CREATE_DATE = "create_date";
     public static final String KEY_COL_LOGIN_DETAIL = "login_detail";
     public static final String KEY_COL_COMPLETE = "complete";
-    public static final String KEY_COL_OFFLINE = "offline";
+    public static final String KEY_COL_LAST_UPDATED = "last_updated";
 
 
     // Table Task
@@ -27,5 +27,5 @@ public class DatabaseInfo {
             DatabaseInfo.KEY_COL_CREATE_DATE + " TEXT NOT NULL," +
             DatabaseInfo.KEY_COL_LOGIN_DETAIL + " TEXT," +
             DatabaseInfo.KEY_COL_COMPLETE + " TEXT NOT NULL," +
-            DatabaseInfo.KEY_COL_OFFLINE + " TEXT NOT NULL DEFAULT false);" ;
+            DatabaseInfo.KEY_COL_LAST_UPDATED + " TEXT NOT NULL );" ;
 }

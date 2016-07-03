@@ -241,8 +241,9 @@ public class TaskDataSource {
         // Select All Query
         String selectQuery = "SELECT  * FROM " + DatabaseInfo.KEY_TABLE_TASK;
         //String whereClause = " WHERE " + DatabaseInfo.KEY_COL_COMPLETE +" = ? ";
+        String whereClause = " ORDER BY " + DatabaseInfo.KEY_COL_LAST_UPDATED + " DESC";
 
-        //selectQuery += whereClause;
+        selectQuery += whereClause;
 
         //String[] args = new String[]{String.valueOf(true)};
         String[] args = new String[]{};
@@ -393,6 +394,7 @@ public class TaskDataSource {
         values.put(DatabaseInfo.KEY_COL_TASK_DETAIL, jsonData);
         values.put(DatabaseInfo.KEY_COL_CREATE_DATE, Converter.DateToString(new Date(), "dd/MM/yyyy HH:mm:ss"));
         values.put(DatabaseInfo.KEY_COL_COMPLETE, task.getComplete().toString());
+        values.put(DatabaseInfo.KEY_COL_LAST_UPDATED, Converter.DateToString(new Date(), "dd/MM/yyyy HH:mm:ss"));
 
         // Inserting Row
 //		db.insert(DatabaseInfo.KEY_TABLE_STORE, null, values);
@@ -415,6 +417,7 @@ public class TaskDataSource {
         values.put(DatabaseInfo.KEY_COL_CREATE_DATE, Converter.DateToString(new Date(), "dd/MM/yyyy HH:mm:ss"));
         values.put(DatabaseInfo.KEY_COL_COMPLETE, task.getComplete().toString());
         values.put(DatabaseInfo.KEY_COL_LOGIN_DETAIL, jsonDataLogin);
+        values.put(DatabaseInfo.KEY_COL_LAST_UPDATED, Converter.DateToString(new Date(), "dd/MM/yyyy HH:mm:ss"));
 
         // Inserting Row
 //		db.insert(DatabaseInfo.KEY_TABLE_STORE, null, values);
@@ -438,6 +441,7 @@ public class TaskDataSource {
         values.put(DatabaseInfo.KEY_COL_CREATE_DATE, Converter.DateToString(new Date(), "dd/MM/yyyy HH:mm:ss"));
         values.put(DatabaseInfo.KEY_COL_COMPLETE, task.getComplete().toString());
         values.put(DatabaseInfo.KEY_COL_LOGIN_DETAIL, jsonDataLogin);
+        values.put(DatabaseInfo.KEY_COL_LAST_UPDATED, Converter.DateToString(new Date(), "dd/MM/yyyy HH:mm:ss"));
 
         // Inserting Row
 //		db.insert(DatabaseInfo.KEY_TABLE_STORE, null, values);

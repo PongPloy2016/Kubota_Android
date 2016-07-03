@@ -6,6 +6,7 @@
         <item>@string/service_step_2</item>
         <item>@string/service_step_3</item>
         <item>@string/service_step_4</item>
+        <item>@string/service_step_5</item>
     </array>
 
     <array name="job_type">
@@ -124,5 +125,12 @@
         <item>11</item>
         <item>12</item>
     </array>
+
+    <array name="questions">
+        <item>ช่างได้เข้าให้บริการตรงวันและเวลาที่นัดหมาย</item>
+        <item>ช่างได้ให้คำแนะนำเรื่องการรักษา ซ่อมบำรุงรถเบื้องต้นแก่ลูกค้าเป็นที่เรียบร้อย</item>
+        <item>ช่างได้ทดสอบรถ หลังจากให้บริการเสร็จแล้ว</item>
+    </array>
+
 
 </resources>

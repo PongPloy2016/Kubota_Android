@@ -1,0 +1,252 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix"
+    android:id="@+id/rootLayout">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_marginBottom="0dp"
+        android:background="@color/background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp">
+            <TextView
+                android:id="@+id/textStepTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:textColor="@color/dark_gray"
+                android:textStyle="bold"
+                android:text="@string/service_step_1"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:background="@drawable/rectangle_round_corner_transparent_gray_border">
+
+                <RelativeLayout
+                    android:id="@+id/backStep1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingLeft="0.8dp"
+                    android:paddingTop="0.8dp"
+                    android:paddingBottom="0.8dp"
+                    android:paddingRight="-1dp"
+                    android:background="@drawable/rectangle_left_round_corner_white">
+                    <ImageButton
+                        android:id="@+id/step1Button"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/deepgrey_number01"
+                        android:background="@android:color/transparent"
+                        android:layout_centerInParent="true"
+                        />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/backStep2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="-0.3dp"
+                    android:background="@color/light_gray_stage">
+                    <ImageView
+                        android:id="@+id/divStep1"
+                        android:layout_width="10dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/edge_white"/>
+                    <ImageButton
+                        android:id="@+id/step2Button"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/lightgrey_number02"
+                        android:background="@android:color/transparent"
+                        android:layout_centerInParent="true"
+                        />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/backStep3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="-0.3dp"
+                    android:background="@color/light_gray_stage">
+                    <ImageView
+                        android:id="@+id/divStep2"
+                        android:layout_width="10dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/edge_grey"/>
+                    <ImageButton
+                        android:id="@+id/step3Button"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/lightgrey_number03"
+                        android:background="@android:color/transparent"
+                        android:layout_centerInParent="true"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/backStep4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="-0.3dp"
+                    android:background="@color/light_gray_stage">
+                    <ImageView
+                        android:id="@+id/divStep3"
+                        android:layout_width="10dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/edge_grey"/>
+                    <ImageButton
+                        android:id="@+id/step4Button"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/lightgrey_number04"
+                        android:background="@android:color/transparent"
+                        android:layout_centerInParent="true"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/backStep5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="-0.3dp"
+                    android:background="@drawable/rectangle_right_round_corner_gray">
+                    <ImageView
+                        android:id="@+id/divStep4"
+                        android:layout_width="10dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/edge_grey"/>
+                    <ImageButton
+                        android:id="@+id/step5Button"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/lightgrey_number05"
+                        android:background="@android:color/transparent"
+                        android:layout_centerInParent="true"
+                        />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+        <th.co.siamkubota.kubota.utils.ui.NoneScrollableViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"/>
+
+        <LinearLayout
+            android:id="@+id/navigationControleLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_marginBottom="7dp"
+                android:textSize="15dp"
+                android:text="@string/service_button_save"
+                android:textColor="@color/button_text_orange_selector"
+                android:background="@drawable/button_black_alpha_selector"
+                android:enabled="true"></Button>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/previousButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:layout_marginRight="10dp"
+                    android:textSize="15dp"
+                    android:text="@string/service_button_previous"
+                    android:textColor="@color/button_white_text_selector"
+                    android:background="@drawable/button_white_border_selector"
+                    android:enabled="false"></Button>
+
+                <Button
+                    android:id="@+id/nextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="15dp"
+                    android:text="@string/service_button_next"
+                    style="@style/buttonOrangeStyle"
+                    android:textColor="@color/button_text_orange_selector"
+                    android:background="@drawable/button_orange_selector"></Button>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

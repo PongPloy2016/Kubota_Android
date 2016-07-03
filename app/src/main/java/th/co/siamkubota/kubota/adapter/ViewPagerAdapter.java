@@ -19,6 +19,8 @@ import th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment;
 import th.co.siamkubota.kubota.fragment.Step2PhotoFragment;
 import th.co.siamkubota.kubota.fragment.Step3SignFragment;
 import th.co.siamkubota.kubota.fragment.Step4ConfirmFragment;
+import th.co.siamkubota.kubota.fragment.Step4QuestionnairFragment;
+import th.co.siamkubota.kubota.fragment.Step5ConfirmFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -28,7 +30,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private Step1CustomerDetailFragment step1CustomerDetailFragment;
     private Step2PhotoFragment step2PhotoFragment;
     private Step3SignFragment step3SignFragment;
-    private Step4ConfirmFragment step4ConfirmFragment;
+    private Step4QuestionnairFragment step4QuestionnairFragment;
+    private Step5ConfirmFragment step5ConfirmFragment;
 
     private Context context;
     private Fragment listener;
@@ -47,7 +50,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         step1CustomerDetailFragment = Step1CustomerDetailFragment.newInstance(task.getTaskInfo(), (!task.getComplete()));
         step2PhotoFragment = Step2PhotoFragment.newInstance( (ArrayList<Image>)task.getTaskImages(), (!task.getComplete()));
         step3SignFragment = Step3SignFragment.newInstance(task.getSignature() , (!task.getComplete()));
-        step4ConfirmFragment = Step4ConfirmFragment.newInstance(task.getComplete() , (!task.getComplete()));
+        step4QuestionnairFragment = Step4QuestionnairFragment.newInstance((ArrayList<Boolean>) task.getAnswers() , (!task.getComplete()));
+        step5ConfirmFragment = Step5ConfirmFragment.newInstance(task.getComplete() , (!task.getComplete()));
 
         /*
         step1CustomerDetailFragment.setmListener((Step1CustomerDetailFragment.OnFragmentInteractionListener) listener);
@@ -74,7 +78,11 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 return step3SignFragment;
             case 3:
                 //((ServiceFragment) listener).setStepTitle(Titles[3]);
-                return step4ConfirmFragment;
+                return step4QuestionnairFragment;
+            case 4:
+                //((ServiceFragment) listener).setStepTitle(Titles[3]);
+                return step5ConfirmFragment;
+
         }
 
         return null;
