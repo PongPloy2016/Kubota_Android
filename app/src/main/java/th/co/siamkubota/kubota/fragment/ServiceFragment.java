@@ -548,8 +548,6 @@ public class ServiceFragment extends Fragment implements
             setStepComplete(4, complete);
             //task.setSignature((Signature) data);
 
-
-
             Fragment currentfragment = adapter.getItem(pageChangeListener.getCurrentPage());
             if(fragment == currentfragment){
                 nextButton.setEnabled(((Step4QuestionnairFragment) fragment).isDataComplete());
@@ -570,8 +568,6 @@ public class ServiceFragment extends Fragment implements
 
                     if(q.isComplete()){
                         answers.add(q.isAnswer());
-                    }else{
-                        answers.add(null);
                     }
                 }
 

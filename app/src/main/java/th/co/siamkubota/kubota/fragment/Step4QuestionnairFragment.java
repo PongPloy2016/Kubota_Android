@@ -164,29 +164,13 @@ public class Step4QuestionnairFragment extends Fragment implements
                 Question q = new Question(i ,"แบบสอบถามที่ " + (i+1));
                 q.setDetail(questions[i]);
 
-                /*
-                if(booArr != null && booArr.length > 0 && booArr.length > i){
-                    q.setAnswer(booArr[i]);
 
-                    if(booArr.length >= 3 && !editabled){
-                        q.setComplete(true);
-                    }
-                }else{
-                    q.setComplete(false);
-                }*/
-
-                if(answers != null && answers.size() > 0 && answers.get(i) != null){
+                if(answers != null && answers.size() >= i + 1 && answers.get(i) != null){
                     q.setAnswer(answers.get(i));
                     q.setComplete(true);
                 }else {
                     q.setComplete(false);
-
-                    if(!editabled){
-                        q.setComplete(true);
-                    }
                 }
-
-
 
                 datalist.add(q);
             }
@@ -203,8 +187,9 @@ public class Step4QuestionnairFragment extends Fragment implements
                 dataComplete = true;
                 setDataComplete(dataComplete);
 
+            }else{
+                setDataComplete(!editabled);
             }
-
 
 
             //validateInput();
@@ -235,29 +220,62 @@ public class Step4QuestionnairFragment extends Fragment implements
         previousButton = (ImageButton) v.findViewById(R.id.previousButton);
         nextButton = (ImageButton) v.findViewById(R.id.nextButton);
 
+        previousButton.setOnClickListener(this);
+        nextButton.setOnClickListener(this);
+
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
 
-        previousButton.setOnClickListener(this);
-        nextButton.setOnClickListener(this);
+
 
         mListener = (Step4QuestionnairFragment.OnFragmentInteractionListener) getParentFragment();
-
-       // pager.setAdapter(adapter);
-        // pager.setOffscreenPageLimit(3);
-       // pager.addOnPageChangeListener(pageChangeListener);
-
-
 
         FragmentManager cfManager = getChildFragmentManager();
         adapter = new QuestionPagerAdapter(getActivity(), cfManager, datalist, Step4QuestionnairFragment.this, editabled);
         pager.setAdapter(adapter);
         pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
         pager.setOffscreenPageLimit(3);
-        pager.setPagingEnabled(true);
+        pager.setPagingEnabled(false);
 
-        pager.setCurrentItem(0);
+        int i = 0;
+        for (Question q : datalist){
+
+            if(!q.isComplete()){
+                pager.setCurrentItem(i);
+                break;
+            }
+
+            i++;
+        }
+
+        if(i == 3){
+            dataComplete = true;
+            pager.setCurrentItem(0);
+        }else{
+            dataComplete = false;
+        }
+
+
+        if(!dataComplete){
+            previousButton.setEnabled(false);
+            nextButton.setEnabled(false);
+
+            button1.setEnabled(false);
+            button2.setEnabled(false);
+            button3.setEnabled(false);
+
+            pager.setPagingEnabled(false);
+        }else {
+            previousButton.setEnabled(true);
+            nextButton.setEnabled(true);
+
+            button1.setEnabled(true);
+            button2.setEnabled(true);
+            button3.setEnabled(true);
+
+            pager.setPagingEnabled(true);
+        }
 
         validateInput();
 
@@ -427,5 +445,27 @@ public class Step4QuestionnairFragment extends Fragment implements
 
         Copier.copy(question, datalist.get(question.getId()));
         validateInput();
+
+        if(question.getId() == 0){
+            button1.setEnabled(true);
+            //previousButton.setEnabled(true);
+        }else if(question.getId() == 1){
+            button2.setEnabled(true);
+        }else if(question.getId() == 2){
+            button3.setEnabled(true);
+            previousButton.setEnabled(true);
+            nextButton.setEnabled(true);
+            pager.setPagingEnabled(true);
+        }
+
+        if(!dataComplete){
+            int nextpage = (pageChangeListener.getCurrentPage() + 1);
+            if(nextpage < 3){
+                pager.setCurrentItem(pageChangeListener.getCurrentPage() + 1);
+            }
+        }else {
+            pager.setPagingEnabled(true);
+        }
+
     }
 }

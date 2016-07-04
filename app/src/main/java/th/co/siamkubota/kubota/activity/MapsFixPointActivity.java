@@ -242,7 +242,7 @@ public class MapsFixPointActivity extends BaseActivity
 
 
             // create marker
-            MarkerOptions markerOptions = new MarkerOptions().position(point).draggable(false).title("Hello Maps");
+            MarkerOptions markerOptions = new MarkerOptions().position(point).draggable(false).title(getString(R.string.map_service_location));
             //MarkerOptions markerOptions = new MarkerOptions().position(point).draggable(true).title("Hello Maps");
             //marker = new MarkerOptions().position(point).draggable(true).title("Hello Maps");
 

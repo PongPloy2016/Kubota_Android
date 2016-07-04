@@ -135,5 +135,6 @@
     <string name="menu_legalnotices">Legal Notices</string>
     <string name="map_select_location">เลือกตำแหน่งที่อยู่</string>
     <string name="map_address_not_found">ไม่พบที่อยู่</string>
+    <string name="map_service_location">จุดให้บริการ</string>
 
 </resources>
