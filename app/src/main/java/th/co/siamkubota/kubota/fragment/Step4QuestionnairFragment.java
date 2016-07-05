@@ -58,7 +58,7 @@ public class Step4QuestionnairFragment extends Fragment implements
     private ArrayList<Question> datalist;
 
 
-    private String[] questions = getActivity().getResources().getStringArray(R.array.questions);
+    private String[] questions;
     private ArrayList<Boolean> answers;
 
     private FragmentManager mRetainedChildFragmentManager;
@@ -87,60 +87,16 @@ public class Step4QuestionnairFragment extends Fragment implements
 
 
     //////////////////////////////////////////////////////////////////// constructor
-/*
-    public static Step4QuestionnairFragment newInstance(ArrayList<Boolean> answers, boolean editabled) {
-        Step4QuestionnairFragment fragment = new Step4QuestionnairFragment();
-        Bundle args = new Bundle();
-        //args.putString(KEY_TITLE, title);
-
-        if(answers != null && answers.size() > 0){
-            boolean[] booArr = new boolean[answers.size()];
-
-            int i = 0;
-            for(Boolean  b : answers){
-                if(b != null){
-                    booArr[i] = b;
-                }
-                i++;
-            }
-            args.putBooleanArray(KEY_ANSWERS, booArr);
-        }
-
-        args.putBoolean(KEY_EDITABLED, editabled);
-        fragment.setArguments(args);
-        return fragment;
-    }
-    */
-
-    /*
-    public static Step4QuestionnairFragment newInstance(ArrayList<Question> questions, boolean editabled) {
-        Step4QuestionnairFragment fragment = new Step4QuestionnairFragment();
-        Bundle args = new Bundle();
-        //args.putString(KEY_TITLE, title);
-
-        if(questions != null && questions.size() > 0){
-
-        }
-
-
-        args.putParcelableArrayList(KEY_QUESTIONS, questions);
-        args.putBoolean(KEY_EDITABLED, editabled);
-        fragment.setArguments(args);
-        return fragment;
-    }*/
 
     public static Step4QuestionnairFragment newInstance(ArrayList<Boolean> answers, boolean editabled) {
         Step4QuestionnairFragment fragment = new Step4QuestionnairFragment();
         Bundle args = new Bundle();
-
-       // static String[] questions = getActivity().getResources().getStringArray(R.array.questions)
 
         ArrayList<Question> datalisttmp = new ArrayList<Question>();
 
         for(int i = 0 ; i < 3 ; i++){
             Question q = new Question(i ,"แบบสอบถามที่ " + (i+1));
             //q.setDetail(questions[i]);
-
 
             if(answers != null && answers.size() >= i + 1 && answers.get(i) != null){
                 q.setAnswer(answers.get(i));
@@ -152,6 +108,7 @@ public class Step4QuestionnairFragment extends Fragment implements
             datalisttmp.add(q);
         }
 
+        args.putParcelableArrayList(KEY_QUESTIONS, datalisttmp);
         args.putBoolean(KEY_EDITABLED, editabled);
         fragment.setArguments(args);
         return fragment;
@@ -184,9 +141,8 @@ public class Step4QuestionnairFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        questions =  getActivity().getResources().getStringArray(R.array.questions);
 
-
-        boolean[] booArr = null;
 
         if(savedInstanceState == null ){
 
@@ -194,36 +150,16 @@ public class Step4QuestionnairFragment extends Fragment implements
 
                 editabled =  getArguments().getBoolean(KEY_EDITABLED);
 
-                 booArr = getArguments().getBooleanArray(KEY_ANSWERS);
+                datalist = getArguments().getParcelableArrayList(KEY_QUESTIONS);
+                if(datalist != null){
 
-                answers = new ArrayList<Boolean>();
-                if(booArr != null && booArr.length > 0){
-
-                    for(boolean b : booArr){
-                        answers.add(new Boolean(b));
+                    int i = 0;
+                    for(Question q : datalist){
+                        q.setDetail(questions[i]);
                     }
                 }
+
             }
-
-            /*
-            datalist = new ArrayList<Question>();
-
-            for(int i = 0 ; i < 3 ; i++){
-                Question q = new Question(i ,"แบบสอบถามที่ " + (i+1));
-                q.setDetail(questions[i]);
-
-
-                if(answers != null && answers.size() >= i + 1 && answers.get(i) != null){
-                    q.setAnswer(answers.get(i));
-                    q.setComplete(true);
-                }else {
-                    q.setComplete(false);
-                }
-
-                datalist.add(q);
-            }*/
-
-            datalist = getArguments().getParcelableArrayList(KEY_QUESTIONS);
 
 
             if(Config.showDefault){
@@ -285,7 +221,7 @@ public class Step4QuestionnairFragment extends Fragment implements
         pager.setAdapter(adapter);
         pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
         pager.setOffscreenPageLimit(3);
-        pager.setPagingEnabled(false);
+        pager.setPagingEnabled(true);
 
         int i = 0;
         for (Question q : datalist){
@@ -303,27 +239,6 @@ public class Step4QuestionnairFragment extends Fragment implements
             pager.setCurrentItem(0);
         }else{
             dataComplete = false;
-        }
-
-
-        if(!dataComplete){
-            previousButton.setEnabled(false);
-            nextButton.setEnabled(false);
-
-            button1.setEnabled(false);
-            button2.setEnabled(false);
-            button3.setEnabled(false);
-
-            pager.setPagingEnabled(false);
-        }else {
-            previousButton.setEnabled(true);
-            nextButton.setEnabled(true);
-
-            button1.setEnabled(true);
-            button2.setEnabled(true);
-            button3.setEnabled(true);
-
-            pager.setPagingEnabled(true);
         }
 
         validateInput();
@@ -497,14 +412,10 @@ public class Step4QuestionnairFragment extends Fragment implements
 
         if(question.getId() == 0){
             button1.setEnabled(true);
-            //previousButton.setEnabled(true);
         }else if(question.getId() == 1){
             button2.setEnabled(true);
         }else if(question.getId() == 2){
             button3.setEnabled(true);
-            previousButton.setEnabled(true);
-            nextButton.setEnabled(true);
-            pager.setPagingEnabled(true);
         }
 
         if(!dataComplete){
@@ -512,8 +423,6 @@ public class Step4QuestionnairFragment extends Fragment implements
             if(nextpage < 3){
                 pager.setCurrentItem(pageChangeListener.getCurrentPage() + 1);
             }
-        }else {
-            pager.setPagingEnabled(true);
         }
 
     }

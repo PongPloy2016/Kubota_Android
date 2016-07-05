@@ -247,6 +247,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     if(requestLoginFrom == null ){
 
                         intent = new Intent(LoginActivity.this, ServiceActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         Bundle bundle = new Bundle();
                         bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA,loginData.getParameter());
                         intent.putExtras(bundle);

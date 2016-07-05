@@ -568,6 +568,8 @@ public class ServiceFragment extends Fragment implements
 
                     if(q.isComplete()){
                         answers.add(q.isAnswer());
+                    }else{
+                        answers.add(null);
                     }
                 }
 

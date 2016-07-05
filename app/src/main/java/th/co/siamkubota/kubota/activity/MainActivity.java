@@ -151,7 +151,7 @@ public class MainActivity extends BaseActivity  implements
 
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
-            finish();
+            //finish();
         }else if(v == offlineBtn){
             Intent intent = new Intent(MainActivity.this, ServiceActivity.class);
             Bundle bundle = new Bundle();
