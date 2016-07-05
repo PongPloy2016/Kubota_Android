@@ -51,7 +51,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="15dp"
                         android:textColor="@color/white"
-                        android:text="ร้าน Kubota ราชบุรี"
+                        android:text=""
                         android:singleLine="true"
                         android:ellipsize="end"/>
 

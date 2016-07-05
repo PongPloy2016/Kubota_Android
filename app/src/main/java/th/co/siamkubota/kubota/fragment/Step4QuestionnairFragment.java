@@ -40,6 +40,7 @@ public class Step4QuestionnairFragment extends Fragment implements
 
     private static final String KEY_TITLE = "title";
     private static final String KEY_ANSWERS = "answers";
+    private static final String KEY_QUESTIONS = "questions";
     private static final String KEY_EDITABLED = "editabled";
 
     private NoneScrollableViewPager pager;
@@ -57,7 +58,7 @@ public class Step4QuestionnairFragment extends Fragment implements
     private ArrayList<Question> datalist;
 
 
-    private String[] questions;
+    private String[] questions = getActivity().getResources().getStringArray(R.array.questions);
     private ArrayList<Boolean> answers;
 
     private FragmentManager mRetainedChildFragmentManager;
@@ -86,7 +87,7 @@ public class Step4QuestionnairFragment extends Fragment implements
 
 
     //////////////////////////////////////////////////////////////////// constructor
-
+/*
     public static Step4QuestionnairFragment newInstance(ArrayList<Boolean> answers, boolean editabled) {
         Step4QuestionnairFragment fragment = new Step4QuestionnairFragment();
         Bundle args = new Bundle();
@@ -103,6 +104,52 @@ public class Step4QuestionnairFragment extends Fragment implements
                 i++;
             }
             args.putBooleanArray(KEY_ANSWERS, booArr);
+        }
+
+        args.putBoolean(KEY_EDITABLED, editabled);
+        fragment.setArguments(args);
+        return fragment;
+    }
+    */
+
+    /*
+    public static Step4QuestionnairFragment newInstance(ArrayList<Question> questions, boolean editabled) {
+        Step4QuestionnairFragment fragment = new Step4QuestionnairFragment();
+        Bundle args = new Bundle();
+        //args.putString(KEY_TITLE, title);
+
+        if(questions != null && questions.size() > 0){
+
+        }
+
+
+        args.putParcelableArrayList(KEY_QUESTIONS, questions);
+        args.putBoolean(KEY_EDITABLED, editabled);
+        fragment.setArguments(args);
+        return fragment;
+    }*/
+
+    public static Step4QuestionnairFragment newInstance(ArrayList<Boolean> answers, boolean editabled) {
+        Step4QuestionnairFragment fragment = new Step4QuestionnairFragment();
+        Bundle args = new Bundle();
+
+       // static String[] questions = getActivity().getResources().getStringArray(R.array.questions)
+
+        ArrayList<Question> datalisttmp = new ArrayList<Question>();
+
+        for(int i = 0 ; i < 3 ; i++){
+            Question q = new Question(i ,"แบบสอบถามที่ " + (i+1));
+            //q.setDetail(questions[i]);
+
+
+            if(answers != null && answers.size() >= i + 1 && answers.get(i) != null){
+                q.setAnswer(answers.get(i));
+                q.setComplete(true);
+            }else {
+                q.setComplete(false);
+            }
+
+            datalisttmp.add(q);
         }
 
         args.putBoolean(KEY_EDITABLED, editabled);
@@ -137,7 +184,7 @@ public class Step4QuestionnairFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        questions = getActivity().getResources().getStringArray(R.array.questions);
+
 
         boolean[] booArr = null;
 
@@ -158,6 +205,7 @@ public class Step4QuestionnairFragment extends Fragment implements
                 }
             }
 
+            /*
             datalist = new ArrayList<Question>();
 
             for(int i = 0 ; i < 3 ; i++){
@@ -173,8 +221,9 @@ public class Step4QuestionnairFragment extends Fragment implements
                 }
 
                 datalist.add(q);
-            }
+            }*/
 
+            datalist = getArguments().getParcelableArrayList(KEY_QUESTIONS);
 
 
             if(Config.showDefault){
