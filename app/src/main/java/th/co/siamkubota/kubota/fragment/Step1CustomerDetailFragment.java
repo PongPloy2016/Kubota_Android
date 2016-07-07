@@ -49,6 +49,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -95,7 +96,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         RadioGroup.OnCheckedChangeListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener {
+        com.google.android.gms.location.LocationListener{
 
     private static final String TAG = Step1CustomerDetailFragment.class.getSimpleName();
 
@@ -195,7 +196,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             if(v == editTextTaskCode && hasFocus ){
                 EditText editText = (EditText) v;
 
-                //if(editText.getText().toString().length() == 14){
+/*
                     editText.setOnFocusChangeListener(null);
                     editText.removeTextChangedListener(editTextTaskCodeWatcher);
 
@@ -209,11 +210,28 @@ public class Step1CustomerDetailFragment extends Fragment implements
                     editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
 
                     editText.setOnFocusChangeListener(focusChangeListener);
-                    editText.addTextChangedListener(editTextTaskCodeWatcher);
-                //}
+                    editText.addTextChangedListener(editTextTaskCodeWatcher);*/
+
+
+                editText.setOnFocusChangeListener(null);
+                editText.removeTextChangedListener(editTextTaskCodeWatcher);
+
+                String text = editText.getText().toString();
+
+                if(text.length() == 0){
+                    editText.setText("OJ");
+                }
+
+                text = editText.getText().toString();
+                editText.setCursorVisible(true);
+                editText.setSelection(text.length());
+
+                editText.setOnFocusChangeListener(focusChangeListener);
+                editText.addTextChangedListener(editTextTaskCodeWatcher);
 
             //}else if(v == editTextTaskCode && !hasFocus){
             }else{
+                /*
                 EditText editText = (EditText) v;
 
                 int maxLength = 14;
@@ -231,6 +249,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
                 editText.setOnFocusChangeListener(focusChangeListener);
                 editText.addTextChangedListener(editTextTaskCodeWatcher);
+                */
             }
         }
     };
@@ -373,6 +392,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
     @Override
     public void onViewCreated(View v, Bundle savedInstanceState) {
 
+        v.findViewById(R.id.scroll).requestFocus();
+
         rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
         spinnerJobType = (CustomSpinner) v.findViewById(R.id.spinnerJobType);
         spinnerProduct = (CustomSpinner) v.findViewById(R.id.spinnerProduct);
@@ -424,7 +445,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             validateInput();
         }
 
-
+        spinnerJobType.requestFocus();
 
     }
 
@@ -662,11 +683,13 @@ public class Step1CustomerDetailFragment extends Fragment implements
             }*/
         }else if(v == addButton){
             if(customerAddressBlock.getVisibility() == View.GONE){
+                addButton.setVisibility(View.GONE);
                 customerAddressBlock.setVisibility(View.VISIBLE);
-                addButton.setText(getText(R.string.service_remove_address));
+                //addButton.setText(getText(R.string.service_remove_address));
+
             }else{
-                customerAddressBlock.setVisibility(View.GONE);
-                addButton.setText(getText(R.string.service_add_address));
+                //customerAddressBlock.setVisibility(View.GONE);
+                //addButton.setText(getText(R.string.service_add_address));
             }
         }
     }
@@ -879,25 +902,16 @@ public class Step1CustomerDetailFragment extends Fragment implements
         }
 
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            /*
-            EditText editText = (EditText) this.view;
-            String text = editText.getText().toString();
-
-            if(text.length()>= 10){
-
-                charSequence = "";
-            }*/
-            /*
-            editText.clearFocus();
-            editText.setCursorVisible(false);
-            EditText nextfocus = (EditText)  rootLayout.findViewById(editText.getNextFocusDownId());
-            nextfocus.requestFocus();
-            nextfocus.setCursorVisible(true);
-            */
+            charSequence = charSequence.toString().concat("-");
         }
 
         public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            switch (count){
+                case  4 :
+                case  9 :
+                    charSequence = charSequence.toString().concat("-");
+
+            }
         }
 
         public void afterTextChanged(Editable editable) {
@@ -916,12 +930,12 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 if(textlength == 10)
                 {
 
-                    editText.clearFocus();
+             /*       editText.clearFocus();
                     editText.setCursorVisible(false);
                     EditText nextfocus = (EditText)  rootLayout.findViewById(editText.getNextFocusDownId());
                     nextfocus.requestFocus();
                     nextfocus.setCursorVisible(true);
-
+*/
                     /*
                     editText.setOnFocusChangeListener(null);
                     String textFormatted = new StringBuilder(text).insert(0,"OJ").insert(4, "-").insert(9,"-").toString();
@@ -933,6 +947,32 @@ public class Step1CustomerDetailFragment extends Fragment implements
                     //nextfocus.setCursorVisible(true);
                     editText.setOnFocusChangeListener(focusChangeListener);*/
                 }
+
+
+                switch (textlength){
+                    case 0 :
+                        editText.setOnFocusChangeListener(null);
+                        //String textFormatted = new StringBuilder(text).insert(0,"OJ").insert(4, "-").insert(9,"-").toString();
+                        editText.setText(String.format("OJ"));
+                        editText.setSelection(editText.getText().length());
+                        editText.setOnFocusChangeListener(focusChangeListener);
+                        break;
+                    case 1 :
+                        editText.setOnFocusChangeListener(null);
+                        editText.setText(String.format("%sJ",text ));
+                        editText.setSelection(editText.getText().length());
+                        editText.setOnFocusChangeListener(focusChangeListener);
+                        break;
+                    case  4 :
+                    case  9 :
+                        editText.setOnFocusChangeListener(null);
+                        editText.setText(String.format("%s-",text ));
+                        editText.setSelection(editText.getText().length());
+                        editText.setOnFocusChangeListener(focusChangeListener);
+                        break;
+
+                }
+
             }
         }
 

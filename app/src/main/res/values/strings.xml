@@ -92,7 +92,7 @@
     <string name="service_setting_gps">การเข้าถึงตำแหน่ง GPS ของคุณถูกปิดอยู่ กรุณาเปิดการเข้าถึงตำแหน่ง</string>
     <string name="service_leave_confirm_message">คุณต้องการออกจากระบบหรือไม่</string>
     <string name="service_save_task">คุณต้องการบันทึกงานใหม่นี้หรือไม่</string>
-    <string name="service_add_address">+เพิ่มที่อยู่</string>
+    <string name="service_add_address">+เพิ่มที่อยู่ลูกค้า (กรณีมีการเปลี่ยนแปลง)</string>
     <string name="service_remove_address">-ลบที่อยู่</string>
 
     <!-- "Yout GPS seems to be disabled, do you want to enable it?"-->
