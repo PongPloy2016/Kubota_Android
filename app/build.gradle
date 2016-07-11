@@ -13,7 +13,7 @@ android {
         applicationId "th.co.siamkubota.kubota"
         minSdkVersion 18
         targetSdkVersion 23
-        versionCode 7
+        versionCode 8
         versionName "1.2"
 
         // Enabling multidex support.
