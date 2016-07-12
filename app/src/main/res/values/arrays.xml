@@ -13,9 +13,9 @@
         <item>1-5-12</item>
         <item>คุ้มอุ่นใจ</item>
         <item>Service Care</item>
-        <item>Service Day</item>
-        <item>งานเคลม</item>
-        <item>อื่นๆ</item>
+        <!--<item>Service Day</item>-->
+        <!--<item>งานเคลม</item>-->
+        <!--<item>อื่นๆ</item>-->
     </array>
 
     <array name="product">
