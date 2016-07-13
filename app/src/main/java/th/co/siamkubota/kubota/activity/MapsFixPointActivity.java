@@ -645,6 +645,14 @@ public class MapsFixPointActivity extends BaseActivity
 
                         showToastError(getString(R.string.map_address_not_found));
 
+
+                        mAddressOutput = "";
+                        mAddressRequested = false;
+
+                        //Toast.makeText(MapsDragableActivity.this, mAddressOutput, Toast.LENGTH_LONG).show();
+
+                        finishWithResult(mAddressOutput);
+
                         //Toast.makeText(MapsDragableActivity.this, "Address not found", Toast.LENGTH_LONG).show();
                     }
                 });

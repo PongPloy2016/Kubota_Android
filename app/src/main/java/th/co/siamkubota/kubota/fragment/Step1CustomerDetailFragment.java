@@ -131,6 +131,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private EditText editTextCarNumber;
     private EditText editTextEngineNumber;
     private EditText editTextWorkHours;
+    private EditText editTextGPSLocation;
     private EditText editTextServiceAddress;
     private EditText editTextCustomerAddress;
 
@@ -370,6 +371,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextCarNumber = (EditText) v.findViewById(R.id.editTextCarNumber);
         editTextEngineNumber = (EditText) v.findViewById(R.id.editTextEngineNumber);
         editTextWorkHours = (EditText) v.findViewById(R.id.editTextWorkHours);
+        editTextGPSLocation = (EditText) v.findViewById(R.id.editTextGPSLocation);
         editTextServiceAddress = (EditText) v.findViewById(R.id.editTextServiceAddress);
         editTextCustomerAddress = (EditText) v.findViewById(R.id.editTextCustomerAddress);
 
@@ -426,6 +428,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextCarNumber.addTextChangedListener(new GenericTextWatcher(editTextCarNumber));
         editTextEngineNumber.addTextChangedListener(new GenericTextWatcher(editTextEngineNumber));
         editTextWorkHours.addTextChangedListener(new GenericTextWatcher(editTextWorkHours));
+        editTextGPSLocation.addTextChangedListener(new GenericTextWatcher(editTextGPSLocation));
         editTextServiceAddress.addTextChangedListener(new GenericTextWatcher(editTextServiceAddress));
         editTextCustomerAddress.addTextChangedListener(new GenericTextWatcher(editTextCustomerAddress));
 
@@ -457,9 +460,15 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextServiceAddress.setText(taskInfo.getAddress());
         editTextCustomerAddress.setText(taskInfo.getCustomerAddress());
 
+        if(taskInfo.getAddressPosition()!=null){
+            String latlon = String.format("%f,%f",taskInfo.getAddressPosition().latitude,taskInfo.getAddressPosition().longitude);
+            editTextGPSLocation.setText(latlon);
+        }
+
+
         if(taskInfo != null && taskInfo.getCustomerAddress() != null && !taskInfo.getCustomerAddress().isEmpty()){
             customerAddressBlock.setVisibility(View.VISIBLE);
-            addButton.setText(getText(R.string.service_remove_address));
+            //addButton.setText(getText(R.string.service_remove_address));
         }else{
             customerAddressBlock.setVisibility(View.GONE);
             addButton.setText(getText(R.string.service_add_address));
@@ -668,6 +677,11 @@ public class Step1CustomerDetailFragment extends Fragment implements
                     editTextServiceAddress.setText(bundle.getString(MapsFixPointActivity.KEY_ADDRESS,""));
 
                     if(bundle.containsKey(MapsFixPointActivity.KEY_POSITION)){
+                        LatLng servicepoint = (LatLng) bundle.getParcelable(MapsFixPointActivity.KEY_POSITION);
+                        if(servicepoint != null){
+                            String latlon = String.format("%f,%f",servicepoint.latitude,servicepoint.longitude);
+                            editTextGPSLocation.setText(latlon);
+                        }
                         taskInfo.setAddressPosition((LatLng) bundle.getParcelable(MapsFixPointActivity.KEY_POSITION));
                     }
                 }
@@ -948,6 +962,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
                     v.setVisibility(View.VISIBLE);
                 }*/
                 View required = parent.findViewWithTag("*");
+                //View required = parent.findViewWithTag(text);
                 if (required != null) {
                     required.setVisibility(View.VISIBLE);
                 }
@@ -1015,17 +1030,6 @@ public class Step1CustomerDetailFragment extends Fragment implements
         } else {
             taskInfo.setCarModelOther("");
         }
-
-       /* if(taskInfo.getTaskCode() != null && !taskInfo.getTaskCode().equals(editTextTaskCode.getText().toString()) && !editTextTaskCode.getText().toString().isEmpty()){
-            long row = updateTask(taskInfo.getTaskCode(), editTextTaskCode.getText().toString() );
-
-            if(row < 0){
-                deleteTask(taskInfo.getTaskCode());
-            }
-
-        }else if(taskInfo.getTaskCode() == null && editTextTaskCode.getText() != null && !editTextTaskCode.getText().toString().isEmpty()){
-            long row = updateTask("undefine", editTextTaskCode.getText().toString() );
-        }*/
 
         if(editTextTaskCode.getText() != null){
             String text = editTextTaskCode.getText().toString();

@@ -248,14 +248,16 @@ public class ServiceFragment extends Fragment implements
         switch (step){
             case 1:
 
-                if(complete){
-                    backStep1.setBackgroundResource(R.drawable.rectangle_left_round_corner_orange);
-                    divStep1.setImageResource(R.drawable.edge_orage);
-                    step1Button.setImageResource(R.drawable.white_number01);
-                }else{
-                    backStep1.setBackgroundResource(R.drawable.rectangle_left_round_corner_white);
-                    divStep1.setImageResource(R.drawable.edge_white);
-                    step1Button.setImageResource(R.drawable.deepgrey_number01);
+                if(backStep1 != null && divStep1 != null && step1Button != null){
+                    if(complete){
+                        backStep1.setBackgroundResource(R.drawable.rectangle_left_round_corner_orange);
+                        divStep1.setImageResource(R.drawable.edge_orage);
+                        step1Button.setImageResource(R.drawable.white_number01);
+                    }else{
+                        backStep1.setBackgroundResource(R.drawable.rectangle_left_round_corner_white);
+                        divStep1.setImageResource(R.drawable.edge_white);
+                        step1Button.setImageResource(R.drawable.deepgrey_number01);
+                    }
                 }
 
                 break;

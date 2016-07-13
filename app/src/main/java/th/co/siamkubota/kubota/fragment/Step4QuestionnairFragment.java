@@ -85,7 +85,6 @@ public class Step4QuestionnairFragment extends Fragment implements
     }
 
 
-
     //////////////////////////////////////////////////////////////////// constructor
 
     public static Step4QuestionnairFragment newInstance(ArrayList<Boolean> answers, boolean editabled) {
@@ -96,7 +95,6 @@ public class Step4QuestionnairFragment extends Fragment implements
 
         for(int i = 0 ; i < 3 ; i++){
             Question q = new Question(i ,"แบบสอบถามที่ " + (i+1));
-            //q.setDetail(questions[i]);
 
             if(answers != null && answers.size() >= i + 1 && answers.get(i) != null){
                 q.setAnswer(answers.get(i));
@@ -156,6 +154,7 @@ public class Step4QuestionnairFragment extends Fragment implements
                     int i = 0;
                     for(Question q : datalist){
                         q.setDetail(questions[i]);
+                        i++;
                     }
                 }
 

@@ -63,6 +63,7 @@
     <string name="service_hint_machine_number">หมายเลขรถ</string>
     <string name="service_hint_engine_number">หมายเลขเครื่อง</string>
     <string name="service_hint_working_hours">ชั่วโมงการทำงาน</string>
+    <string name="service_hint_point_service">พิกัดที่อยู่จุดบริการ</string>
     <string name="service_hint_addrss_service">ที่อยู่จุดบริการ</string>
     <string name="service_hint_addrss_customer">ที่อยู่ลูกค้า</string>
 
