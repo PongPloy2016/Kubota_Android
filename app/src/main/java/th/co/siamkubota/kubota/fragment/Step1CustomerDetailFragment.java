@@ -1499,6 +1499,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             editTextCarNumber.setText("111111");
             editTextEngineNumber.setText("0844367");
             editTextWorkHours.setText("10");
+            editTextGPSLocation.setText("13.15466,100.15552");
             editTextServiceAddress.setText("บ้านหนองใหญ่ ต.ใหญ่มาก อ.ใหญ่สุดๆ");
             editTextCustomerAddress.setText("21/43 หมู่6 บ้านหนองใหญ่ ต.ใหญ่มาก อ.ใหญ่สุดๆ");
 

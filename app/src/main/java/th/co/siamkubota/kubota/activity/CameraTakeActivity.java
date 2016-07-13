@@ -1,17 +1,23 @@
 package th.co.siamkubota.kubota.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -65,6 +71,9 @@ public class CameraTakeActivity extends BaseActivity implements
     private Date takenDate;
     private Uri mImageUri;
 
+    public static final int PERMISSION_ALL = 20;
+    String[] PERMISSIONS = { Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +92,39 @@ public class CameraTakeActivity extends BaseActivity implements
         renderText = bundle.getString(CameraTakeActivity.KEY_RENDER_TEXT, null);
 
 
+       /* switch (command){
+            case 0:
+                requestCamera();
+                break;
+            case 1:
+                selectFile();
+                break;
+            default:
+                break;
+        }*/
+
+        if(!hasPermissions(this, PERMISSIONS)){
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+        }else{
+
+           /* switch (command){
+                case 0:
+                    requestCamera();
+                    break;
+                case 1:
+                    selectFile();
+                    break;
+                default:
+                    break;
+            }*/
+
+            chooser(command);
+        }
+
+
+    }
+
+    private void chooser(int command){
         switch (command){
             case 0:
                 requestCamera();
@@ -93,7 +135,6 @@ public class CameraTakeActivity extends BaseActivity implements
             default:
                 break;
         }
-
     }
 
 
@@ -322,4 +363,42 @@ public class CameraTakeActivity extends BaseActivity implements
     }
 
 
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_ALL: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    chooser(command);
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    // dialog
+                    finish();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 }

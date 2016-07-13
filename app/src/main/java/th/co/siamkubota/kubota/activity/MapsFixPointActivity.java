@@ -73,7 +73,7 @@ public class MapsFixPointActivity extends BaseActivity
         GoogleMap.OnInfoWindowClickListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener{
+        com.google.android.gms.location.LocationListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     public static final String KEY_ADDRESS = "ADDRESS";
@@ -122,6 +122,9 @@ public class MapsFixPointActivity extends BaseActivity
 
     private LatLng markerPosition;
 
+    public static final int PERMISSION_ALL = 40;
+    String[] PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,25 +132,16 @@ public class MapsFixPointActivity extends BaseActivity
         setContentView(R.layout.activity_maps_fix_point);
 
         Bundle bundle = getIntent().getExtras();
-        if(bundle != null && bundle.containsKey(KEY_POSITION)){
+        if (bundle != null && bundle.containsKey(KEY_POSITION)) {
             markerPosition = (LatLng) bundle.getParcelable(KEY_POSITION);
         }
 
 
         //tvLocInfo = (TextView)findViewById(R.id.locinfo);
-        SupportMapFragment myMapFragment = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map));
+        SupportMapFragment myMapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         myMapFragment.getMapAsync(this);
 
         mResultReceiver = new AddressResultReceiver(null);
-
-        /*
-        if(markerPosition == null){
-            if (!EnableGPSIfPossible()) {
-                getCurrentLocation();
-            }
-        }else{
-            pinPoint(markerPosition, false);
-        }*/
 
 
         markerClicked = false;
@@ -166,6 +160,9 @@ public class MapsFixPointActivity extends BaseActivity
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            //return;
+
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
             return;
         }
         myMap.setMyLocationEnabled(true);
@@ -176,11 +173,11 @@ public class MapsFixPointActivity extends BaseActivity
         //myMap.setOnMapLongClickListener(this);
         //myMap.setOnMarkerDragListener(this);
 
-        if(markerPosition == null){
+        if (markerPosition == null) {
             if (!EnableGPSIfPossible()) {
                 getCurrentLocation();
             }
-        }else{
+        } else {
             pinPoint(markerPosition, false);
         }
 
@@ -228,17 +225,16 @@ public class MapsFixPointActivity extends BaseActivity
 
     }
 
-    private void pinPoint(LatLng point, boolean showinfo){
+    private void pinPoint(LatLng point, boolean showinfo) {
 
         //tvLocInfo.setText("New marker added@" + point.toString());
 
-        if(myMap != null){
-            if(marker != null) {
+        if (myMap != null) {
+            if (marker != null) {
                 marker.remove();
             }
 
             markerClicked = false;
-
 
 
             // create marker
@@ -252,7 +248,7 @@ public class MapsFixPointActivity extends BaseActivity
 
             marker = myMap.addMarker(markerOptions);
 
-            if(showinfo){
+            if (showinfo) {
                 myMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
                 myMap.setOnInfoWindowClickListener(this);
                 marker.showInfoWindow();
@@ -365,8 +361,8 @@ public class MapsFixPointActivity extends BaseActivity
     private boolean checkPlayServices() {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
         int result = googleAPI.isGooglePlayServicesAvailable(MapsFixPointActivity.this);
-        if(result != ConnectionResult.SUCCESS) {
-            if(googleAPI.isUserResolvableError(result)) {
+        if (result != ConnectionResult.SUCCESS) {
+            if (googleAPI.isUserResolvableError(result)) {
                 googleAPI.getErrorDialog(MapsFixPointActivity.this, result,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             }
@@ -396,7 +392,7 @@ public class MapsFixPointActivity extends BaseActivity
             intent.putExtra(Constants.LOCATION_NAME_DATA_EXTRA, addressText);
         } else {
 
-            if(point == null){
+            if (point == null) {
                 if (mLastLocation == null) {
                     return;
                 }
@@ -408,7 +404,7 @@ public class MapsFixPointActivity extends BaseActivity
 
                 markerPosition = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
 
-            }else{
+            } else {
                 intent.putExtra(Constants.LOCATION_LATITUDE_DATA_EXTRA,
                         point.latitude);
                 intent.putExtra(Constants.LOCATION_LONGITUDE_DATA_EXTRA,
@@ -499,11 +495,11 @@ public class MapsFixPointActivity extends BaseActivity
             //updateMarker(location);
 
             double suitableMeter = 20.0; // adjust your need
-            if(location.getAccuracy() < suitableMeter ){
+            if (location.getAccuracy() < suitableMeter) {
                 mWaitLocation = false;
                 mLastLocation = location;
 
-                if(markerPosition == null){
+                if (markerPosition == null) {
                     pinPoint(new LatLng(location.getLatitude(), location.getLongitude()), true);
                 }
 
@@ -560,12 +556,13 @@ public class MapsFixPointActivity extends BaseActivity
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
             return;
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
 
-        if(mLastLocation != null && markerPosition == null){
+        if (mLastLocation != null && markerPosition == null) {
             pinPoint(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), true);
         }
 
@@ -590,11 +587,11 @@ public class MapsFixPointActivity extends BaseActivity
 
         //updateMarker(location);
         double suitableMeter = 20.0; // adjust your need
-        if(location.getAccuracy() < suitableMeter ){
+        if (location.getAccuracy() < suitableMeter) {
             mWaitLocation = false;
             mLastLocation = location;
 
-            if(markerPosition == null){
+            if (markerPosition == null) {
                 pinPoint(new LatLng(location.getLatitude(), location.getLongitude()), true);
             }
 
@@ -678,6 +675,7 @@ public class MapsFixPointActivity extends BaseActivity
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(
@@ -686,12 +684,12 @@ public class MapsFixPointActivity extends BaseActivity
 
 
     protected void stopLocationUpdates() {
-        if(mGoogleApiClient != null && mGoogleApiClient.isConnected()){
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(
                     mGoogleApiClient, this);
         }
 
-        if(locMgr != null){
+        if (locMgr != null) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
@@ -747,17 +745,14 @@ public class MapsFixPointActivity extends BaseActivity
         void execute();
     }
 
-    public class CancelCommand implements ICommand
-    {
+    public class CancelCommand implements ICommand {
         protected Activity m_activity;
 
-        public CancelCommand(Activity activity)
-        {
+        public CancelCommand(Activity activity) {
             m_activity = activity;
         }
 
-        public void execute()
-        {
+        public void execute() {
             alert.dismiss();
             //start asyncronous operation here
         }
@@ -765,6 +760,7 @@ public class MapsFixPointActivity extends BaseActivity
 
     public static class CommandWrapper implements DialogInterface.OnClickListener {
         private ICommand command;
+
         public CommandWrapper(ICommand command) {
             this.command = command;
         }
@@ -776,7 +772,7 @@ public class MapsFixPointActivity extends BaseActivity
         }
     }
 
-    private boolean checkLocationServiceEnable(Context mContext){
+    private boolean checkLocationServiceEnable(Context mContext) {
         boolean gps_enabled = LocationService.isGPSEnabled(mContext);
         boolean network_enabled = Network.isNetworkEnabled(mContext);
 
@@ -784,14 +780,12 @@ public class MapsFixPointActivity extends BaseActivity
 
     }
 
-    public class EnableGpsCommand extends CancelCommand
-    {
-        public EnableGpsCommand( Activity activity) {
+    public class EnableGpsCommand extends CancelCommand {
+        public EnableGpsCommand(Activity activity) {
             super(activity);
         }
 
-        public void execute()
-        {
+        public void execute() {
             // take the user to the phone gps settings and then start the asyncronous logic.
             m_activity.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
             waitGPSSetting = true;
@@ -800,11 +794,9 @@ public class MapsFixPointActivity extends BaseActivity
     }
 
 
-
-    private boolean EnableGPSIfPossible()
-    {
+    private boolean EnableGPSIfPossible() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
             //mAddressRequested = true;
             return true;
@@ -812,8 +804,7 @@ public class MapsFixPointActivity extends BaseActivity
         return false;
     }
 
-    private  void buildAlertMessageNoGps()
-    {
+    private void buildAlertMessageNoGps() {
         final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MapsFixPointActivity.this);
         builder.setMessage(getString(R.string.service_setting_gps))
                 .setCancelable(false)
@@ -824,7 +815,7 @@ public class MapsFixPointActivity extends BaseActivity
         alert.show();
     }
 
-    private void finishWithResult(String result){
+    private void finishWithResult(String result) {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_ADDRESS, result);
@@ -835,7 +826,7 @@ public class MapsFixPointActivity extends BaseActivity
         finish();
     }
 
-    private void showToastError(String message){
+    private void showToastError(String message) {
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.toast_data_complete_layout,
                 (ViewGroup) findViewById(R.id.toast_layout_root));
@@ -843,11 +834,75 @@ public class MapsFixPointActivity extends BaseActivity
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 250);
         toast.setDuration(Toast.LENGTH_SHORT);
 
-        TextView  textView = (TextView) layout.findViewById(R.id.textView1);
+        TextView textView = (TextView) layout.findViewById(R.id.textView1);
         textView.setText(message);
 
         toast.setView(layout);
         toast.show();
+    }
+
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_ALL: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    myMap.setMyLocationEnabled(true);
+
+                    //myMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+                    myMap.setOnMapClickListener(this);
+                    //myMap.setOnMapLongClickListener(this);
+                    //myMap.setOnMarkerDragListener(this);
+
+                    if(markerPosition == null){
+                        if (!EnableGPSIfPossible()) {
+                            getCurrentLocation();
+                        }
+                    }else{
+                        pinPoint(markerPosition, false);
+                    }
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    // dialog
+                    finish();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
 }
