@@ -206,43 +206,24 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onClick(View v) {
         if(v == okButton){
-            /*Intent intent = new Intent(ResultActivity.this, QuestionnairActivity.class);
-            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, loginData);
-            intent.putExtras(bundle);
-            startActivity(intent);*/
 
-            //finish();
+            navigateToUnfinishTaskList();
 
-            if(success){
+           /* if(success){
                 FinishDialogFragment alert = new FinishDialogFragment();
                 alert.setmListener(new FinishDialogFragment.onActionListener() {
                     @Override
                     public void onFinishDialog() {
-
-                        /*
-                        Intent intent = new Intent(ResultActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                        */
-
-                        getUnfinishTask();
+                        //getUnfinishTask();
+                        navigateToUnfinishTaskList();
                     }
                 });
                 alert.show(getSupportFragmentManager(), "finish");
 
             }else{
-                /*
-                Intent intent = new Intent(ResultActivity.this, ServiceActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA,loginData);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                finish();
-                */
-                getUnfinishTask();
-            }
+                //getUnfinishTask();
+                navigateToUnfinishTaskList();
+            }*/
 
         }
     }
@@ -382,7 +363,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     //Ui.showAlertError(ResultActivity.this, message);
                     showResultFail();
                     alertLoading.dismiss();
-                    saveTask(taskSave, loginData);
+                    saveTask(taskSave, null);
                     //showToastError(message);
                 }
 
@@ -394,7 +375,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                 handler.removeCallbacks(runnable);
                 showResultFail();
                 alertLoading.dismiss();
-                saveTask(taskSave, loginData);
+                saveTask(taskSave, null);
                 showToastError(t.getMessage());
             }
         });
@@ -463,7 +444,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     }
 
                     showResultFail();
-                    saveTask(taskSave, loginData);
+                    saveTask(taskSave, null);
                     showToastError(message);
 
                 }
@@ -476,7 +457,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                 handler.removeCallbacks(runnable);
                 alertLoading.dismiss();
                 showResultFail();
-                saveTask(taskSave, loginData);
+                saveTask(taskSave, null);
                 showToastError(t.getMessage());
             }
         });
@@ -536,7 +517,8 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
         //check internet and login data
 
-        if( Network.isNetworkAvailable(this) && (loginData == null || (from != null && !from.isEmpty()))){
+        //if( Network.isNetworkAvailable(this) && (loginData == null || (from != null && !from.isEmpty()))){
+        if( Network.isNetworkAvailable(this) && (loginData == null )){
             //go to login page
 
             Intent intent = new Intent(ResultActivity.this, LoginActivity.class);
@@ -572,8 +554,10 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         }else{
 
             //save data offline
-            saveTask(taskSave, loginData);
-            getUnfinishTask();
+            //saveTask(taskSave, loginData);
+            saveTask(taskSave, null);
+            //getUnfinishTask();
+            navigateToUnfinishTaskList();
 
         }
 
@@ -627,11 +611,21 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
-        }else{
+        }/*else{
             Intent intent = new Intent(ResultActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
-        }
+        }*/
+    }
+
+    private void navigateToUnfinishTaskList(){
+
+        Intent intent = new Intent(ResultActivity.this, ServiceActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(LoginActivity.KEY_LOGIN_DATA,loginData);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        finish();
     }
 
     @Override

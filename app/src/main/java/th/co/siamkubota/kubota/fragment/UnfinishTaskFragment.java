@@ -107,6 +107,7 @@ public class UnfinishTaskFragment extends Fragment implements
         View rootView = inflater.inflate(R.layout.fragment_unfinish_task, container, false);
 
         listView = (ListView) rootView.findViewById(R.id.listView);
+        startNewTaskButton = (Button) rootView.findViewById(R.id.buttonWhite);
 
         getOfflineTask();
 
@@ -158,14 +159,14 @@ public class UnfinishTaskFragment extends Fragment implements
             listFooterView.setLayoutParams(paramsfooter);
 
 
-            startNewTaskButton = (Button) View.inflate(getActivity(),
-                    R.layout.button_white, null);
+           /* startNewTaskButton = (Button) View.inflate(getActivity(),
+                    R.layout.button_white, null);*/
             startNewTaskButton.setOnClickListener(this);
 
-            listFooterView.addView(startNewTaskButton);
+            //listFooterView.addView(startNewTaskButton);
 
             //listView.addHeaderView(listHeaderView);
-            listView.addFooterView(listFooterView);
+            //listView.addFooterView(listFooterView);
         //}
 
         return rootView;
@@ -287,29 +288,31 @@ public class UnfinishTaskFragment extends Fragment implements
 
         if(datalist.size() > 0){
             setAdapter();
-        }else{
+        }/*else{
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
             getActivity().finish();
-        }
+        }*/
     }
 
-    private void setAdapter(){
-        if(adapter == null){
+    private void setAdapter() {
+        if (adapter == null) {
             adapter = new UnfinishTaskSectionAdapter(getActivity(), R.layout.item_unfinish_header);
         }
 
-        if(unsendTaskAdapter == null){
-            unsendTaskAdapter = new UnsendTaskAdapter(getActivity(),unsenddatalist );
+        adapter.clearSection();
+
+        if (unsendTaskAdapter == null) {
+            unsendTaskAdapter = new UnsendTaskAdapter(getActivity(), unsenddatalist);
             unsendTaskAdapter.setOnClickListener(this);
-        }else{
+        } else {
             unsendTaskAdapter.setData(unsenddatalist);
         }
 
-        if(unfinishTaskAdapter == null){
-            unfinishTaskAdapter = new UnfinishTaskAdapter(getActivity(),unfinishdatalist );
-           unfinishTaskAdapter.setOnClickListener(this);
-        }else{
+        if (unfinishTaskAdapter == null) {
+            unfinishTaskAdapter = new UnfinishTaskAdapter(getActivity(), unfinishdatalist);
+            unfinishTaskAdapter.setOnClickListener(this);
+        } else {
             unfinishTaskAdapter.setData(unfinishdatalist);
         }
 
@@ -318,7 +321,7 @@ public class UnfinishTaskFragment extends Fragment implements
             adapter.addSection(getString(R.string.unfinish_task_unsend), unsendTaskAdapter);
         }
 
-        if(unfinishdatalist.size() > 0){
+        if(unfinishdatalist.size() > 0) {
             adapter.addSection(getString(R.string.unfinish_task), unfinishTaskAdapter);
         }
 

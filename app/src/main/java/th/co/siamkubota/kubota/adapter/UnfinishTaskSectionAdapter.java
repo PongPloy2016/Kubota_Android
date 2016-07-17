@@ -28,6 +28,12 @@ public class UnfinishTaskSectionAdapter extends BaseAdapter {
         this.sections.put(section, adapter);
     }
 
+    public void clearSection() {
+        this.headers.clear();
+        this.sections.clear();
+        notifyDataSetChanged();
+    }
+
     public Object getItem(int position) {
         for(Object section : this.sections.keySet()) {
             Adapter adapter = sections.get(section);

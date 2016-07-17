@@ -81,9 +81,9 @@ public class ServiceActivity extends BaseActivity implements
 
             Bundle bundle = getIntent().getExtras();
 
-            if(bundle.containsKey(ServiceActivity.KEY_MODE) && bundle.getString(ServiceActivity.KEY_MODE).equals("offline")){
-                displayServiceFragment(null);
-            }else{
+//            if(bundle.containsKey(ServiceActivity.KEY_MODE) && bundle.getString(ServiceActivity.KEY_MODE).equals("offline")){
+//                displayServiceFragment(null);
+//            }else{
 
                 if(bundle.containsKey(LoginActivity.KEY_LOGIN_DATA)){
                     loginData = bundle.getParcelable(LoginActivity.KEY_LOGIN_DATA);
@@ -96,7 +96,17 @@ public class ServiceActivity extends BaseActivity implements
 
                 getUnfinishTask();
 
-                if(unfinishTasks != null && unfinishTasks.size() > 0){
+                ft = getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+                //ft.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down);
+                UnfinishTaskFragment unfinishTaskFragment = UnfinishTaskFragment.newInstance(unfinishTasks);
+                unfinishTaskFragment.setmListener(this);
+                ft.replace(R.id.content, unfinishTaskFragment, "unfinishTaskFragment");
+                //ft.addToBackStack(null);
+                // Start the animated transition.
+                ft.commit();
+
+               /* if(unfinishTasks != null && unfinishTasks.size() > 0){
 
                     ft = getSupportFragmentManager().beginTransaction();
                     ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
@@ -110,9 +120,9 @@ public class ServiceActivity extends BaseActivity implements
                 }else{
 
                     displayServiceFragment(null);
-                }
+                }*/
 
-            }
+           // }
 
         }
 
@@ -256,7 +266,8 @@ public class ServiceActivity extends BaseActivity implements
         ServiceFragment newFragment;
 
         if(task != null){
-            newFragment = ServiceFragment.newInstance(task.getLoginData(), task.getTask());
+            //newFragment = ServiceFragment.newInstance(task.getLoginData(), task.getTask());
+            newFragment = ServiceFragment.newInstance(loginData, task.getTask());
         }else{
             newFragment = ServiceFragment.newInstance(loginData, null);
         }

@@ -164,22 +164,24 @@ public class MapsFixPointActivity extends BaseActivity
 
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
             return;
-        }
-        myMap.setMyLocationEnabled(true);
+        }else{
+            myMap.setMyLocationEnabled(true);
 
-        //myMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            //myMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-        myMap.setOnMapClickListener(this);
-        //myMap.setOnMapLongClickListener(this);
-        //myMap.setOnMarkerDragListener(this);
+            myMap.setOnMapClickListener(this);
+            //myMap.setOnMapLongClickListener(this);
+            //myMap.setOnMarkerDragListener(this);
 
-        if (markerPosition == null) {
-            if (!EnableGPSIfPossible()) {
-                getCurrentLocation();
+            if (markerPosition == null) {
+                if (!EnableGPSIfPossible()) {
+                    getCurrentLocation();
+                }
+            } else {
+                pinPoint(markerPosition, false);
             }
-        } else {
-            pinPoint(markerPosition, false);
         }
+
 
     }
 
@@ -203,6 +205,13 @@ public class MapsFixPointActivity extends BaseActivity
             startLocationUpdates();
         }
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        stopLocationUpdates();
     }
 
     @Override
@@ -338,7 +347,7 @@ public class MapsFixPointActivity extends BaseActivity
     public void onStart() {
         super.onStart();
 
-        if (!EnableGPSIfPossible()) {
+        if (markerPosition == null && !EnableGPSIfPossible()) {
             /*if (mLastLocation != null) {
                 startIntentService();
             } else {
@@ -501,8 +510,12 @@ public class MapsFixPointActivity extends BaseActivity
 
                 if (markerPosition == null) {
                     pinPoint(new LatLng(location.getLatitude(), location.getLongitude()), true);
+                }else{
+                    pinPoint(new LatLng(markerPosition.latitude, markerPosition.longitude), false);
                 }
 
+            }else{
+                Log.d("wait ## ", "wait for new position");
             }
 
         }
@@ -524,7 +537,7 @@ public class MapsFixPointActivity extends BaseActivity
 
         @Override
         public void onProviderEnabled(String provider) {
-
+            getCurrentLocation();
         }
 
         @Override
@@ -564,6 +577,12 @@ public class MapsFixPointActivity extends BaseActivity
 
         if (mLastLocation != null && markerPosition == null) {
             pinPoint(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), true);
+        }else if(markerPosition != null){
+            pinPoint(new LatLng(markerPosition.latitude,markerPosition.longitude), false);
+        }else{
+            if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
+                startLocationUpdates();
+            }
         }
 
     }
@@ -593,7 +612,10 @@ public class MapsFixPointActivity extends BaseActivity
 
             if (markerPosition == null) {
                 pinPoint(new LatLng(location.getLatitude(), location.getLongitude()), true);
+            }else{
+                pinPoint(new LatLng(markerPosition.latitude, markerPosition.longitude), false);
             }
+
 
         }
 
@@ -678,12 +700,18 @@ public class MapsFixPointActivity extends BaseActivity
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
             return;
         }
+        mRequestingLocationUpdates = true;
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
     }
 
 
     protected void stopLocationUpdates() {
+
+        if(!mRequestingLocationUpdates){
+            return;
+        }
+
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(
                     mGoogleApiClient, this);

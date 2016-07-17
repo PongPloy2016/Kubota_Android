@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     android:background="@color/background"
     tools:context="th.co.siamkubota.kubota.fragment.UnfinishTaskFragment">
 
@@ -9,7 +10,8 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:divider="@color/transparent"
         android:headerDividersEnabled="false"
         android:footerDividersEnabled="false"
@@ -18,5 +20,17 @@
         android:paddingBottom="0dp"
         android:listSelector="@android:color/transparent">
     </ListView>
+    <Button
+        android:id="@+id/buttonWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textSize="20dp"
+        android:text="@string/unfinish_task_button_start_new_job"
+        android:textColor="@color/button_white_text_selector"
+        android:background="@drawable/button_white_border_selector"></Button>
 
 </LinearLayout>
