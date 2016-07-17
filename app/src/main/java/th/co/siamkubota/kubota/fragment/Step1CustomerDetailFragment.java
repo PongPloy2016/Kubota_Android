@@ -610,6 +610,10 @@ public class Step1CustomerDetailFragment extends Fragment implements
         stopLocationUpdates();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
     /**
      * This interface must be implemented by activities that contain this

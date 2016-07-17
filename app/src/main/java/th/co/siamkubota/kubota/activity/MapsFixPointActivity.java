@@ -152,36 +152,26 @@ public class MapsFixPointActivity extends BaseActivity
     public void onMapReady(GoogleMap googleMap) {
         myMap = googleMap;
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            //return;
+        if (markerPosition == null) {
 
-            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
-            return;
-        }else{
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+                return;
+            }
             myMap.setMyLocationEnabled(true);
 
             //myMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
             myMap.setOnMapClickListener(this);
-            //myMap.setOnMapLongClickListener(this);
-            //myMap.setOnMarkerDragListener(this);
 
-            if (markerPosition == null) {
-                if (!EnableGPSIfPossible()) {
-                    getCurrentLocation();
-                }
-            } else {
-                pinPoint(markerPosition, false);
+            if (!EnableGPSIfPossible()) {
+                getCurrentLocation();
             }
+        } else {
+            myMap.setOnMapClickListener(this);
+            pinPoint(markerPosition, false);
         }
-
 
     }
 
@@ -197,11 +187,11 @@ public class MapsFixPointActivity extends BaseActivity
                     Toast.LENGTH_LONG).show();
         }*/
 
-        if (checkLocationServiceEnable(MapsFixPointActivity.this)) {
+        if (markerPosition == null && checkLocationServiceEnable(MapsFixPointActivity.this)) {
             getCurrentLocation();
         }
 
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
+        if (markerPosition == null && mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
             startLocationUpdates();
         }
 
@@ -446,21 +436,19 @@ public class MapsFixPointActivity extends BaseActivity
         } else {
             locMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             if (ActivityCompat.checkSelfPermission(MapsFixPointActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MapsFixPointActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
+
+                //return;
+                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
                 return;
-            }
-            Criteria criteria = new Criteria();
-            criteria.setAccuracy(Criteria.ACCURACY_FINE);
-            String provider = locMgr.getBestProvider(criteria, true);
-            locMgr.requestLocationUpdates(provider, 0, 0, locLsnr);
+            }else{
+                Criteria criteria = new Criteria();
+                criteria.setAccuracy(Criteria.ACCURACY_FINE);
+                String provider = locMgr.getBestProvider(criteria, true);
+                locMgr.requestLocationUpdates(provider, 0, 0, locLsnr);
 //            locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 //                    0, 0, locLsnr);
+            }
+
         }
 
     }
@@ -562,13 +550,7 @@ public class MapsFixPointActivity extends BaseActivity
         // Gets the best and most recent location currently available,
         // which may be null in rare cases when a location is not available.
         if (ActivityCompat.checkSelfPermission(MapsFixPointActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MapsFixPointActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
             return;
         }
@@ -690,13 +672,7 @@ public class MapsFixPointActivity extends BaseActivity
 
     protected void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(MapsFixPointActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MapsFixPointActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
             return;
         }
@@ -719,13 +695,7 @@ public class MapsFixPointActivity extends BaseActivity
 
         if (locMgr != null) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
+                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
                 return;
             }
             locMgr.removeUpdates(locLsnr);
@@ -893,13 +863,7 @@ public class MapsFixPointActivity extends BaseActivity
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
+                        ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
                         return;
                     }
                     myMap.setMyLocationEnabled(true);
@@ -923,7 +887,7 @@ public class MapsFixPointActivity extends BaseActivity
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     // dialog
-                    finish();
+                    //finish();
                 }
                 return;
             }
