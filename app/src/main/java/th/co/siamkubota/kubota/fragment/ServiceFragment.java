@@ -89,7 +89,7 @@ public class ServiceFragment extends Fragment implements
     private Task task;
     private TaskDataSource dataSource;
 
-    private boolean newTask = false;
+    //private boolean newTask = false;
 
     private FragmentManager mRetainedChildFragmentManager;
 
@@ -136,7 +136,7 @@ public class ServiceFragment extends Fragment implements
                     task.getTaskInfo().setshopID(loginData.getUserId());
                 }
 
-                newTask = true;
+                //newTask = true;
 
             }
 
@@ -144,6 +144,9 @@ public class ServiceFragment extends Fragment implements
             mRetainedChildFragmentManager = childFragmentManager();
             adapter = new ViewPagerAdapter(getActivity(), mRetainedChildFragmentManager, mTitle,
                     Numboftabs, ServiceFragment.this, task);
+        }else{
+
+
         }
 
     }
@@ -162,9 +165,15 @@ public class ServiceFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-       if(savedInstanceState == null){
+        if (savedInstanceState == null) {
+            // Fragment ถูกสร้างขึ้นมาครั้งแรก
+        } else {
+            // Fragment ถูก Restore ขึ้นมา
+            task = savedInstanceState.getParcelable("task");
+            loginData = savedInstanceState.getParcelable("loginData");
+        }
 
-       }
+
     }
 
     @Override
@@ -173,6 +182,9 @@ public class ServiceFragment extends Fragment implements
 
         task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
         saveTask(task, loginData);
+
+        outState.putParcelable("task", task);
+        outState.putParcelable("loginData", loginData);
     }
 
     @Override
