@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,6 +91,8 @@ public class ServiceFragment extends Fragment implements
 
     private boolean newTask = false;
 
+    private FragmentManager mRetainedChildFragmentManager;
+
 
     public void setmListener(OnFragmentInteractionListener mListener) {
         this.mListener = mListener;
@@ -137,12 +140,22 @@ public class ServiceFragment extends Fragment implements
 
             }
 
-            FragmentManager cfManager = getChildFragmentManager();
-            adapter = new ViewPagerAdapter(getActivity(), cfManager, mTitle,
+            //FragmentManager cfManager = getChildFragmentManager();
+            mRetainedChildFragmentManager = childFragmentManager();
+            adapter = new ViewPagerAdapter(getActivity(), mRetainedChildFragmentManager, mTitle,
                     Numboftabs, ServiceFragment.this, task);
         }
 
     }
+
+
+    private FragmentManager childFragmentManager() {//!!!Use this instead of getFragmentManager, support library from 20+, has a bug that doesn't retain instance of nested fragments!!!!
+        if(mRetainedChildFragmentManager == null) {
+            mRetainedChildFragmentManager = getChildFragmentManager();
+        }
+        return mRetainedChildFragmentManager;
+    }
+
 
 
     @Override
@@ -353,12 +366,19 @@ public class ServiceFragment extends Fragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+        if (mRetainedChildFragmentManager != null) {
+            //restore the last retained child fragment manager to the new
+            //created fragment
+            try {
+                Field childFMField = Fragment.class.getDeclaredField("mChildFragmentManager");
+                childFMField.setAccessible(true);
+                childFMField.set(this, mRetainedChildFragmentManager);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

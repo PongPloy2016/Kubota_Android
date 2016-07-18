@@ -202,7 +202,8 @@ public class CameraTakeActivity extends BaseActivity implements
         Bitmap bitmap;
         try
         {
-            bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri);
+            //bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri);
+            bitmap = ImageFile.decodeSampledBitmapFromUri(cr, mImageUri, 960, 960);
             //image = ImageFile.ImageResize(bitmap, 640, ImageFile.getImageOrientation(mImageUri.getPath()));
             image = ImageFile.ImageResizeFixWidth(bitmap, 960, ImageFile.getImageOrientation(mImageUri.getPath()));
             //imageView.setImageBitmap(image);
@@ -210,6 +211,12 @@ public class CameraTakeActivity extends BaseActivity implements
             finishWithResult(image);
 
             bitmap.recycle();
+        }
+        catch (OutOfMemoryError err){
+            Toast.makeText(this, "Out of memory error : " + err.getCause(), Toast.LENGTH_LONG).show();
+            Log.d(TAG, "Failed to load", err.getCause());
+            err.printStackTrace();
+            finish();
         }
         catch (Exception e)
         {

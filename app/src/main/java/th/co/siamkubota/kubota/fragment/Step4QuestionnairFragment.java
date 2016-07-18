@@ -139,6 +139,8 @@ public class Step4QuestionnairFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //setRetainInstance(true);
+
         questions =  getActivity().getResources().getStringArray(R.array.questions);
 
 
@@ -159,6 +161,9 @@ public class Step4QuestionnairFragment extends Fragment implements
                 }
 
             }
+
+            FragmentManager cfManager = getChildFragmentManager();
+            adapter = new QuestionPagerAdapter(getActivity(), cfManager, datalist, Step4QuestionnairFragment.this, editabled);
 
 
             if(Config.showDefault){
@@ -215,8 +220,7 @@ public class Step4QuestionnairFragment extends Fragment implements
 
         mListener = (Step4QuestionnairFragment.OnFragmentInteractionListener) getParentFragment();
 
-        FragmentManager cfManager = getChildFragmentManager();
-        adapter = new QuestionPagerAdapter(getActivity(), cfManager, datalist, Step4QuestionnairFragment.this, editabled);
+
         pager.setAdapter(adapter);
         pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
         pager.setOffscreenPageLimit(3);

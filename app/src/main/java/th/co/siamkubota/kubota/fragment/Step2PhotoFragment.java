@@ -144,6 +144,8 @@ PhotoPageFragment.OnFragmentInteractionListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //setRetainInstance(true);
+
         if(savedInstanceState == null ){
             if (getArguments() != null) {
                 //title = getArguments().getString(ARG_PARAM_TITLE);

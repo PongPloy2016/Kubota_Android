@@ -129,6 +129,10 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
         if(bundle.containsKey(ResultActivity.KEY_LOGIN_DATA)){
             loginData = bundle.getParcelable(ResultActivity.KEY_LOGIN_DATA);
+
+            if(loginData != null){
+                task.getTaskInfo().setshopID(loginData.getUserId());
+            }
         }
 
         if(bundle.containsKey("shopName")){

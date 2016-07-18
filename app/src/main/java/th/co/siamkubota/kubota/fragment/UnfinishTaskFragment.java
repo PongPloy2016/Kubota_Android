@@ -26,6 +26,7 @@ import io.swagger.client.model.Task;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.activity.MainActivity;
 import th.co.siamkubota.kubota.activity.ResultActivity;
+import th.co.siamkubota.kubota.activity.ServiceActivity;
 import th.co.siamkubota.kubota.adapter.UnfinishTaskAdapter;
 import th.co.siamkubota.kubota.adapter.UnfinishTaskSectionAdapter;
 import th.co.siamkubota.kubota.adapter.UnsendTaskAdapter;
@@ -247,7 +248,8 @@ public class UnfinishTaskFragment extends Fragment implements
                 Intent intent = new Intent(getActivity(), ResultActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(ResultActivity.KEY_TASK, task.getTask());
-                bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, task.getLoginData());
+                //bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, task.getLoginData());
+                bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA,((ServiceActivity) mListener).getLoginData());
                 bundle.putString(ResultActivity.KEY_FROM, ResultActivity.class.getSimpleName());
 
                 intent.putExtras(bundle);

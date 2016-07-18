@@ -65,6 +65,10 @@ public class ServiceActivity extends BaseActivity implements
     FragmentTransaction ft;
 
 
+    public LoginData getLoginData() {
+        return loginData;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -289,4 +293,6 @@ public class ServiceActivity extends BaseActivity implements
     public void onSaveTask(OfflineTask task) {
         buildAlertSaveTask( task);
     }
+
+
 }

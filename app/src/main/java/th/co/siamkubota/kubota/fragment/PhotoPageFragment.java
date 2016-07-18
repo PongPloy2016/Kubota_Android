@@ -276,6 +276,11 @@ public class PhotoPageFragment extends Fragment implements View.OnClickListener{
             }
 
             this.data.setServerPath(null);
+
+            if(this.data.getPath() != null && !this.data.getPath().isEmpty()){
+                ImageFile.deleteFile(this.data.getPath());
+            }
+
             this.data.setPath(imagePath);
             this.data.setDate(Converter.StringToDate(dateInfo, "yyyy-MM-dd HH:mm:ss"));
 
