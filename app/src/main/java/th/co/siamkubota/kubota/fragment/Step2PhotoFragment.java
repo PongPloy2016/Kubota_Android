@@ -51,6 +51,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
     private static final String KEY_TITLE = "title";
     private static final String KEY_IMAGES = "images";
+    private static final String KEY_PHOTOS = "photos";
     private static final String KEY_EDITABLED = "editabled";
 
     private ViewPager pager;
@@ -125,8 +126,10 @@ PhotoPageFragment.OnFragmentInteractionListener{
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        //outState.putParcelableArrayList(KEY_IMAGES, images);
-        //mListener.onFragmentSaveInstanceState(this);
+        outState.putParcelableArrayList(KEY_IMAGES, images);
+        outState.putParcelableArrayList(KEY_PHOTOS, photos);
+        outState.putBoolean(KEY_EDITABLED, editabled);
+
     }
 
     @Override
@@ -134,10 +137,17 @@ PhotoPageFragment.OnFragmentInteractionListener{
         super.onActivityCreated(savedInstanceState);
 
         if(savedInstanceState != null){
-            //images = savedInstanceState.getParcelableArrayList(KEY_IMAGES);
+            images = savedInstanceState.getParcelableArrayList(KEY_IMAGES);
+            photos = savedInstanceState.getParcelableArrayList(KEY_PHOTOS);
+            editabled = savedInstanceState.getBoolean(KEY_EDITABLED);
 
+            mListener = (Step2PhotoFragment.OnFragmentInteractionListener) getParentFragment();
+
+            FragmentManager cfManager = getChildFragmentManager();
+            adapter = new PhotoPagerAdapter(getActivity(), cfManager, photos , Step2PhotoFragment.this, editabled);
+            pageChangeListener = new CustomOnPageChangeListener();
         }
-        mListener = (Step2PhotoFragment.OnFragmentInteractionListener) getParentFragment();
+
     }
 
     @Override

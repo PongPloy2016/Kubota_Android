@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -146,7 +147,9 @@ public class ServiceFragment extends Fragment implements
                     Numboftabs, ServiceFragment.this, task);
         }else{
 
-
+            mRetainedChildFragmentManager = childFragmentManager();
+            adapter = new ViewPagerAdapter(getActivity(), mRetainedChildFragmentManager, mTitle,
+                    Numboftabs, ServiceFragment.this, task);
         }
 
     }
@@ -171,6 +174,13 @@ public class ServiceFragment extends Fragment implements
             // Fragment ถูก Restore ขึ้นมา
             task = savedInstanceState.getParcelable("task");
             loginData = savedInstanceState.getParcelable("loginData");
+
+            mTitle = getActivity().getResources().getStringArray(R.array.stage_title);
+            Numboftabs = mTitle.length;
+
+            mRetainedChildFragmentManager = childFragmentManager();
+            adapter = new ViewPagerAdapter(getActivity(), mRetainedChildFragmentManager, mTitle,
+                    Numboftabs, ServiceFragment.this, task);
         }
 
 
@@ -513,9 +523,17 @@ public class ServiceFragment extends Fragment implements
     @Override
     public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data) {
 
-       /* if(complete){
-            showToastComplete();
-        }*/
+       if(adapter == null){
+            Log.e("NULL ###", "adapter");
+        }
+
+        if(pageChangeListener == null){
+            Log.e("NULL ###", "pageChangeListener");
+        }
+
+        if(adapter == null || pageChangeListener == null){
+            return;
+        }
 
         if(fragment instanceof Step1CustomerDetailFragment){
 
