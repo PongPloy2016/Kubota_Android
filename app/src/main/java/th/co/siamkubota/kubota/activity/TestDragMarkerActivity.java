@@ -29,7 +29,7 @@ public class TestDragMarkerActivity extends FragmentActivity implements OnMapLon
         super.onCreate(saveInstance);
         setContentView(R.layout.activity_maps);
 
-        map = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+       //map = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
         map.setOnMarkerDragListener(this);
         map.setOnMapLongClickListener(this);
         map.setOnMapClickListener(this);

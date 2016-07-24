@@ -222,6 +222,7 @@ public class CameraTakeActivity extends BaseActivity implements
         {
             Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "Failed to load", e);
+            finish();
         }
     }
 

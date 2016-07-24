@@ -22,9 +22,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+//import com.google.android.gms.analytics.GoogleAnalytics;
+//import com.google.android.gms.analytics.Tracker;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 import th.co.siamkubota.kubota.R;
@@ -39,7 +42,11 @@ public class AppController extends MultiDexApplication {
 
     private AppController app;
     public String token;
-
+  /*  public enum TrackerName {
+        APP_TRACKER // Tracker used only in this app.
+    }
+    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+*/
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -116,15 +123,13 @@ public class AppController extends MultiDexApplication {
         }
     }
 
-
-   /* // broadcast a custom intent.
-    public void broadcastUnreadIntent(int unread){
-        Intent intent = new Intent();
-        intent.putExtra("unread", unread);
-        intent.setAction("com.mimo.greenspot.NEWS_UNREAD_INTENT");
-        sendBroadcast(intent);
+  /*  public synchronized Tracker getTracker(TrackerName trackerId) {
+        if (!mTrackers.containsKey(trackerId)) {
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            Tracker t=analytics.newTracker(R.xml.app_tracker);
+            mTrackers.put(trackerId, t);
+        }
+        return mTrackers.get(trackerId);
     }*/
-
-
 
 }

@@ -147,6 +147,12 @@ public class ServiceFragment extends Fragment implements
                     Numboftabs, ServiceFragment.this, task);
         }else{
 
+            task = savedInstanceState.getParcelable("task");
+            loginData = savedInstanceState.getParcelable("loginData");
+
+            mTitle = getActivity().getResources().getStringArray(R.array.stage_title);
+            Numboftabs = mTitle.length;
+
             mRetainedChildFragmentManager = childFragmentManager();
             adapter = new ViewPagerAdapter(getActivity(), mRetainedChildFragmentManager, mTitle,
                     Numboftabs, ServiceFragment.this, task);

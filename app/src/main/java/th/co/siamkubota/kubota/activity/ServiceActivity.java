@@ -23,7 +23,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
+//import com.google.android.gms.analytics.GoogleAnalytics;
+//import com.google.android.gms.analytics.Tracker;
+//import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +76,8 @@ public class ServiceActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service);
         //this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
+
+        //setupGoogleAnalytics();
 
         if (savedInstanceState == null) {
 
@@ -293,6 +297,13 @@ public class ServiceActivity extends BaseActivity implements
     public void onSaveTask(OfflineTask task) {
         buildAlertSaveTask( task);
     }
+
+   /* private void setupGoogleAnalytics() {
+        AppController app = (AppController) getApplication();
+        Tracker myTracker = app.getTracker(AppController.TrackerName.APP_TRACKER);
+        myTracker.enableAutoActivityTracking(true);
+        GoogleAnalytics.getInstance(this).enableAutoActivityReports(app);
+    }*/
 
 
 }
