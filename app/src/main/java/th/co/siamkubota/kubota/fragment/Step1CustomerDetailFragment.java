@@ -869,7 +869,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
                 String text = editText.getText().toString();
 
-                checkRequire(text);
+                checkRequire(editText);
             }
         }
 
@@ -936,15 +936,17 @@ public class Step1CustomerDetailFragment extends Fragment implements
             String text = editable.toString();
             int textlength = editable.toString().length();
             //save the value for the given tag :
-            checkRequire(text);
 
+            EditText editText = (EditText) this.view ;
+
+            checkRequire(editText);
             validateInput();
 
 
         }
 
-        public void checkRequire(String text){
-            if (!text.isEmpty() && view != null) {
+        public void checkRequire(EditText editText){
+            if (!editText.getText().toString().isEmpty() && view != null) {
 
                 LinearLayout parent = (LinearLayout) this.view.getParent();
                 /*ArrayList<View> requires = new ArrayList<View>();
@@ -952,11 +954,21 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 for (View v : requires){
                     v.setVisibility(View.GONE);
                 }*/
+
                 View required = parent.findViewWithTag("*");
                 if (required != null) {
-                    required.setVisibility(View.GONE);
-                }
 
+                    int maxLength = Validate.getMaxLengthForEditText(editText);
+                    int textLength =  editText.getText().toString().length();
+
+                    if(maxLength != -1 && maxLength != textLength ){
+                        required.setVisibility(View.VISIBLE);
+                    }else{
+                        required.setVisibility(View.GONE);
+                    }
+
+
+                }
 
             } else {
                 LinearLayout parent = (LinearLayout) this.view.getParent();
@@ -982,6 +994,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             mListener.onFragmentDataComplete(this, dataComplete, collectData());
             return;
         }
+
 
 
         dataComplete = true;

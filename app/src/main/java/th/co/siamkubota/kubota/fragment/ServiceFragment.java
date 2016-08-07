@@ -262,7 +262,8 @@ public class ServiceFragment extends Fragment implements
                 setStepComplete(3, true);
                 setStepComplete(4, true);
                 setStepComplete(5, true);
-                pager.setCurrentItem(adapter.getCount()-1);
+                //pager.setCurrentItem(adapter.getCount()-1);
+                pager.setCurrentItem(0);
 
                 //saveButton.setVisibility(View.GONE);
 

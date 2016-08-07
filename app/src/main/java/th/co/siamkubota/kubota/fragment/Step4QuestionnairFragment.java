@@ -205,6 +205,7 @@ public class Step4QuestionnairFragment extends Fragment implements
         button2 = (Button) v.findViewById(R.id.button2);
         button3 = (Button) v.findViewById(R.id.button3);
         pager = (NoneScrollableViewPager) v.findViewById(R.id.pager);
+        pager.setScrollDurationFactor(2);
 
         previousButton = (ImageButton) v.findViewById(R.id.previousButton);
         nextButton = (ImageButton) v.findViewById(R.id.nextButton);
@@ -215,7 +216,6 @@ public class Step4QuestionnairFragment extends Fragment implements
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
-
 
 
         mListener = (Step4QuestionnairFragment.OnFragmentInteractionListener) getParentFragment();

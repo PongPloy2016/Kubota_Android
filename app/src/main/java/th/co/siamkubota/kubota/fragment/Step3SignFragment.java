@@ -524,6 +524,13 @@ public class Step3SignFragment extends Fragment implements
         private View view;
         private GenericTextWatcher(View view) {
             this.view = view;
+            if(this.view instanceof EditText){
+                EditText editText = (EditText) this.view;
+
+                String text = editText.getText().toString();
+
+                checkRequire(editText);
+            }
         }
 
         public View getView() {
@@ -546,8 +553,50 @@ public class Step3SignFragment extends Fragment implements
 
 
             }
+            EditText editText = (EditText) this.view ;
 
+            checkRequire(editText);
             validateInput();
+        }
+
+        public void checkRequire(EditText editText){
+            if (!editText.getText().toString().isEmpty() && view != null) {
+
+                LinearLayout parent = (LinearLayout) this.view.getParent();
+                /*ArrayList<View> requires = new ArrayList<View>();
+                parent.findViewsWithText(requires,"*",View.FIND_VIEWS_WITH_TEXT);
+                for (View v : requires){
+                    v.setVisibility(View.GONE);
+                }*/
+
+                View required = parent.findViewWithTag("*");
+                if (required != null) {
+
+                    int maxLength = Validate.getMaxLengthForEditText(editText);
+                    int textLength =  editText.getText().toString().length();
+
+                    if(maxLength != -1 && maxLength != textLength ){
+                        required.setVisibility(View.VISIBLE);
+                    }else{
+                        required.setVisibility(View.GONE);
+                    }
+
+
+                }
+
+            } else {
+                LinearLayout parent = (LinearLayout) this.view.getParent();
+               /* ArrayList<View> requires = new ArrayList<View>();
+                parent.findViewsWithText(requires,"*",View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                for (View v : requires){
+                    v.setVisibility(View.VISIBLE);
+                }*/
+                View required = parent.findViewWithTag("*");
+                //View required = parent.findViewWithTag(text);
+                if (required != null) {
+                    required.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 
@@ -570,42 +619,6 @@ public class Step3SignFragment extends Fragment implements
 
         dataComplete = true;
         mListener.onFragmentDataComplete(this, dataComplete, collectData());
-
-     /*   try {
-
-            if((imageCustomer == null || (imageCustomer != null && !imageCustomer.isComplete())) ||
-                    (imageTechnician == null || (imageTechnician != null && !imageTechnician.isComplete())) ){
-                dataComplete = false;
-                mListener.onFragmentDataComplete(this, dataComplete, collectData());
-                return;
-            }
-
-            View view = Validate.inputValidate(rootLayout, "required");
-            if(view != null ){
-                dataComplete = false;
-                mListener.onFragmentDataComplete(this, dataComplete, collectData());
-                return;
-            }
-
-            dataComplete = true;
-            mListener.onFragmentDataComplete(this, dataComplete, collectData());
-
-        }catch (NullPointerException e){
-
-            if(mListener == null){
-                if(getActivity() != null){
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-
-                    if(fm.findFragmentByTag("serviceFragment") != null){
-                        mListener = (Step3SignFragment.OnFragmentInteractionListener) fm.findFragmentByTag("serviceFragment");
-
-                        mListener.onFragmentDataComplete(this, dataComplete, collectData());
-                    }
-
-                }
-            }
-
-        }*/
 
     }
 

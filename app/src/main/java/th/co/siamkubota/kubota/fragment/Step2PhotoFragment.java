@@ -190,6 +190,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
                     if(img.getImagePath() != null  && !img.getImagePath().isEmpty()){
                         photos.get(i).setPath(img.getImagePath());
+                        photos.get(i).setDate(img.getCapturedAt());
                         photos.get(i).setComplete(true);
                     }
                     i++;

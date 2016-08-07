@@ -21,6 +21,7 @@
             style="@style/TextTitleOrangeStyle"
             android:text="@string/sign_pad_total_sparepart_cost"/>
 
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.7dp"
@@ -43,6 +44,10 @@
                 style="@style/EditTextStyle"
                 android:inputType="numberDecimal"
                 android:tag="required"/>
+            <TextView
+                android:id="@+id/requireEngineNumber"
+                style="@style/textViewAstericStyle"
+                android:text="*"/>
         </LinearLayout>
 
 
@@ -271,6 +276,9 @@
                         android:hint="@string/service_hint_technician_name"
                         style="@style/EditTextStyle"
                         android:tag="required"/>
+                    <TextView
+                        style="@style/textViewAstericStyle"
+                        android:text="*"/>
                 </LinearLayout>
                 <LinearLayout
                     style="@style/LinearLayoutTextView"
