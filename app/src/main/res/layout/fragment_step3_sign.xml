@@ -154,6 +154,9 @@
                         android:hint="@string/service_hint_customer_name"
                         style="@style/EditTextStyle"
                         android:tag="required"/>
+                    <TextView
+                        style="@style/textViewAstericStyle"
+                        android:text="*"/>
                 </LinearLayout>
                 <LinearLayout
                     style="@style/LinearLayoutTextView"
@@ -167,6 +170,9 @@
                         android:enabled="false"
                         style="@style/EditTextStyle"
                         android:tag="required"/>
+                    <TextView
+                        style="@style/textViewAstericStyle"
+                        android:text="*"/>
                 </LinearLayout>
 
 
@@ -292,6 +298,9 @@
                         android:enabled="false"
                         style="@style/EditTextStyle"
                         android:tag="required"/>
+                    <TextView
+                        style="@style/textViewAstericStyle"
+                        android:text="*"/>
                 </LinearLayout>
 
 

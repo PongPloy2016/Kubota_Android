@@ -442,7 +442,7 @@ public class MapsFixPointActivity extends BaseActivity
                 return;
             }else{
                 Criteria criteria = new Criteria();
-                criteria.setAccuracy(Criteria.ACCURACY_FINE);
+                criteria.setAccuracy(Criteria.ACCURACY_HIGH);
                 String provider = locMgr.getBestProvider(criteria, true);
                 locMgr.requestLocationUpdates(provider, 0, 0, locLsnr);
 //            locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER,
