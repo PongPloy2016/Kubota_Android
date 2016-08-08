@@ -849,9 +849,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        if (group == radioGroupUserType) {
+       /* if (group == radioGroupUserType) {
 
-        }
+        }*/
         validateInput();
     }
 
@@ -867,7 +867,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             if(this.view instanceof EditText){
                 EditText editText = (EditText) this.view;
 
-                String text = editText.getText().toString();
+                //String text = editText.getText().toString();
 
                 checkRequire(editText);
             }
@@ -934,7 +934,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         public void afterTextChanged(Editable editable) {
 
             String text = editable.toString();
-            int textlength = editable.toString().length();
+            //int textlength = editable.toString().length();
             //save the value for the given tag :
 
             EditText editText = (EditText) this.view ;
@@ -995,38 +995,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
             return;
         }
 
-
-
         dataComplete = true;
         mListener.onFragmentDataComplete(this, dataComplete, collectData());
 
-        /*
-        try{
-            View view = Validate.inputValidate(rootLayout, "required");
-            if (view != null) {
-                dataComplete = false;
-                mListener.onFragmentDataComplete(this, dataComplete, collectData());
-                return;
-            }
-
-
-            dataComplete = true;
-            mListener.onFragmentDataComplete(this, dataComplete, collectData());
-        }catch (NullPointerException e){
-
-            if(mListener == null){
-                if(getActivity() != null){
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-
-                    if(fm.findFragmentByTag("serviceFragment") != null){
-                        mListener = (Step1CustomerDetailFragment.OnFragmentInteractionListener) fm.findFragmentByTag("serviceFragment");
-                        mListener.onFragmentDataComplete(this, dataComplete, collectData());
-                    }
-
-                }
-            }
-
-        }*/
 
     }
 
