@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -15,6 +16,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.opengl.Visibility;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -44,6 +46,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.analytics.internal.Command;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -52,7 +55,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -70,6 +75,7 @@ import th.co.siamkubota.kubota.activity.TestDragMarkerActivity;
 import th.co.siamkubota.kubota.adapter.CustomSpinnerAdapter;
 import th.co.siamkubota.kubota.adapter.SelectNoneSpinnerAdapter;
 import th.co.siamkubota.kubota.app.Config;
+import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.service.Constants;
 import th.co.siamkubota.kubota.service.FetchAddressIntentService;
 import th.co.siamkubota.kubota.service.GeocodeAddressIntentService;
@@ -81,6 +87,9 @@ import th.co.siamkubota.kubota.utils.function.Ui;
 import th.co.siamkubota.kubota.utils.function.Validate;
 import th.co.siamkubota.kubota.utils.ui.CustomSpinner;
 import th.co.siamkubota.kubota.utils.ui.CustomSpinnerDialog;
+
+import static android.content.Context.LOCATION_SERVICE;
+import static th.co.siamkubota.kubota.activity.MapsFixPointActivity.PERMISSION_ALL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,7 +105,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
         RadioGroup.OnCheckedChangeListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener{
+        com.google.android.gms.location.LocationListener,
+        LocationListener {
 
     private static final String TAG = Step1CustomerDetailFragment.class.getSimpleName();
 
@@ -112,6 +122,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private CustomSpinner spinnerProduct;
     private CustomSpinner spinnerModel;
     private LinearLayout layoutOtherModel;
+    private int OnClickMap = 0 ;
 
     private String[] jobTypeDataList;
     private String[] productDataList;
@@ -140,8 +151,10 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private ImageButton locationButton;
 
     private RadioGroup radioGroupUserType;
-    private RadioButton radioButton1 ;
-    private RadioButton radioButton2 ;
+    private RadioButton radioButton1;
+    private RadioButton radioButton2;
+    private int checkAndroid = 0;
+    private int checkAndroidM = 0;
 
     private Button addButton;
     private LinearLayout customerAddressBlock;
@@ -150,11 +163,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private AddressResultReceiver mResultReceiver;
     private String mAddressOutput;
     private boolean mAddressRequested;
+    Location location; // location
     //private GoogleApiClient mGoogleApiClient;
-
     //protected Location mCurrentLocation;
-
-
     //private AddressResultReceiver mResultReceiver;
     boolean fetchAddress;
     int fetchType = Constants.USE_ADDRESS_LOCATION;
@@ -166,7 +177,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
 
     private Location mLastLocation;
-
+    boolean canGetLocation = false;
     // Google client to interact with Google API
     private GoogleApiClient mGoogleApiClient;
 
@@ -186,15 +197,29 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private boolean dataComplete = false;
     private OnFragmentInteractionListener mListener;
     private TaskInfo taskInfo;
-
     private TaskDataSource dataSource;
-
     private boolean editabled = true;
+    protected LocationManager locationManager;
+    boolean isGPSEnabled = false;
+    boolean isNetworkEnabled = false;
+    double latitude; // latitude
+    double longitude; // longitude
+    private Location mLocation;
+
+    private String provider;
+    private MaterialDialog materialDialog;
+    // The minimum distance to change Updates in meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+
+    // The minimum time between updates in milliseconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+
+    String[] PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
     private View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if(v == editTextTaskCode && hasFocus ){
+            if (v == editTextTaskCode && hasFocus) {
                 EditText editText = (EditText) v;
 
                 editText.setOnFocusChangeListener(null);
@@ -202,7 +227,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
                 String text = editText.getText().toString();
 
-                if(text.length() == 0){
+                if (text.length() == 0) {
                     editText.setText("OJ");
                 }
 
@@ -266,7 +291,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
 
             //taskInfo = savedInstanceState.getParcelable(KEY_TASK_INFO);
 
@@ -282,60 +307,60 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         //if(savedInstanceState == null){
 
-            if (getArguments() != null) {
-                taskInfo = getArguments().getParcelable(KEY_TASK_INFO);
-                editabled = getArguments().getBoolean(KEY_EDITABLED);
-            }
-            //taskInfo = new TaskInfo();
+        if (getArguments() != null) {
+            taskInfo = getArguments().getParcelable(KEY_TASK_INFO);
+            editabled = getArguments().getBoolean(KEY_EDITABLED);
+        }
+        //taskInfo = new TaskInfo();
 
-            jobTypeDataList = getResources().getStringArray(R.array.job_type);
-            productDataList = getResources().getStringArray(R.array.product);
-            modelDataList = getModelDataList(0);
+        jobTypeDataList = getResources().getStringArray(R.array.job_type);
+        productDataList = getResources().getStringArray(R.array.product);
+        modelDataList = getModelDataList(0);
 
-            if(taskInfo != null && taskInfo.getProduct() != null && !taskInfo.getProduct().isEmpty()){
+        if (taskInfo != null && taskInfo.getProduct() != null && !taskInfo.getProduct().isEmpty()) {
 
-                for (int i = 0 ; i < productDataList.length ; i++){
+            for (int i = 0; i < productDataList.length; i++) {
 
-                    if(taskInfo.getProduct().equals(productDataList[i])){
-                        modelDataList = getModelDataList(i + 1);
-                        break;
-                    }
+                if (taskInfo.getProduct().equals(productDataList[i])) {
+                    modelDataList = getModelDataList(i + 1);
+                    break;
                 }
             }
+        }
 
 
-            jobTypeSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), jobTypeDataList);
-            productSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), productDataList);
-            modelSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), modelDataList);
+        jobTypeSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), jobTypeDataList);
+        productSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), productDataList);
+        modelSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), modelDataList);
 
 
-            selectNoneJobTypeSpinnerAdapter = new SelectNoneSpinnerAdapter(
-                    jobTypeSpinnerAdapter,
-                    R.layout.item_spinner_row_nothing_selected,
-                    // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
-                    getActivity(), getString(R.string.service_hint_job_type));
+        selectNoneJobTypeSpinnerAdapter = new SelectNoneSpinnerAdapter(
+                jobTypeSpinnerAdapter,
+                R.layout.item_spinner_row_nothing_selected,
+                // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                getActivity(), getString(R.string.service_hint_job_type));
 
-            selectNoneProductSpinnerAdapter = new SelectNoneSpinnerAdapter(
-                    productSpinnerAdapter,
-                    R.layout.item_spinner_row_nothing_selected,
-                    // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
-                    getActivity(), getString(R.string.service_hint_product));
+        selectNoneProductSpinnerAdapter = new SelectNoneSpinnerAdapter(
+                productSpinnerAdapter,
+                R.layout.item_spinner_row_nothing_selected,
+                // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                getActivity(), getString(R.string.service_hint_product));
 
-            selectNoneModelSpinnerAdapter = new SelectNoneSpinnerAdapter(
-                    modelSpinnerAdapter,
-                    R.layout.item_spinner_row_nothing_selected,
-                    // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
-                    getActivity(), getString(R.string.service_hint_model));
+        selectNoneModelSpinnerAdapter = new SelectNoneSpinnerAdapter(
+                modelSpinnerAdapter,
+                R.layout.item_spinner_row_nothing_selected,
+                // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                getActivity(), getString(R.string.service_hint_model));
 
 
-            mResultReceiver = new AddressResultReceiver(null);
+        mResultReceiver = new AddressResultReceiver(null);
 
-            // First we need to check availability of play services
-            if (checkPlayServices()) {
-                // Building the GoogleApi client
-                buildGoogleApiClient();
-                createLocationRequest();
-            }
+        // First we need to check availability of play services
+        if (checkPlayServices()) {
+            // Building the GoogleApi client
+            buildGoogleApiClient();
+            createLocationRequest();
+        }
         //}
 
     }
@@ -385,7 +410,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         radioButton1 = (RadioButton) v.findViewById(R.id.radioButton1);
         radioButton2 = (RadioButton) v.findViewById(R.id.radioButton2);
 
-        addButton = (Button)  v.findViewById(R.id.addButton);
+        addButton = (Button) v.findViewById(R.id.addButton);
 
         customerAddressBlock = (LinearLayout) v.findViewById(R.id.customerAddressBlock);
 
@@ -405,7 +430,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         setData();
         setDataChangeListener();
 
-        if(getActivity() != null){
+        if (getActivity() != null) {
             validateInput();
         }
 
@@ -442,11 +467,10 @@ public class Step1CustomerDetailFragment extends Fragment implements
     }
 
 
-
     private void setData() {
 
         spinnerJobType.setSelection(getIndex(spinnerJobType, taskInfo.getTaskType()));
-        spinnerProduct.setSelection(getIndex(spinnerProduct,  taskInfo.getProduct()));
+        spinnerProduct.setSelection(getIndex(spinnerProduct, taskInfo.getProduct()));
         spinnerModel.setSelection(getIndex(spinnerModel, taskInfo.getCarModel()));
 
         editTextOtherModel.setText(taskInfo.getCarModelOther());
@@ -460,29 +484,32 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextServiceAddress.setText(taskInfo.getAddress());
         editTextCustomerAddress.setText(taskInfo.getCustomerAddress());
 
-        if(taskInfo.getAddressPosition()!=null){
-            String latlon = String.format("%f,%f",taskInfo.getAddressPosition().latitude,taskInfo.getAddressPosition().longitude);
+        if (taskInfo.getAddressPosition() != null) {
+            String latlon = String.format("%f,%f", taskInfo.getAddressPosition().latitude, taskInfo.getAddressPosition().longitude);
             editTextGPSLocation.setText(latlon);
+
+            Logger.Log("taskInfo latitude ", String.valueOf(taskInfo.getAddressPosition().latitude));
+            Logger.Log("taskInfo longitude ", String.valueOf(taskInfo.getAddressPosition().longitude));
         }
 
 
-        if(taskInfo != null && taskInfo.getCustomerAddress() != null && !taskInfo.getCustomerAddress().isEmpty()){
+        if (taskInfo != null && taskInfo.getCustomerAddress() != null && !taskInfo.getCustomerAddress().isEmpty()) {
             customerAddressBlock.setVisibility(View.VISIBLE);
             //addButton.setText(getText(R.string.service_remove_address));
-        }else{
+        } else {
             customerAddressBlock.setVisibility(View.GONE);
             addButton.setText(getText(R.string.service_add_address));
         }
 
-        if(taskInfo.getIsOwner() != null){
-            if(taskInfo.getIsOwner()){
+        if (taskInfo.getIsOwner() != null) {
+            if (taskInfo.getIsOwner()) {
                 radioGroupUserType.check(R.id.radioButton1);
-            }else {
+            } else {
                 radioGroupUserType.check(R.id.radioButton2);
             }
         }
 
-        setDefault();
+        //   setDefault();
         setEnabled(editabled);
 
     }
@@ -594,13 +621,158 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 getCurrentLocation();
             }*/
 
+
             openMaps();
 
+
         }
+        if (checkAndroid == 1) {
+
+            if (mLocation != null) {
+
+            } else {
+                mLocationCkeck();
+            }
+
+        } else {
+
+
+        }
+
+
+//        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            handleNewLocation(mLocation);
+//            return;
+//        }
+//        else {
+//
+//        }
+
+
+
+
 
        /* if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
             startLocationUpdates();
         }*/
+    }
+
+    private void getMapoffine() {
+
+
+        // Getting LocationManager object
+        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+
+        // Creating an empty criteria object
+        Criteria criteria = new Criteria();
+
+        // Getting the name of the provider that meets the criteria
+        provider = locationManager.getBestProvider(criteria, false);
+
+        if (provider != null && !provider.equals("")) {
+
+            // Get the location from the given provider
+
+            //  Location location = locationManager.getLastKnownLocation(provider);
+
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+
+
+            } else {
+
+                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                locationManager.requestLocationUpdates(provider, 20000, 1, this);
+
+                if (location != null) {
+                    //  onLocationChanged(location);
+
+                    // loadData(location);
+
+                } else {
+                    Toast.makeText(getContext(), "Location can't be retrieved", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+            return;
+        } else {
+            Toast.makeText(getContext(), "No Provider Found", Toast.LENGTH_SHORT).show();
+        }
+
+
+//        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+//        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+
+
+//        locationManager = (LocationManager) getContext()
+//                .getSystemService(LOCATION_SERVICE);
+//
+//        // getting GPS status
+//
+//        if (LocationService.isGPSEnabled(getContext())) {
+//
+//            if (locationManager != null) {
+//                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                    // TODO: Consider calling
+//                    return;
+//                }
+//                    location = locationManager  .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//
+//                if (location == null) {
+//
+//                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+//                            2000, 1, this);
+//
+//                    //  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0,this);
+//                    Logger.Log("GPS Enabled", "GPS Enabled");
+//                    if (locationManager != null) {
+//
+////                        Logger.Log("locationManager not null", "locationManager nit null");
+////                        //   location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+////                                if (location != null) {
+////                                    Logger.Log("location not null", "location nit null");
+////                                    latitude = location.getLatitude();
+////                                    longitude = location.getLongitude();
+////                                    Logger.Log("latitude and longitude ", latitude + "" + longitude);
+////                                } else {
+////                                    Logger.Log("location is null ", "location is null");
+////                                }
+//
+//                        if (location != null) {
+//                            latitude = location.getLatitude();
+//                            longitude = location.getLongitude();
+//                        }
+//
+//                        Logger.Log("latitude and longitude ",latitude +""+longitude);
+//                        Toast.makeText(
+//                                getContext(),
+//                                "Mobile Location (GPS): \nLatitude: " + latitude
+//                                        + "\nLongitude: " + longitude,
+//                                Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//
+//            }
+//
+//
+//            else {
+//                Logger.Log("locationManager not null  ", "locationManager  not null ");
+//            }
+//            Logger.Log("LocationManager ", String.valueOf(locMgr));
+        //       }
     }
 
 
@@ -628,7 +800,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data);
+
         public void onFragmentSaveInstanceState(Fragment fragment);
+
         public void onCustomerNameChange(String name);
     }
 
@@ -642,11 +816,34 @@ public class Step1CustomerDetailFragment extends Fragment implements
     public void onClick(View v) {
         if (v == locationButton) {
 
+            Logger.Log("check cleck map", "check cleck map");
+            if (taskInfo.getAddressPosition() != null || !EnableGPSIfPossible()) {
 
-            if ( taskInfo.getAddressPosition() != null || !EnableGPSIfPossible() ) {
-                openMaps();
+
+                if (Network.isNetworkAvailable(getActivity())) {
+                    Logger.Log("checkLocationServiceEnable online", "checkLocationServiceEnable online");
+
+                    openMaps();
+                } else {
+                    Logger.Log("checkLocationServiceEnable offline", "checkLocationServiceEnable offine");
+
+                    //  getMapoffine();
+
+                    if(OnClickMap == 0){
+                        OnClickMap =1 ;
+                        loadData();
+                    }
+                    else {
+                        Logger.Log("no click", "no click");
+                    }
+
+
+
+                    //    CallLacationOffine();
+                }
+
+
             }
-
 
             /*if (!EnableGPSIfPossible()) {
                 if (mLastLocation != null) {
@@ -656,13 +853,13 @@ public class Step1CustomerDetailFragment extends Fragment implements
                     getCurrentLocation();
                 }
             }*/
-        }else if(v == addButton){
-            if(customerAddressBlock.getVisibility() == View.GONE){
+        } else if (v == addButton) {
+            if (customerAddressBlock.getVisibility() == View.GONE) {
                 addButton.setVisibility(View.GONE);
                 customerAddressBlock.setVisibility(View.VISIBLE);
                 //addButton.setText(getText(R.string.service_remove_address));
 
-            }else{
+            } else {
                 //customerAddressBlock.setVisibility(View.GONE);
                 //addButton.setText(getText(R.string.service_add_address));
             }
@@ -673,27 +870,33 @@ public class Step1CustomerDetailFragment extends Fragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == Activity.RESULT_OK){
+        if (resultCode == Activity.RESULT_OK) {
 
-            if(requestCode == REQUEST_CODE_MAP){
+            if (requestCode == REQUEST_CODE_MAP) {
                 Bundle bundle = data.getExtras();
-                if(bundle != null){
-                    editTextServiceAddress.setText(bundle.getString(MapsFixPointActivity.KEY_ADDRESS,""));
+                if (bundle != null) {
+                    editTextServiceAddress.setText(bundle.getString(MapsFixPointActivity.KEY_ADDRESS, ""));
+                    //call setResult 2
+                    Logger.Log("KEY_POSITION 2", "KEY_POSITION 2");
 
-                    if(bundle.containsKey(MapsFixPointActivity.KEY_POSITION)){
+                    if (bundle.containsKey(MapsFixPointActivity.KEY_POSITION)) {
                         LatLng servicepoint = (LatLng) bundle.getParcelable(MapsFixPointActivity.KEY_POSITION);
-                        if(servicepoint != null){
-                            String latlon = String.format("%f,%f",servicepoint.latitude,servicepoint.longitude);
+                        if (servicepoint != null) {
+                            String latlon = String.format("%f,%f", servicepoint.latitude, servicepoint.longitude);
                             editTextGPSLocation.setText(latlon);
+
+                            //set map online
                         }
                         taskInfo.setAddressPosition((LatLng) bundle.getParcelable(MapsFixPointActivity.KEY_POSITION));
+
+                        Logger.Log("setAddressPosition((LatLng)", String.valueOf((LatLng) bundle.getParcelable(MapsFixPointActivity.KEY_POSITION)));
                     }
                 }
             }
         }
     }
 
-    private String[] getModelDataList(int position){
+    private String[] getModelDataList(int position) {
 
         String[] dataList = new String[0];
 
@@ -728,7 +931,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             boolean productWasSelected = false;
 
             String product = (String) spinnerProduct.getSelectedItem();
-            if(product != null){
+            if (product != null) {
                 for (String s : modelDataList) {
                     int i = s.indexOf(spinnerModel.getSelectedItem().toString());
                     if (i >= 0) {
@@ -739,8 +942,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 }
             }
 
-            if(spinnerJobType.getSelectedItemPosition() > 0 && spinnerProduct.getSelectedItem() == null && editabled &&
-                    ((taskInfo.getTaskType() == null || taskInfo.getTaskType().isEmpty()) ) ){
+            if (spinnerJobType.getSelectedItemPosition() > 0 && spinnerProduct.getSelectedItem() == null && editabled &&
+                    ((taskInfo.getTaskType() == null || taskInfo.getTaskType().isEmpty()))) {
                 spinnerProduct.requestFocus();
                 spinnerProduct.performClick();
             }
@@ -764,8 +967,6 @@ public class Step1CustomerDetailFragment extends Fragment implements
             }
 
 
-
-
             modelSpinnerAdapter.setItemList(modelDataList);
             selectNoneModelSpinnerAdapter.setAdapter(modelSpinnerAdapter);
             spinnerModel.setAdapter(selectNoneModelSpinnerAdapter);
@@ -776,7 +977,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             boolean modelWasSelected = false;
 
             String model = (String) spinnerModel.getSelectedItem();
-            if(model != null){
+            if (model != null) {
                 for (String s : modelDataList) {
                     int i = s.indexOf(spinnerModel.getSelectedItem().toString());
                     if (i >= 0) {
@@ -788,16 +989,15 @@ public class Step1CustomerDetailFragment extends Fragment implements
             }
 
 
-            if(Config.showDefault == true){
+            if (Config.showDefault == true) {
                 spinnerModel.setSelection(1);
-            }else if(spinnerProduct.getSelectedItemPosition() > 0 && editabled && !modelWasSelected){
+            } else if (spinnerProduct.getSelectedItemPosition() > 0 && editabled && !modelWasSelected) {
 
                 spinnerModel.setPrompt(spinnerProduct.getSelectedItem().toString());
 
                 spinnerModel.requestFocus();
                 spinnerModel.performClick();
             }
-
 
 
         } else if (parent == spinnerModel) {
@@ -819,7 +1019,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             TextView textViewDialog = (TextView) view.findViewById(R.id.textView);
             textViewDialog.setTextSize(Converter.pxTosp(getActivity(), Converter.dpTopx(getActivity(), 15)));
 
-            if(position != 0){
+            if (position != 0) {
                 textViewDialog.setTextColor(ContextCompat.getColor(getActivity(), R.color.dark_gray));
                 ImageView selectedImage = (ImageView) view.findViewById(R.id.selectedImage);
                 selectedImage.setVisibility(View.GONE);
@@ -864,7 +1064,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         private GenericTextWatcher(View view) {
             this.view = view;
 
-            if(this.view instanceof EditText){
+            if (this.view instanceof EditText) {
                 EditText editText = (EditText) this.view;
 
                 //String text = editText.getText().toString();
@@ -887,37 +1087,38 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
-            EditText editText = (EditText) this.view ;
-            if(editText.getTag() != null && editText.getTag().toString().contains("formatted")){
+            EditText editText = (EditText) this.view;
+            if (editText.getTag() != null && editText.getTag().toString().contains("formatted")) {
 
-                if(count > 0){
-                    switch (start){
-                        case 0 :
-                            if(count == 1){
+                if (count > 0) {
+                    switch (start) {
+                        case 0:
+                            if (count == 1) {
                                 charSequence = String.format("OJ%s", charSequence);
                                 editText.setText(charSequence);
                                 editText.setSelection(editText.getText().length());
                             }
                             break;
-                        case 1 :
+                        case 1:
                             String text3 = charSequence.toString();
                             charSequence = text3.substring(0, 1) + "J" + text3.substring(1, text3.length());
                             editText.setText(charSequence);
-                            editText.setSelection(editText.getText().length());                            break;
+                            editText.setSelection(editText.getText().length());
+                            break;
 
-                        case 3 :
-                        case 8 :
+                        case 3:
+                        case 8:
                             charSequence = charSequence.toString().concat("-");
                             editText.setText(charSequence);
                             editText.setSelection(editText.getText().length());
                             break;
-                        case 4 :
+                        case 4:
                             String text = charSequence.toString();
                             charSequence = text.substring(0, 4) + "-" + text.substring(4, text.length());
                             editText.setText(charSequence);
                             editText.setSelection(editText.getText().length());
                             break;
-                        case 9 :
+                        case 9:
                             String text2 = charSequence.toString();
                             charSequence = text2.substring(0, 9) + "-" + text2.substring(9, text2.length());
                             editText.setText(charSequence);
@@ -937,7 +1138,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             //int textlength = editable.toString().length();
             //save the value for the given tag :
 
-            EditText editText = (EditText) this.view ;
+            EditText editText = (EditText) this.view;
 
             checkRequire(editText);
             validateInput();
@@ -945,7 +1146,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         }
 
-        public void checkRequire(EditText editText){
+        public void checkRequire(EditText editText) {
             if (!editText.getText().toString().isEmpty() && view != null) {
 
                 LinearLayout parent = (LinearLayout) this.view.getParent();
@@ -959,11 +1160,11 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 if (required != null) {
 
                     int maxLength = Validate.getMaxLengthForEditText(editText);
-                    int textLength =  editText.getText().toString().length();
+                    int textLength = editText.getText().toString().length();
 
-                    if(maxLength != -1 && maxLength != textLength ){
+                    if (maxLength != -1 && maxLength != textLength) {
                         required.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         required.setVisibility(View.GONE);
                     }
 
@@ -1003,40 +1204,40 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     private TaskInfo collectData() {
 
-        if(spinnerJobType.getSelectedItem() != null){
+        if (spinnerJobType.getSelectedItem() != null) {
             taskInfo.setTaskType(spinnerJobType.getSelectedItem().toString());
         }
-        if(spinnerProduct.getSelectedItem() != null){
+        if (spinnerProduct.getSelectedItem() != null) {
             taskInfo.setProduct(spinnerProduct.getSelectedItem().toString());
         }
-        if(spinnerModel.getSelectedItem() != null){
+        if (spinnerModel.getSelectedItem() != null) {
             taskInfo.setCarModel(spinnerModel.getSelectedItem().toString());
         }
 
-        if (taskInfo.getCarModel() != null && taskInfo.getCarModel().equals("อื่นๆ") && editTextOtherModel.getText() != null ) {
+        if (taskInfo.getCarModel() != null && taskInfo.getCarModel().equals("อื่นๆ") && editTextOtherModel.getText() != null) {
             taskInfo.setCarModelOther(editTextOtherModel.getText().toString());
         } else {
             taskInfo.setCarModelOther("");
         }
 
-        if(editTextTaskCode.getText() != null){
+        if (editTextTaskCode.getText() != null) {
             String text = editTextTaskCode.getText().toString();
-            if(text.length() == 10){
-                String textFormatted = new StringBuilder(text).insert(0,"OJ").insert(4, "-").insert(9,"-").toString();
+            if (text.length() == 10) {
+                String textFormatted = new StringBuilder(text).insert(0, "OJ").insert(4, "-").insert(9, "-").toString();
                 taskInfo.setTaskCode(textFormatted);
-            }else {
+            } else {
                 taskInfo.setTaskCode(editTextTaskCode.getText().toString());
             }
         }
 
-        if(editTextName.getText() != null){
+        if (editTextName.getText() != null) {
 
-            if(!editTextName.getText().equals(taskInfo.getCustomerName())){
+            if (!editTextName.getText().equals(taskInfo.getCustomerName())) {
 
             }
             taskInfo.setCustomerName(editTextName.getText().toString());
         }
-        if(editTextTel1.getText() != null){
+        if (editTextTel1.getText() != null) {
             taskInfo.setTel1(editTextTel1.getText().toString());
         }
 
@@ -1046,26 +1247,26 @@ public class Step1CustomerDetailFragment extends Fragment implements
             taskInfo.setTel2("");
         }
 
-        if(editTextCarNumber.getText() != null){
+        if (editTextCarNumber.getText() != null) {
             taskInfo.setCarNo(editTextCarNumber.getText().toString());
         }
-        if(editTextEngineNumber.getText() != null){
+        if (editTextEngineNumber.getText() != null) {
             taskInfo.setEngineNo(editTextEngineNumber.getText().toString());
         }
-        if(editTextWorkHours.getText() != null){
+        if (editTextWorkHours.getText() != null) {
             taskInfo.setUsageHours(editTextWorkHours.getText().toString());
         }
-        if(editTextServiceAddress.getText() != null){
+        if (editTextServiceAddress.getText() != null) {
             taskInfo.setAddress(editTextServiceAddress.getText().toString());
         }
-        if(editTextCustomerAddress.getText() != null){
+        if (editTextCustomerAddress.getText() != null) {
             taskInfo.setCustomerAddress(editTextCustomerAddress.getText().toString());
         }
 
 
-        if(radioGroupUserType.getCheckedRadioButtonId() == R.id.radioButton1){
+        if (radioGroupUserType.getCheckedRadioButtonId() == R.id.radioButton1) {
             taskInfo.setIsOwner(true);
-        }else  if(radioGroupUserType.getCheckedRadioButtonId() == R.id.radioButton2){
+        } else if (radioGroupUserType.getCheckedRadioButtonId() == R.id.radioButton2) {
             taskInfo.setIsOwner(false);
         }
 
@@ -1084,7 +1285,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             }
 
         } else {
-            locMgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            locMgr = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
@@ -1107,15 +1308,20 @@ public class Step1CustomerDetailFragment extends Fragment implements
     }
 
     private LocationManager locMgr;
+
     private LocationListener locLsnr = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
 //            double myLat = location.getLatitude();
 //            double myLon = location.getLongitude();
 
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            Logger.Log("latitude and longitude ", latitude + ":" + longitude);
+
             //if(location.getAccuracy() < 100.0 && location.getSpeed() < 6.95){
             double suitableMeter = 100.0; // adjust your need
-            if(location.getAccuracy() < suitableMeter ){
+            if (location.getAccuracy() < suitableMeter) {
 
                 mLastLocation = location;
 
@@ -1131,8 +1337,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
                     startIntentService();
 
                 }
-            }
-            else{
+            } else {
                 //Continue listening for a more accurate location
             }
 
@@ -1170,6 +1375,82 @@ public class Step1CustomerDetailFragment extends Fragment implements
     public void onConnected(Bundle connectionHint) {
 
         displayLocation();
+
+        Log.i(TAG, "Location services connected");
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        //   CallLacationOffine();
+
+    }
+
+    private void CallLacationOffine() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+            materialDialog.hide();
+
+            ActivityCompat.requestPermissions(getActivity(), PERMISSIONS, PERMISSION_ALL);
+
+            checkAndroid = 1;
+
+
+            return;
+        } else {
+            mLocationCkeck();
+        }
+    }
+
+    private void mLocationCkeck() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if (mLocation == null) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, (com.google.android.gms.location.LocationListener) this);
+
+        } else {
+            handleNewLocation(mLocation);
+        }
+    }
+
+
+    private void handleNewLocation(Location mLocation) {
+      //  Log.d(TAG, "The location is currently: " + mLocation.toString());
+
+        double currentLat = mLocation.getLatitude();
+        double currentLng = mLocation.getLongitude();
+
+        Logger.Log( "The location is currently: ", String.valueOf(currentLat));
+        Logger.Log( "The location is currentLng: ", String.valueOf(currentLng));
+
+        LatLng latlng1 = new LatLng(currentLat, currentLng);
+        taskInfo.setAddressPosition(latlng1);
+        String latlonOffline = String.format("%f,%f", mLocation.getLatitude(),mLocation.getLongitude());
+        editTextGPSLocation.setText(latlonOffline);
+        mLastLocation = location;
+        materialDialog.hide();
 
     }
 
@@ -1218,9 +1499,111 @@ public class Step1CustomerDetailFragment extends Fragment implements
     }
 
 
+
+    private void loadData(  ) {
+        new AsyncTask<Void, Void, Void>(){
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //     showIndeterminateProgressDialog(true);
+
+                if(materialDialog == null) {
+                    MaterialDialog.Builder builder = new MaterialDialog.Builder(Step1CustomerDetailFragment.this.getContext())
+                            .title("แจ้งเตือน")
+                            .content("กรุณารอซักครู่ค่ะ")
+                            .progress(true, 0);
+
+                     materialDialog = builder.build();
+                    materialDialog.show();
+                }
+
+//                if(pDialog == null){
+//                    pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+//                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//                    pDialog.setTitleText("Loading");
+//                    pDialog.setCancelable(false);
+//                    pDialog.show();
+//                }
+//                else {
+//                    Logger.Log("PD.Null","PD.Null");
+//                }
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                getActivity().runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        // do some thing which you want in try block
+                        try {
+
+                            CallLacationOffine();
+                           // onLocationChanged(location);
+                        } catch (Throwable e) {
+                            e.printStackTrace();
+
+                            intentChectSendEmail(e.toString());
+                            //  intentChectSendEmail(nameId);
+                        }
+                    }
+                });
+
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                Logger.Log("go next","go next");
+
+             //   materialDialog.hide();
+
+                Logger.Log("pDialog.dismiss() News", "pDialog.dismiss() News");
+
+            }
+        }.execute();
+    }
+
+
+
     @Override
     public void onLocationChanged(Location location) {
+
+        String msg = "New Latitude: " + location.getLatitude()
+                + "New Longitude: " + location.getLongitude();
+
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+
+
+            LatLng latlng1 = new LatLng(location.getLatitude(), location.getLongitude());
+
+        taskInfo.setAddressPosition(latlng1);
+
+        String latlonOffline = String.format("%f,%f", location.getLatitude(),location.getLongitude());
+
+        editTextGPSLocation.setText(latlonOffline);
+
+
         mLastLocation = location;
+
+        // materialDialog.hide();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
 
@@ -1290,7 +1673,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
 
     protected void stopLocationUpdates() {
-        if(mGoogleApiClient != null && mGoogleApiClient.isConnected()){
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(
                     mGoogleApiClient, this);
         }
@@ -1313,7 +1696,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         int resultCode = GooglePlayServicesUtil
                 .isGooglePlayServicesAvailable(getActivity());
         if (resultCode != ConnectionResult.SUCCESS) {
-           // alert error dialog update play service *******
+            // alert error dialog update play service *******
            /* if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
 
                 Locale locale = new Locale("th", "TH");
@@ -1338,7 +1721,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
     private boolean checkPlayServices() {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
         int result = googleAPI.isGooglePlayServicesAvailable(getActivity());
-        if(result != ConnectionResult.SUCCESS) {
+        if (result != ConnectionResult.SUCCESS) {
            /* if(googleAPI.isUserResolvableError(result)) {
                 googleAPI.getErrorDialog(getActivity(), result,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
@@ -1356,17 +1739,14 @@ public class Step1CustomerDetailFragment extends Fragment implements
         void execute();
     }
 
-    public class CancelCommand implements ICommand
-    {
+    public class CancelCommand implements ICommand {
         protected Activity m_activity;
 
-        public CancelCommand(Activity activity)
-        {
+        public CancelCommand(Activity activity) {
             m_activity = activity;
         }
 
-        public void execute()
-        {
+        public void execute() {
             alert.dismiss();
             //start asyncronous operation here
         }
@@ -1374,6 +1754,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     public static class CommandWrapper implements DialogInterface.OnClickListener {
         private ICommand command;
+
         public CommandWrapper(ICommand command) {
             this.command = command;
         }
@@ -1385,7 +1766,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         }
     }
 
-    private boolean checkLocationServiceEnable(Context mContext){
+    private boolean checkLocationServiceEnable(Context mContext) {
         boolean gps_enabled = LocationService.isGPSEnabled(mContext);
         boolean network_enabled = Network.isNetworkEnabled(mContext);
 
@@ -1394,14 +1775,12 @@ public class Step1CustomerDetailFragment extends Fragment implements
     }
 
 
-    public class EnableGpsCommand extends CancelCommand
-    {
-        public EnableGpsCommand( Activity activity) {
+    public class EnableGpsCommand extends CancelCommand {
+        public EnableGpsCommand(Activity activity) {
             super(activity);
         }
 
-        public void execute()
-        {
+        public void execute() {
             // take the user to the phone gps settings and then start the asyncronous logic.
             m_activity.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
             waitGPSSetting = true;
@@ -1409,10 +1788,9 @@ public class Step1CustomerDetailFragment extends Fragment implements
         }
     }
 
-    private boolean EnableGPSIfPossible()
-    {
-        final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+    private boolean EnableGPSIfPossible() {
+        final LocationManager manager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
             mAddressRequested = true;
             return true;
@@ -1421,8 +1799,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
     }
 
 
-    private  void buildAlertMessageNoGps()
-    {
+    private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(getString(R.string.service_setting_gps))
                 .setCancelable(false)
@@ -1433,7 +1810,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         alert.show();
     }
 
-    private long updateTask(String taskCode, String newTaskCode){
+    private long updateTask(String taskCode, String newTaskCode) {
 
         dataSource = new TaskDataSource(getActivity());
         dataSource.open();
@@ -1442,7 +1819,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     }
 
-    private void deleteTask(String taskCode){
+    private void deleteTask(String taskCode) {
 
         dataSource = new TaskDataSource(getActivity());
         dataSource.open();
@@ -1451,21 +1828,27 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
     }
 
-    private void openMaps(){
+    private void openMaps() {
+
+        Logger.Log("taskInfo.getAddressPosition()", String.valueOf(taskInfo.getAddressPosition()));
         //Intent intent = new Intent(getActivity(), MapsDragableActivity.class);
         Intent intent = new Intent(getActivity(), MapsFixPointActivity.class);
         //startActivity(intent);
-
-        if(taskInfo.getAddressPosition() != null){
+        if (taskInfo.getAddressPosition() != null) {
             Bundle bundle = new Bundle();
             bundle.putParcelable(MapsFixPointActivity.KEY_POSITION, taskInfo.getAddressPosition());
             intent.putExtras(bundle);
+            Logger.Log("taskInfo.getAddressPosition() not null ", String.valueOf(taskInfo.getAddressPosition()));
+        } else {
+
+
+
+            getActivity().startActivityForResult(intent, REQUEST_CODE_MAP);
         }
 
-
-
-        getActivity().startActivityForResult(intent, REQUEST_CODE_MAP);
     }
+
+
 
 
     private void setDefault(){
@@ -1523,6 +1906,20 @@ public class Step1CustomerDetailFragment extends Fragment implements
             radioButton2.setEnabled(enabled);
 
             addButton.setVisibility(View.GONE);
+        }
+    }
+
+
+    public void intentChectSendEmail(String Error) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"pongku71@gmail.com"});
+        i.putExtra(Intent.EXTRA_SUBJECT, " กรุณาระบุปัญหาของคุณด้วยค่ะ !!! ");
+        i.putExtra(Intent.EXTRA_TEXT   ,Error);
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+
         }
     }
 

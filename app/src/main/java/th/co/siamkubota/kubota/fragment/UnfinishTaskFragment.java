@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import th.co.siamkubota.kubota.activity.ServiceActivity;
 import th.co.siamkubota.kubota.adapter.UnfinishTaskAdapter;
 import th.co.siamkubota.kubota.adapter.UnfinishTaskSectionAdapter;
 import th.co.siamkubota.kubota.adapter.UnsendTaskAdapter;
+import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.model.OfflineTask;
 import th.co.siamkubota.kubota.sqlite.TaskDataSource;
 import th.co.siamkubota.kubota.utils.function.Converter;
@@ -235,6 +237,8 @@ public class UnfinishTaskFragment extends Fragment implements
             mListener.onDisplayTask(null);
         }else{
 
+            Logger.Log("onclick new job","onclick new job");
+
             int key = (int)v.getTag(R.id.key);
             if(key == KEY_DELETE){
 
@@ -242,6 +246,7 @@ public class UnfinishTaskFragment extends Fragment implements
                 buildAlertConfirmDelete(task);
 
             }else if(key == KEY_SEND){
+
 
                 OfflineTask task = (OfflineTask) v.getTag(R.id.value);
 

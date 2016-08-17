@@ -870,4 +870,17 @@ public class ServiceFragment extends Fragment implements
         }
 
     }
+
+    public void intentChectSendEmail(String Error) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"pongku71@gmail.com"});
+        i.putExtra(Intent.EXTRA_SUBJECT, " กรุณาระบุปัญหาของคุณด้วยค่ะ !!! ");
+        i.putExtra(Intent.EXTRA_TEXT   ,Error);
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+
+        }
+    }
 }
