@@ -1230,11 +1230,11 @@ public class Step1CustomerDetailFragment extends Fragment implements
             }
         }
 
-        if (editTextName.getText() != null) {
+        if (editTextName.getText() != null && !editTextName.getText().toString().isEmpty()) {
 
-            if (!editTextName.getText().equals(taskInfo.getCustomerName())) {
+           /* if (!editTextName.getText().toString().equals(taskInfo.getCustomerName())) {
 
-            }
+            }*/
             taskInfo.setCustomerName(editTextName.getText().toString());
         }
         if (editTextTel1.getText() != null) {
@@ -1571,24 +1571,29 @@ public class Step1CustomerDetailFragment extends Fragment implements
     @Override
     public void onLocationChanged(Location location) {
 
-        String msg = "New Latitude: " + location.getLatitude()
-                + "New Longitude: " + location.getLongitude();
-
-        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+        if(taskInfo.getAddressPosition() == null ){
 
 
-            LatLng latlng1 = new LatLng(location.getLatitude(), location.getLongitude());
+            String msg = "New Latitude: " + location.getLatitude()
+                    + "New Longitude: " + location.getLongitude();
 
-        taskInfo.setAddressPosition(latlng1);
-
-        String latlonOffline = String.format("%f,%f", location.getLatitude(),location.getLongitude());
-
-        editTextGPSLocation.setText(latlonOffline);
+            Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
 
 
-        mLastLocation = location;
+                LatLng latlng1 = new LatLng(location.getLatitude(), location.getLongitude());
 
-        // materialDialog.hide();
+            taskInfo.setAddressPosition(latlng1);
+
+            String latlonOffline = String.format("%f,%f", location.getLatitude(),location.getLongitude());
+
+            editTextGPSLocation.setText(latlonOffline);
+
+
+            mLastLocation = location;
+
+            // materialDialog.hide();
+
+        }
     }
 
     @Override

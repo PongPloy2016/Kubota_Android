@@ -17,6 +17,7 @@
     <string name="login_button">เข้าสู่ระบบ</string>
     <string name="login_invalid_username_password">กรุณากรอกชื่อผู้ใช้และรหัสผ่านให้ครบ</string>
     <string name="login_before_submit">กรุณาล็อกอินเข้าสู่ระบบร้านก่อนส่งงาน</string>
+    <string name="login_default_error_message">เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง</string>
 
     <!-- UnfinishTask -->ServiceFragment
     <string name="unfinish_task">งานที่ยังทำไม่เสร็จ</string>
@@ -137,5 +138,9 @@
     <string name="map_select_location">เลือกตำแหน่งที่อยู่</string>
     <string name="map_address_not_found">ไม่พบที่อยู่</string>
     <string name="map_service_location">จุดให้บริการ</string>
+
+    <!--Result-->
+    <string name="result_no_internet">กรุณาเชื่อมต่ออินเตอร์เน็ต</string>
+    <string name="result_submit_failed">ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง</string>
 
 </resources>

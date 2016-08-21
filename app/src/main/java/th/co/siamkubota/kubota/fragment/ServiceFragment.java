@@ -653,6 +653,8 @@ public class ServiceFragment extends Fragment implements
             }
         }
 
+        saveTask(task, loginData);
+
     }
 
     @Override
@@ -677,7 +679,6 @@ public class ServiceFragment extends Fragment implements
                 bundle.putString(ResultActivity.KEY_FROM, ResultActivity.class.getSimpleName());
             }
 
-            //bundle.putString("shopName", loginData.getShopName());
             intent.putExtras(bundle);
             getActivity().startActivity(intent);
             getActivity().finish();

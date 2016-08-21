@@ -322,8 +322,10 @@ public class ImageFile {
                 if (!tempFile.getParentFile().exists()) {
                     tempFile.getParentFile().mkdirs();
                 }
+            }else{
+                return "";
             }
-            tempFile.delete();
+            //tempFile.delete();
             tempFile.createNewFile();
 
             int quality = 100;

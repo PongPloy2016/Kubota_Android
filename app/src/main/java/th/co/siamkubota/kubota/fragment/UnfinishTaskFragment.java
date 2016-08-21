@@ -114,63 +114,13 @@ public class UnfinishTaskFragment extends Fragment implements
 
         getOfflineTask();
 
+        LinearLayout listFooterView = new LinearLayout(getActivity());
+        AbsListView.LayoutParams paramsfooter = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Converter.dpTopx(getActivity(), 120));
+        listFooterView.setGravity(Gravity.CENTER);
+        listFooterView.setLayoutParams(paramsfooter);
 
-       // if(datalist != null){
-            //adapter = new UnfinishTaskAdapter(getActivity(), datalist);
+        startNewTaskButton.setOnClickListener(this);
 
-            /*
-            adapter = new UnfinishTaskSectionAdapter(getActivity(), R.layout.item_unfinish_header);
-
-            unsendTaskAdapter = new UnsendTaskAdapter(getActivity(),datalist );
-            unfinishTaskAdapter = new UnfinishTaskAdapter(getActivity(),datalist );
-
-            unsendTaskAdapter.setOnClickListener(this);
-
-            adapter.addSection(getString(R.string.unfinish_task_unsend), unsendTaskAdapter);
-            adapter.addSection(getString(R.string.unfinish_task), unfinishTaskAdapter);
-
-
-            listView.setAdapter(adapter);
-            listView.setOnItemClickListener(this);
-
-            */
-
-
-//            LinearLayout listHeaderView = (LinearLayout)View.inflate(getActivity(),
-//                    R.layout.header_listview, null);
-//            LinearLayout listFooterView = (LinearLayout)View.inflate(getActivity(),
-//                    R.layout.footer_listview, null);
-
-            /*
-            LinearLayout listHeaderView  = new LinearLayout(getActivity());
-            listHeaderView.setGravity(Gravity.CENTER);
-            //LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Converter.dpTopx(getActivity(), 70));
-            listHeaderView.setLayoutParams(params);
-            //params.setMargins(left, top, left, top);
-
-            TextView listTitle = (TextView)View.inflate(getActivity(),
-                    R.layout.textview_title, null);
-
-            listHeaderView.addView(listTitle);
-
-            */
-
-            LinearLayout listFooterView = new LinearLayout(getActivity());
-            AbsListView.LayoutParams paramsfooter = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Converter.dpTopx(getActivity(), 120));
-            listFooterView.setGravity(Gravity.CENTER);
-            listFooterView.setLayoutParams(paramsfooter);
-
-
-           /* startNewTaskButton = (Button) View.inflate(getActivity(),
-                    R.layout.button_white, null);*/
-            startNewTaskButton.setOnClickListener(this);
-
-            //listFooterView.addView(startNewTaskButton);
-
-            //listView.addHeaderView(listHeaderView);
-            //listView.addFooterView(listFooterView);
-        //}
 
         return rootView;
     }
