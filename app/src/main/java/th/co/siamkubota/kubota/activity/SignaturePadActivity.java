@@ -159,16 +159,23 @@ public class SignaturePadActivity extends BaseActivity implements View.OnClickLi
 
     private void finishWithResult(Bitmap bitmap)
     {
-        String imagePath = ImageFile.saveBitmapToPath(SignaturePadActivity.this, bitmap, getString(R.string.image_path), "signature_" +Converter.DateToString(new Date(), "yyyyMMddHHmmss"));
+        String dateString = Converter.DateToString(new Date(), "yyyyMMddHHmmss");
+        if(dateString == null || dateString.isEmpty()){
+            return;
+        }
 
-        Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putString("imagePath", imagePath);
-        bundle.putString("takenDate", Converter.DateToString(new Date(), "dd/MM/yyyy"));
+        String imagePath = ImageFile.saveBitmapToPath(SignaturePadActivity.this, bitmap, getString(R.string.image_path), "signature_" + dateString);
 
-        intent.putExtras(bundle);
-        setResult(RESULT_OK, intent);
-        finish();
+        if(imagePath != null && !imagePath.isEmpty()){
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putString("imagePath", imagePath);
+            bundle.putString("takenDate", Converter.DateToString(new Date(), "dd/MM/yyyy"));
+
+            intent.putExtras(bundle);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
 
     }
 

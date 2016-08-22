@@ -60,6 +60,7 @@ import android.widget.Toast;
 import java.util.Hashtable;
 
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.service.Constants;
 import th.co.siamkubota.kubota.service.GeocodeAddressIntentService;
 import th.co.siamkubota.kubota.utils.function.LocationService;
@@ -90,7 +91,6 @@ public class MapsFixPointActivity extends BaseActivity
     Polygon polygon;
 
     private Marker marker;
-
 
     //protected Location mLastLocation;
     private AddressResultReceiver mResultReceiver;
@@ -498,6 +498,8 @@ public class MapsFixPointActivity extends BaseActivity
 
                 if (markerPosition == null) {
                     pinPoint(new LatLng(location.getLatitude(), location.getLongitude()), true);
+
+                    Logger.Log("pinPoint",location.getLatitude() + "" +location.getLongitude() );
                 }else{
                     pinPoint(new LatLng(markerPosition.latitude, markerPosition.longitude), false);
                 }
@@ -818,10 +820,11 @@ public class MapsFixPointActivity extends BaseActivity
         Bundle bundle = new Bundle();
         bundle.putString(KEY_ADDRESS, result);
         bundle.putParcelable(KEY_POSITION, markerPosition);
-
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         finish();
+        Logger.Log("KEY_POSITION 1","KEY_POSITION 1");
+        //call setResult 1
     }
 
     private void showToastError(String message) {

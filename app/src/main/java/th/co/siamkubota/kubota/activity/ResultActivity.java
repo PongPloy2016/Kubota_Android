@@ -132,6 +132,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
             if(loginData != null){
                 task.getTaskInfo().setshopID(loginData.getUserId());
+                taskSave.getTaskInfo().setshopID(loginData.getUserId());
             }
         }
 
@@ -139,36 +140,11 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
             shopName = bundle.getString("shopName");
         }
 
-
         if(bundle.containsKey(KEY_FROM)){
             from = bundle.getString(KEY_FROM);
         }
 
-
         submitData();
-
-
-        /*
-        if(loginData == null && Network.isNetworkEnabled(this)){
-            //go to login page
-
-            Intent intent = new Intent(ResultActivity.this, LoginActivity.class);
-            Bundle loginbundle = new Bundle();
-            loginbundle.putString(LoginActivity.KEY_REQUEST_LOGIN_FROM,"ResultActivity");
-            intent.putExtras(loginbundle);
-            startActivityForResult(intent, 0);
-
-        }else if(loginData != null){
-
-            submitData();
-
-
-        }else{
-
-            //save data offline
-        }
-
-        */
 
     }
 
@@ -193,6 +169,23 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         alert.show();
     }
 
+    private  void buildAlertNoInternet()
+    {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ResultActivity.this);
+        builder.setMessage(getString(R.string.result_no_internet))
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.service_button_ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        saveTask(taskSave, null);
+                        navigateToUnfinishTaskList();
+                    }
+                });
+
+        alert = builder.create();
+        alert.show();
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -212,22 +205,6 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         if(v == okButton){
 
             navigateToUnfinishTaskList();
-
-           /* if(success){
-                FinishDialogFragment alert = new FinishDialogFragment();
-                alert.setmListener(new FinishDialogFragment.onActionListener() {
-                    @Override
-                    public void onFinishDialog() {
-                        //getUnfinishTask();
-                        navigateToUnfinishTaskList();
-                    }
-                });
-                alert.show(getSupportFragmentManager(), "finish");
-
-            }else{
-                //getUnfinishTask();
-                navigateToUnfinishTaskList();
-            }*/
 
         }
     }
@@ -335,16 +312,6 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                         signature.setEngineerSignature(uploadData.getParameter().getSignature2());
                     }
 
-//                    int i = 0;
-//                    for (Image image : images){
-//                        taskSave.getTaskImages().set(i, image);
-//                        i++;
-//                    }
-//
-//                    taskSave.getSignature().getCustomerSignatureImage().setImagePath(signature.getCustomerSignatureImage().getImagePath());
-//                    taskSave.getSignature().getCustomerSignatureImage().setCapturedAt(signature.getCustomerSignatureImage().getCapturedAt());
-//                    taskSave.getSignature().getEngineerSignatureImage().setImagePath(signature.getEngineerSignatureImage().getImagePath());
-//                    taskSave.getSignature().getEngineerSignatureImage().setCapturedAt(signature.getEngineerSignatureImage().getCapturedAt());
 
                     images.get(0).setImagePath(null);
                     images.get(1).setImagePath(null);
@@ -437,6 +404,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                     deleteTask(taskSave.getTaskId());
 
                     //saveTask(taskSave);
+                    showResultSuccess();
 
                 } else {
 
@@ -445,6 +413,10 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
                         message = submitData.getMessage();
                     } else {
                         message = response.raw().message();
+                    }
+
+                    if(message == null || message.isEmpty()){
+                        message = getResources().getString(R.string.result_submit_failed);
                     }
 
                     showResultFail();
@@ -473,6 +445,14 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         messageText.setText(getString(R.string.service_popup_fail_message));
 
         success = false;
+    }
+
+    private void showResultSuccess(){
+        imageView.setImageResource(R.drawable.success_icon);
+        titleText.setText(getString(R.string.service_popup_success_title));
+        messageText.setText(getString(R.string.service_popup_success_message));
+
+        success = true;
     }
 
     private void saveTask(Task task){
@@ -557,11 +537,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
         }else{
 
-            //save data offline
-            //saveTask(taskSave, loginData);
-            saveTask(taskSave, null);
-            //getUnfinishTask();
-            navigateToUnfinishTaskList();
+            buildAlertNoInternet();
 
         }
 

@@ -653,6 +653,8 @@ public class ServiceFragment extends Fragment implements
             }
         }
 
+        saveTask(task, loginData);
+
     }
 
     @Override
@@ -677,7 +679,6 @@ public class ServiceFragment extends Fragment implements
                 bundle.putString(ResultActivity.KEY_FROM, ResultActivity.class.getSimpleName());
             }
 
-            //bundle.putString("shopName", loginData.getShopName());
             intent.putExtras(bundle);
             getActivity().startActivity(intent);
             getActivity().finish();
@@ -869,5 +870,18 @@ public class ServiceFragment extends Fragment implements
             dataSource.deleteTask(task.getTaskId());
         }
 
+    }
+
+    public void intentChectSendEmail(String Error) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"pongku71@gmail.com"});
+        i.putExtra(Intent.EXTRA_SUBJECT, " กรุณาระบุปัญหาของคุณด้วยค่ะ !!! ");
+        i.putExtra(Intent.EXTRA_TEXT   ,Error);
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+
+        }
     }
 }

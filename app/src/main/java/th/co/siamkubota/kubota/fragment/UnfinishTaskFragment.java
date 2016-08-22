@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import th.co.siamkubota.kubota.activity.ServiceActivity;
 import th.co.siamkubota.kubota.adapter.UnfinishTaskAdapter;
 import th.co.siamkubota.kubota.adapter.UnfinishTaskSectionAdapter;
 import th.co.siamkubota.kubota.adapter.UnsendTaskAdapter;
+import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.model.OfflineTask;
 import th.co.siamkubota.kubota.sqlite.TaskDataSource;
 import th.co.siamkubota.kubota.utils.function.Converter;
@@ -112,63 +114,13 @@ public class UnfinishTaskFragment extends Fragment implements
 
         getOfflineTask();
 
+        LinearLayout listFooterView = new LinearLayout(getActivity());
+        AbsListView.LayoutParams paramsfooter = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Converter.dpTopx(getActivity(), 120));
+        listFooterView.setGravity(Gravity.CENTER);
+        listFooterView.setLayoutParams(paramsfooter);
 
-       // if(datalist != null){
-            //adapter = new UnfinishTaskAdapter(getActivity(), datalist);
+        startNewTaskButton.setOnClickListener(this);
 
-            /*
-            adapter = new UnfinishTaskSectionAdapter(getActivity(), R.layout.item_unfinish_header);
-
-            unsendTaskAdapter = new UnsendTaskAdapter(getActivity(),datalist );
-            unfinishTaskAdapter = new UnfinishTaskAdapter(getActivity(),datalist );
-
-            unsendTaskAdapter.setOnClickListener(this);
-
-            adapter.addSection(getString(R.string.unfinish_task_unsend), unsendTaskAdapter);
-            adapter.addSection(getString(R.string.unfinish_task), unfinishTaskAdapter);
-
-
-            listView.setAdapter(adapter);
-            listView.setOnItemClickListener(this);
-
-            */
-
-
-//            LinearLayout listHeaderView = (LinearLayout)View.inflate(getActivity(),
-//                    R.layout.header_listview, null);
-//            LinearLayout listFooterView = (LinearLayout)View.inflate(getActivity(),
-//                    R.layout.footer_listview, null);
-
-            /*
-            LinearLayout listHeaderView  = new LinearLayout(getActivity());
-            listHeaderView.setGravity(Gravity.CENTER);
-            //LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Converter.dpTopx(getActivity(), 70));
-            listHeaderView.setLayoutParams(params);
-            //params.setMargins(left, top, left, top);
-
-            TextView listTitle = (TextView)View.inflate(getActivity(),
-                    R.layout.textview_title, null);
-
-            listHeaderView.addView(listTitle);
-
-            */
-
-            LinearLayout listFooterView = new LinearLayout(getActivity());
-            AbsListView.LayoutParams paramsfooter = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Converter.dpTopx(getActivity(), 120));
-            listFooterView.setGravity(Gravity.CENTER);
-            listFooterView.setLayoutParams(paramsfooter);
-
-
-           /* startNewTaskButton = (Button) View.inflate(getActivity(),
-                    R.layout.button_white, null);*/
-            startNewTaskButton.setOnClickListener(this);
-
-            //listFooterView.addView(startNewTaskButton);
-
-            //listView.addHeaderView(listHeaderView);
-            //listView.addFooterView(listFooterView);
-        //}
 
         return rootView;
     }
@@ -235,6 +187,8 @@ public class UnfinishTaskFragment extends Fragment implements
             mListener.onDisplayTask(null);
         }else{
 
+            Logger.Log("onclick new job","onclick new job");
+
             int key = (int)v.getTag(R.id.key);
             if(key == KEY_DELETE){
 
@@ -242,6 +196,7 @@ public class UnfinishTaskFragment extends Fragment implements
                 buildAlertConfirmDelete(task);
 
             }else if(key == KEY_SEND){
+
 
                 OfflineTask task = (OfflineTask) v.getTag(R.id.value);
 

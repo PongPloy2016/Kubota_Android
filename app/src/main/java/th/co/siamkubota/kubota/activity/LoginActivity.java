@@ -268,6 +268,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         message = response.raw().message();
                     }
 
+                    if(message == null || message.isEmpty()){
+                        message = getResources().getString(R.string.login_default_error_message);
+                    }
+
                     passwordEditText.setText("");
 
                     Ui.showAlertError(LoginActivity.this, message);

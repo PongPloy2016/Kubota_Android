@@ -251,7 +251,12 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
         pager.setCurrentItem(0);
 
-        setSelectPhoto();
+        if( pager == null){
+
+        }
+        else {
+            setSelectPhoto();
+        }
 
         validateInput();
 

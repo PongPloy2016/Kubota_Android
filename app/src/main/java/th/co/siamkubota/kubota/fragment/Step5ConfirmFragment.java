@@ -199,16 +199,6 @@ public class Step5ConfirmFragment extends Fragment implements
             mListener.onConfirmSubmit(this, true);
 
         }else{
-            /*
-            if(!complete){
-                dataComplete = false;
-                mListener.onFragmentDataComplete(this,dataComplete, null);
-            }else {
-                //cancelButton.setEnabled(false);
-                dataComplete = true;
-                mListener.onFragmentDataComplete(this,dataComplete, null);
-            }
-            */
 
             mListener.onConfirmSubmit(this, false);
 
