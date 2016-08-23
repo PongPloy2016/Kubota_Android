@@ -22,6 +22,7 @@ import java.util.List;
 import io.swagger.client.model.Image;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.activity.ImageViewActivity;
+import th.co.siamkubota.kubota.activity.MainActivity;
 import th.co.siamkubota.kubota.adapter.PhotoPagerAdapter;
 import th.co.siamkubota.kubota.adapter.QuestionPagerAdapter;
 import th.co.siamkubota.kubota.app.Config;
@@ -218,33 +219,39 @@ public class Step4QuestionnairFragment extends Fragment implements
         button3.setOnClickListener(this);
 
 
-        mListener = (Step4QuestionnairFragment.OnFragmentInteractionListener) getParentFragment();
+        try {
 
+            mListener = (Step4QuestionnairFragment.OnFragmentInteractionListener) getParentFragment();
 
-        pager.setAdapter(adapter);
-        pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
-        pager.setOffscreenPageLimit(3);
-        pager.setPagingEnabled(true);
+            pager.setAdapter(adapter);
+            pager.addOnPageChangeListener(pageChangeListener = new CustomOnPageChangeListener());
+            pager.setOffscreenPageLimit(3);
+            pager.setPagingEnabled(true);
 
-        int i = 0;
-        for (Question q : datalist){
+            int i = 0;
+            for (Question q : datalist){
 
-            if(!q.isComplete()){
-                pager.setCurrentItem(i);
-                break;
+                if(!q.isComplete()){
+                    pager.setCurrentItem(i);
+                    break;
+                }
+
+                i++;
             }
 
-            i++;
-        }
+            if(i == 3){
+                dataComplete = true;
+                pager.setCurrentItem(0);
+            }else{
+                dataComplete = false;
+            }
 
-        if(i == 3){
-            dataComplete = true;
-            pager.setCurrentItem(0);
-        }else{
-            dataComplete = false;
+            validateInput();
+        }catch (NullPointerException e){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
-
-        validateInput();
 
 
     }

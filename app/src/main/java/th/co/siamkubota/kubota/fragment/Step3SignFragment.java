@@ -31,6 +31,7 @@ import java.util.Date;
 import io.swagger.client.model.Image;
 import io.swagger.client.model.Signature;
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.activity.MainActivity;
 import th.co.siamkubota.kubota.activity.SignaturePadActivity;
 import th.co.siamkubota.kubota.app.AppController;
 import th.co.siamkubota.kubota.app.Config;
@@ -194,45 +195,54 @@ public class Step3SignFragment extends Fragment implements
     @Override
     public void onViewCreated(View v, Bundle savedInstanceState) {
 
-        if(savedInstanceState == null){
+        try{
 
-            rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
-            imageCustomerSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageCustomerSignature);
-            imageTechnicianSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageTechnicianSignature);
-            editTextTotalCost = (EditText) v.findViewById(R.id.editTextTotalCost);
-            editTextCustomerSignDate = (EditText) v.findViewById(R.id.editTextCustomerSignDate);
-            editTextTechnicianSignDate = (EditText) v.findViewById(R.id.editTextTechnicianSignDate);
-            editTextCustomerName = (EditText) v.findViewById(R.id.editTextCustomerName);
-            editTextTechnicianName = (EditText) v.findViewById(R.id.editTextTechnicianName);
-            editTextRemark = (EditText) v.findViewById(R.id.editTextRemark);
-            signatureCustomerHintLayout = (LinearLayout) v.findViewById(R.id.signatureCustomerHintLayout);
-            signatureTechnicianHintLayout = (LinearLayout) v.findViewById(R.id.signatureTechnicianHintLayout);
-            checkBoxUserAccept = (CheckBox) v.findViewById(R.id.checkBoxUserAccept);
-            checkBoxTecnicianAccept = (CheckBox) v.findViewById(R.id.checkBoxTecnicianAccept);
+            if(savedInstanceState == null){
+
+                rootLayout = (LinearLayout) v.findViewById(R.id.rootLayout);
+                imageCustomerSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageCustomerSignature);
+                imageTechnicianSignature = (SelectableRoundedImageView) v.findViewById(R.id.imageTechnicianSignature);
+                editTextTotalCost = (EditText) v.findViewById(R.id.editTextTotalCost);
+                editTextCustomerSignDate = (EditText) v.findViewById(R.id.editTextCustomerSignDate);
+                editTextTechnicianSignDate = (EditText) v.findViewById(R.id.editTextTechnicianSignDate);
+                editTextCustomerName = (EditText) v.findViewById(R.id.editTextCustomerName);
+                editTextTechnicianName = (EditText) v.findViewById(R.id.editTextTechnicianName);
+                editTextRemark = (EditText) v.findViewById(R.id.editTextRemark);
+                signatureCustomerHintLayout = (LinearLayout) v.findViewById(R.id.signatureCustomerHintLayout);
+                signatureTechnicianHintLayout = (LinearLayout) v.findViewById(R.id.signatureTechnicianHintLayout);
+                checkBoxUserAccept = (CheckBox) v.findViewById(R.id.checkBoxUserAccept);
+                checkBoxTecnicianAccept = (CheckBox) v.findViewById(R.id.checkBoxTecnicianAccept);
 
 
-            if(imageCustomer != null && imageCustomer.getPath() != null && !imageCustomer.getPath().isEmpty()){
-                imageCustomerSignature.setImageURI(Uri.fromFile(new File(imageCustomer.getPath())));
-                editTextCustomerSignDate.setText(Converter.DateToString(imageCustomer.getDate(),"dd/MM/yyyy"));
-                signatureCustomerHintLayout.setVisibility(View.GONE);
+                if(imageCustomer != null && imageCustomer.getPath() != null && !imageCustomer.getPath().isEmpty()){
+                    imageCustomerSignature.setImageURI(Uri.fromFile(new File(imageCustomer.getPath())));
+                    editTextCustomerSignDate.setText(Converter.DateToString(imageCustomer.getDate(),"dd/MM/yyyy"));
+                    signatureCustomerHintLayout.setVisibility(View.GONE);
+                }
+
+                if(imageTechnician != null && imageTechnician.getPath() != null && !imageTechnician.getPath().isEmpty()){
+                    imageTechnicianSignature.setImageURI(Uri.fromFile(new File(imageTechnician.getPath())));
+                    editTextTechnicianSignDate.setText(Converter.DateToString(imageTechnician.getDate(),"dd/MM/yyyy"));
+                    signatureTechnicianHintLayout.setVisibility(View.GONE);
+                }
+
+                Ui.setupUI(getActivity(), rootLayout);
+
             }
 
-            if(imageTechnician != null && imageTechnician.getPath() != null && !imageTechnician.getPath().isEmpty()){
-                imageTechnicianSignature.setImageURI(Uri.fromFile(new File(imageTechnician.getPath())));
-                editTextTechnicianSignDate.setText(Converter.DateToString(imageTechnician.getDate(),"dd/MM/yyyy"));
-                signatureTechnicianHintLayout.setVisibility(View.GONE);
-            }
+            mListener = (Step3SignFragment.OnFragmentInteractionListener) getParentFragment();
 
-            Ui.setupUI(getActivity(), rootLayout);
+            setData();
+            setDataChangeListener();
+            validateInput();
+            setEnabled(editabled);
 
+
+        }catch (NullPointerException e){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
-
-        mListener = (Step3SignFragment.OnFragmentInteractionListener) getParentFragment();
-
-        setData();
-        setDataChangeListener();
-        validateInput();
-        setEnabled(editabled);
 
     }
 
@@ -560,7 +570,7 @@ public class Step3SignFragment extends Fragment implements
         }
 
         public void checkRequire(EditText editText){
-            if (!editText.getText().toString().isEmpty() && view != null) {
+            if (!editText.getText().toString().trim().isEmpty() && view != null) {
 
                 LinearLayout parent = (LinearLayout) this.view.getParent();
                 /*ArrayList<View> requires = new ArrayList<View>();

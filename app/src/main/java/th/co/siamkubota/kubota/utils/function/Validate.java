@@ -142,7 +142,7 @@ public class Validate {
                 EditText editText = (EditText) view;
 
                 if ((editText.getTag() != null && editText.getTag().toString().equals(required.toString()))
-                        && (editText.length() <= 0 || editText.getText().toString().isEmpty())  ) {
+                        && (editText.length() <= 0 || editText.getText().toString().trim().isEmpty()) ) {
                     return editText;
                 }
             }else if(view instanceof RadioGroup){
@@ -190,7 +190,7 @@ public class Validate {
                 EditText editText = (EditText) view;
 
                 if ((editText.getTag() != null && editText.getTag().toString().contains(required.toString()))
-                        && (editText.length() <= 0 || editText.getText().toString().isEmpty())  ) {
+                        && (editText.length() <= 0 || editText.getText().toString().trim().isEmpty())) {
                     return editText;
                 }
 

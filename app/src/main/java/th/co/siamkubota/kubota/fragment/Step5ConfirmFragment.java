@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.activity.MainActivity;
 import th.co.siamkubota.kubota.activity.ResultActivity;
 
 /**
@@ -131,11 +132,17 @@ public class Step5ConfirmFragment extends Fragment implements
             confirmButton.setOnClickListener(this);
             cancelButton.setOnClickListener(this);
 
-            mListener = (Step5ConfirmFragment.OnFragmentInteractionListener) getParentFragment();
+            try {
+                mListener = (Step5ConfirmFragment.OnFragmentInteractionListener) getParentFragment();
 
-            if(complete){
-                mListener.onFragmentDataComplete(this, dataComplete, null);
-                //setDataComplete(complete);
+                if(complete){
+                    mListener.onFragmentDataComplete(this, dataComplete, null);
+                    //setDataComplete(complete);
+                }
+            }catch (NullPointerException e){
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
 
         }

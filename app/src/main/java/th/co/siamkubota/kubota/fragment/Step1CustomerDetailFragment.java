@@ -68,6 +68,7 @@ import java.util.Locale;
 
 import io.swagger.client.model.TaskInfo;
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.activity.MainActivity;
 import th.co.siamkubota.kubota.activity.MapsActivity;
 import th.co.siamkubota.kubota.activity.MapsDragableActivity;
 import th.co.siamkubota.kubota.activity.MapsFixPointActivity;
@@ -414,27 +415,37 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         customerAddressBlock = (LinearLayout) v.findViewById(R.id.customerAddressBlock);
 
-        radioButton1.getCompoundDrawables()[0].setBounds(0, 0, 10, 10);
+        try{
 
-        spinnerJobType.setAdapter(selectNoneJobTypeSpinnerAdapter);
-        spinnerProduct.setAdapter(selectNoneProductSpinnerAdapter);
-        spinnerModel.setAdapter(selectNoneModelSpinnerAdapter);
+            radioButton1.getCompoundDrawables()[0].setBounds(0, 0, 10, 10);
+
+            spinnerJobType.setAdapter(selectNoneJobTypeSpinnerAdapter);
+            spinnerProduct.setAdapter(selectNoneProductSpinnerAdapter);
+            spinnerModel.setAdapter(selectNoneModelSpinnerAdapter);
 
 
-        spinnerModel.setPrompt(getString(R.string.service_hint_model));
+            spinnerModel.setPrompt(getString(R.string.service_hint_model));
 
-        Ui.setupUI(getActivity(), rootLayout);
+            Ui.setupUI(getActivity(), rootLayout);
 
-        mListener = (Step1CustomerDetailFragment.OnFragmentInteractionListener) getParentFragment();
+            mListener = (Step1CustomerDetailFragment.OnFragmentInteractionListener) getParentFragment();
 
-        setData();
-        setDataChangeListener();
+            setData();
+            setDataChangeListener();
 
-        if (getActivity() != null) {
-            validateInput();
+            if (getActivity() != null) {
+                validateInput();
+            }
+
+            spinnerJobType.requestFocus();
+
+
+
+        }catch (NullPointerException e){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
-
-        spinnerJobType.requestFocus();
 
     }
 
@@ -1147,7 +1158,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         }
 
         public void checkRequire(EditText editText) {
-            if (!editText.getText().toString().isEmpty() && view != null) {
+            if (!editText.getText().toString().trim().isEmpty() && view != null) {
 
                 LinearLayout parent = (LinearLayout) this.view.getParent();
                 /*ArrayList<View> requires = new ArrayList<View>();

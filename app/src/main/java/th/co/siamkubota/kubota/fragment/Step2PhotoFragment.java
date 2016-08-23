@@ -29,6 +29,7 @@ import java.util.List;
 import io.swagger.client.model.Image;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.activity.ImageViewActivity;
+import th.co.siamkubota.kubota.activity.MainActivity;
 import th.co.siamkubota.kubota.adapter.PhotoPagerAdapter;
 import th.co.siamkubota.kubota.adapter.PhotoViewPagerAdapter;
 import th.co.siamkubota.kubota.app.Config;
@@ -232,34 +233,40 @@ PhotoPageFragment.OnFragmentInteractionListener{
         button4 = (Button) v.findViewById(R.id.button4);
         pager = (ViewPager) v.findViewById(R.id.pagerPhoto);
 
-        previousButton = (ImageButton) v.findViewById(R.id.previousButton);
-        nextButton = (ImageButton) v.findViewById(R.id.nextButton);
+        try{
+            previousButton = (ImageButton) v.findViewById(R.id.previousButton);
+            nextButton = (ImageButton) v.findViewById(R.id.nextButton);
 
-        button1.setOnClickListener(this);
-        button2.setOnClickListener(this);
-        button3.setOnClickListener(this);
-        button4.setOnClickListener(this);
+            button1.setOnClickListener(this);
+            button2.setOnClickListener(this);
+            button3.setOnClickListener(this);
+            button4.setOnClickListener(this);
 
-        previousButton.setOnClickListener(this);
-        nextButton.setOnClickListener(this);
+            previousButton.setOnClickListener(this);
+            nextButton.setOnClickListener(this);
 
-        mListener = (Step2PhotoFragment.OnFragmentInteractionListener) getParentFragment();
+            mListener = (Step2PhotoFragment.OnFragmentInteractionListener) getParentFragment();
 
-        pager.setAdapter(adapter);
-        pager.setOffscreenPageLimit(4);
-        pager.addOnPageChangeListener(pageChangeListener);
+            pager.setAdapter(adapter);
+            pager.setOffscreenPageLimit(4);
+            pager.addOnPageChangeListener(pageChangeListener);
 
-        pager.setCurrentItem(0);
+            pager.setCurrentItem(0);
 
-        if( pager == null){
+            if( pager == null){
 
+            }
+            else {
+                setSelectPhoto();
+            }
+
+            validateInput();
+
+        }catch (NullPointerException e){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
-        else {
-            setSelectPhoto();
-        }
-
-        validateInput();
-
 
     }
 
