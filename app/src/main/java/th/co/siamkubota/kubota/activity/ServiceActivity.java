@@ -39,6 +39,7 @@ import th.co.siamkubota.kubota.fragment.ServiceFragment;
 import th.co.siamkubota.kubota.fragment.SignaturePadFragment;
 import th.co.siamkubota.kubota.fragment.UnfinishTaskFragment;
 import th.co.siamkubota.kubota.interfaces.OnHomePressedListener;
+import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.model.OfflineTask;
 import th.co.siamkubota.kubota.service.Constants;
 import th.co.siamkubota.kubota.service.GeocodeAddressIntentService;
@@ -83,7 +84,6 @@ public class ServiceActivity extends BaseActivity implements
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
-
             mTitle = new AtomicReference<>((TextView) toolbar.findViewById(R.id.toolbar_title));
 
 
@@ -95,10 +95,12 @@ public class ServiceActivity extends BaseActivity implements
 
                 if(bundle.containsKey(LoginActivity.KEY_LOGIN_DATA)){
                     loginData = bundle.getParcelable(LoginActivity.KEY_LOGIN_DATA);
+                    Logger.Log("loginData", String.valueOf(loginData));
                 }
 
                 if(loginData != null){
                     mTitle.get().setText(loginData.getShopName());
+                     Logger.Log("loginData", loginData.getShopName());
                 }
 
 
@@ -108,11 +110,13 @@ public class ServiceActivity extends BaseActivity implements
                 ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
                 //ft.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down);
                 UnfinishTaskFragment unfinishTaskFragment = UnfinishTaskFragment.newInstance(unfinishTasks);
-                unfinishTaskFragment.setmListener(this);
-                ft.replace(R.id.content, unfinishTaskFragment, "unfinishTaskFragment");
-                //ft.addToBackStack(null);
+                unfinishTaskFragment.setmListener(this,getApplicationContext());
+                ft.add(R.id.content, unfinishTaskFragment, "unfinishTaskFragment");
+              //  ft.addToBackStack(null);
                 // Start the animated transition.
                 ft.commit();
+
+            Logger.Log("unfinishTaskFragment","unfinishTaskFragment");
 
                /* if(unfinishTasks != null && unfinishTasks.size() > 0){
 
@@ -191,15 +195,15 @@ public class ServiceActivity extends BaseActivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        saveTask(task.getTask(), task.getLoginData());
+                       // saveTask(task.getTask(), task.getLoginData());
 
-                        getUnfinishTask();
+                       // getUnfinishTask();
 
                         ft = getSupportFragmentManager().beginTransaction();
                         ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
                         //ft.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down);
                         UnfinishTaskFragment unfinishTaskFragment = UnfinishTaskFragment.newInstance(unfinishTasks);
-                        unfinishTaskFragment.setmListener(ServiceActivity.this);
+                        unfinishTaskFragment.setmListener(ServiceActivity.this,getApplicationContext());
                         ft.replace(R.id.content, unfinishTaskFragment, "unfinishTaskFragment");
                         //ft.addToBackStack(null);
                         // Start the animated transition.
@@ -217,9 +221,11 @@ public class ServiceActivity extends BaseActivity implements
     public void onBackPressed() {
 
 
+        Logger.Log("onBackPressed Service ","onBackPressed Service");
         if(!leave){
             buildAlertConfirmLeave(KeyEvent.KEYCODE_BACK);
             //buildAlertSaveTask(KeyEvent.KEYCODE_BACK);
+            Logger.Log("onBackPressed back ","onBackPressed back");
             return;
         }
 
@@ -228,6 +234,7 @@ public class ServiceActivity extends BaseActivity implements
             if(f instanceof ServiceFragment){
                 ((ServiceFragment)f).deleteTask();
             }
+            Logger.Log("onBackPressed deleteTask ","onBackPressed deleteTask");
         }
 
         super.onBackPressed();
@@ -264,7 +271,7 @@ public class ServiceActivity extends BaseActivity implements
         dataSource = new TaskDataSource(ServiceActivity.this);
         dataSource.open();
         //unfinishTasks = dataSource.getAllTasks();
-        unfinishTasks = (ArrayList<OfflineTask>) dataSource.getOfflineTasks();
+        unfinishTasks = (ArrayList<OfflineTask>) dataSource.getOfflineTasks(getApplicationContext());
 
     }
 

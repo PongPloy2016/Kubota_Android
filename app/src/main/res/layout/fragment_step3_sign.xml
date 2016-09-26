@@ -53,7 +53,7 @@
 
         <TextView
             style="@style/TextTitleOrangeStyle"
-            android:text="@string/service_title_customer_sign"/>
+            android:text="@string/service_title_customer_sign_edit"/>
 
         <View
             android:layout_width="match_parent"
@@ -109,7 +109,7 @@
                         android:textColor="@color/text_hint_gray"
                         android:textSize="15dp"
                         android:layout_marginLeft="10dp"
-                        android:text="@string/service_hint_signature"/>
+                        android:text="@string/service_hint_signature_edit"/>
                 </LinearLayout>
 
 
@@ -182,7 +182,7 @@
 
         <TextView
             style="@style/TextTitleOrangeStyle"
-            android:text="@string/service_title_technician_sign"/>
+            android:text="@string/service_title_technician_sign_edit"/>
 
         <View
             android:layout_width="match_parent"
@@ -238,7 +238,7 @@
                         android:textColor="@color/text_hint_gray"
                         android:textSize="15dp"
                         android:layout_marginLeft="10dp"
-                        android:text="@string/service_hint_signature"/>
+                        android:text="@string/service_hint_signature_edit"/>
                 </LinearLayout>
 
 

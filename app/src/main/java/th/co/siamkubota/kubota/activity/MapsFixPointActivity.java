@@ -441,10 +441,25 @@ public class MapsFixPointActivity extends BaseActivity
                 ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
                 return;
             }else{
+//                Criteria criteria = new Criteria();
+//                criteria.setAccuracy(Criteria.ACCURACY_HIGH);
+//                String provider = locMgr.getBestProvider(criteria, true);
+//                locMgr.requestLocationUpdates(provider, 0, 0, locLsnr);
+
                 Criteria criteria = new Criteria();
-                criteria.setAccuracy(Criteria.ACCURACY_HIGH);
-                String provider = locMgr.getBestProvider(criteria, true);
-                locMgr.requestLocationUpdates(provider, 0, 0, locLsnr);
+                //Use FINE or COARSE (or NO_REQUIREMENT) here
+                criteria.setAccuracy(Criteria.ACCURACY_FINE);
+                criteria.setPowerRequirement(Criteria.POWER_LOW);
+                criteria.setAltitudeRequired(true);
+                criteria.setSpeedRequired(true);
+                criteria.setCostAllowed(true);
+                criteria.setBearingRequired(true);
+
+                //API level 9 and up
+                criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+                criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+                criteria.setBearingAccuracy(Criteria.ACCURACY_LOW);
+                criteria.setSpeedAccuracy(Criteria.ACCURACY_MEDIUM);
 //            locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 //                    0, 0, locLsnr);
             }

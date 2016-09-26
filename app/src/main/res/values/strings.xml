@@ -45,7 +45,9 @@
     <string name="service_title_usage_info">ข้อมูลการใช้งาน</string>
     <string name="service_title_customer_info">ข้อมูลลูกค้าเบื้องต้น</string>
     <string name="service_title_customer_sign">ลงชื่อลูกค้า</string>
+    <string name="service_title_customer_sign_edit">ลงชื่อลูกค้าตัวบรรจง</string>
     <string name="service_title_technician_sign">ลงชื่อช่างบริการ</string>
+    <string name="service_title_technician_sign_edit">ลงชื่อช่างบริการตัวบรรจง</string>
     <string name="service_title_confirm_submittion">ยืนยันการส่งข้อมูล</string>
 
     <string name="service_radio_caption_owner">เจ้าของรถ</string>
@@ -78,6 +80,7 @@
 
     <string name="service_hint_total_cost">ยอดค่าอะไหล่</string>
     <string name="service_hint_signature">ลายมือชื่อ</string>
+    <string name="service_hint_signature_edit">ลงชื่อตัวบรรจง</string>
     <string name="service_hint_date">วว/ดด/ปปปป</string>
     <string name="service_hint_customer_name">ชื่อลูกค้า</string>
     <string name="service_hint_technician_name">ชื่อผู้ให้บริการ</string>
@@ -142,5 +145,9 @@
     <!--Result-->
     <string name="result_no_internet">กรุณาเชื่อมต่ออินเตอร์เน็ต</string>
     <string name="result_submit_failed">ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง</string>
+
+
+    <string name="google_maps_key_release">AIzaSyD2WbUqD-tKSNlGVIPUBx4Y0ZBGn11Q7w0</string>
+    <string name="google_maps_key_debug">AIzaSyDib0hl63S4iG1m9oGTJ4tzjk5kU19oS5o</string>
 
 </resources>

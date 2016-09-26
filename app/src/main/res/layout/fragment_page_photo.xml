@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,6 +14,24 @@ android:layout_marginBottom="10dp"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
     android:id="@id/rootLayout">
+
+
+    <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+        android:id="@+id/progressBar"
+        android:visibility="gone"
+        app:mlpb_show_arrow="true"
+        app:mlpb_arrow_height="5dp"
+        app:mlpb_arrow_width="10dp"
+        app:mlpb_enable_circle_background="true"
+        android:layout_centerVertical="true"
+        app:mlpb_progress_stoke_width="5dp"
+        app:mlpb_progress_text_visibility="invisible"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        />
+
+
 
 
     <com.joooonho.SelectableRoundedImageView
@@ -31,6 +50,9 @@ android:layout_marginBottom="10dp"
         app:sriv_border_color="#ffe3e1e1"
         app:sriv_oval="false"
         android:visibility="visible"/>
+
+
+
 
     <Button
         android:id="@+id/cameraButton"

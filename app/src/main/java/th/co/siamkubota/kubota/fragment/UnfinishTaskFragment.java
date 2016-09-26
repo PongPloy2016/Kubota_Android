@@ -1,10 +1,13 @@
 package th.co.siamkubota.kubota.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +22,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +40,8 @@ import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.model.OfflineTask;
 import th.co.siamkubota.kubota.sqlite.TaskDataSource;
 import th.co.siamkubota.kubota.utils.function.Converter;
+
+import static com.google.android.gms.internal.zzhu.runOnUiThread;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,9 +77,13 @@ public class UnfinishTaskFragment extends Fragment implements
     private UnfinishTaskSectionAdapter adapter;
     private UnfinishTaskAdapter unfinishTaskAdapter;
     private UnsendTaskAdapter unsendTaskAdapter;
-
+    private String checkData ;
+    private MaterialDialog materialDialog;
 
     private OnFragmentInteractionListener mListener;
+    private Context mContext ;
+
+    private Task taskSave;
 
     private TaskDataSource dataSource;
     private  AlertDialog alert;
@@ -90,8 +101,40 @@ public class UnfinishTaskFragment extends Fragment implements
         // Required empty public constructor
     }
 
-    public void setmListener(OnFragmentInteractionListener mListener) {
+    @Override
+    public void onResume() {
+
+        if (getArguments() != null) {
+            checkData = getArguments().getString("fragment_noUnfinish");
+            if(checkData != null){
+
+                if(checkData.equals("123")){
+
+
+                }
+                else {
+
+                }
+                //  deleteTask("0");
+            }
+            Logger.Log("checkData",checkData);
+        }
+        else {
+
+        }
+        super.onResume();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+
+    }
+
+    public void setmListener(OnFragmentInteractionListener mListener , Context context) {
         this.mListener = mListener;
+        this.mContext = context ;
     }
 
     @Override
@@ -102,6 +145,8 @@ public class UnfinishTaskFragment extends Fragment implements
         }
 
         dataSource = new TaskDataSource(getActivity());
+
+
     }
 
     @Override
@@ -112,8 +157,16 @@ public class UnfinishTaskFragment extends Fragment implements
         listView = (ListView) rootView.findViewById(R.id.listView);
         startNewTaskButton = (Button) rootView.findViewById(R.id.buttonWhite);
 
-        getOfflineTask();
+//        if(checkData.equals("123")){
+//
+//        }
+//        else {
+        //
+//        }
 
+        loadData(  );
+
+        //   getOfflineTask();
         LinearLayout listFooterView = new LinearLayout(getActivity());
         AbsListView.LayoutParams paramsfooter = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Converter.dpTopx(getActivity(), 120));
         listFooterView.setGravity(Gravity.CENTER);
@@ -131,6 +184,69 @@ public class UnfinishTaskFragment extends Fragment implements
             mListener.onFragmentInteraction(uri);
         }
     }*/
+
+
+    private void loadData( ) {
+        new AsyncTask<Void, Void, Void>(){
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //     showIndeterminateProgressDialog(true);
+
+                if(materialDialog == null) {
+                    MaterialDialog.Builder builder = new MaterialDialog.Builder(UnfinishTaskFragment.this.getContext())
+                            .title("แจ้งเตือน")
+                            .content("กรุณารอซักครู่ค่ะ")
+                            .progress(true, 0);
+
+                    materialDialog = builder.build();
+                    materialDialog.show();
+                }
+
+
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        // do some thing which you want in try block
+                        try {
+                            getOfflineTask();
+                        } catch (Throwable e) {
+                            e.printStackTrace();
+
+                            //  intentChectSendEmail(e.toString());
+                            //  intentChectSendEmail(nameId);
+                        }
+                    }
+                });
+
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+
+
+                if(materialDialog.isShowing()){
+                    materialDialog.dismiss();
+
+                }
+
+                // materialDialog.hide();
+                //   materialDialog.hide();
+
+                Logger.Log("pDialog.dismiss() News", "pDialog.dismiss() News");
+
+            }
+        }.execute();
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -182,9 +298,21 @@ public class UnfinishTaskFragment extends Fragment implements
     @Override
     public void onClick(View v) {
         if(v == startNewTaskButton){
-            //getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+//            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             //getActivity().getSupportFragmentManager().popBackStack();
-            mListener.onDisplayTask(null);
+
+            try{
+                if(mListener != null) {
+                    mListener.onDisplayTask(null);
+                }
+
+            }
+            catch (Exception e){
+                intentChectSendEmail(e.toString());
+            }
+
+
+            Logger.Log("onclick new ","onclick new");
         }else{
 
             Logger.Log("onclick new job","onclick new job");
@@ -203,9 +331,17 @@ public class UnfinishTaskFragment extends Fragment implements
                 Intent intent = new Intent(getActivity(), ResultActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(ResultActivity.KEY_TASK, task.getTask());
+                Logger.Log("task.getTask()", String.valueOf(task.getTask()));
+
                 //bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA, task.getLoginData());
-                bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA,((ServiceActivity) mListener).getLoginData());
+                if(((ServiceActivity) mListener).getLoginData() != null){
+                    bundle.putParcelable(ResultActivity.KEY_LOGIN_DATA,((ServiceActivity) mListener).getLoginData());
+                }
+
+                Logger.Log("(ServiceActivity) mListener).getLoginData()", String.valueOf(((ServiceActivity) mListener).getLoginData()));
                 bundle.putString(ResultActivity.KEY_FROM, ResultActivity.class.getSimpleName());
+                Logger.Log("ResultActivity.KEY_FROM",  ResultActivity.class.getSimpleName());
+
 
                 intent.putExtras(bundle);
                 getActivity().startActivity(intent);
@@ -220,7 +356,10 @@ public class UnfinishTaskFragment extends Fragment implements
     }
 
     private void getOfflineTask(){
-        datalist = (ArrayList<OfflineTask>) dataSource.getOfflineTasks();
+
+
+        datalist = (ArrayList<OfflineTask>) dataSource.getOfflineTasks(getContext());
+
 
         if(unsenddatalist == null){
             unsenddatalist = new ArrayList<OfflineTask>();
@@ -244,12 +383,18 @@ public class UnfinishTaskFragment extends Fragment implements
         }
 
         if(datalist.size() > 0){
+
+
             setAdapter();
+
+
         }/*else{
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
             getActivity().finish();
         }*/
+
+        materialDialog.hide();
     }
 
     private void setAdapter() {
@@ -296,7 +441,8 @@ public class UnfinishTaskFragment extends Fragment implements
                     public void onClick(DialogInterface dialog, int which) {
 
                         dataSource.deleteTask(task.getTask().getTaskId());
-                        getOfflineTask();
+                        //   getOfflineTask();
+                        loadData();
 
                     }
                 })
@@ -304,6 +450,29 @@ public class UnfinishTaskFragment extends Fragment implements
 
         alert = builder.create();
         alert.show();
+    }
+
+
+//    private void deleteTask(String taskId){
+//
+//        dataSource = new TaskDataSource(getContext());
+//        dataSource.open();
+//
+//        dataSource.deleteTask(taskId);
+//
+//    }
+
+    public void intentChectSendEmail(String Error) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"pongku71@gmail.com"});
+        i.putExtra(Intent.EXTRA_SUBJECT, " กรุณาระบุปัญหาของคุณด้วยค่ะ !!! ");
+        i.putExtra(Intent.EXTRA_TEXT   ,Error);
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+
+        }
     }
 
 }

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
@@ -24,6 +25,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.utils.L;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,8 +40,11 @@ import io.swagger.client.model.TaskInfo;
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.activity.LoginActivity;
 import th.co.siamkubota.kubota.activity.ResultActivity;
+import th.co.siamkubota.kubota.activity.ServiceActivity;
+import th.co.siamkubota.kubota.adapter.UnfinishTaskAdapter;
 import th.co.siamkubota.kubota.adapter.ViewPagerAdapter;
 import th.co.siamkubota.kubota.app.AppController;
+import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.model.OfflineTask;
 import th.co.siamkubota.kubota.model.Question;
 import th.co.siamkubota.kubota.sqlite.TaskDataSource;
@@ -70,9 +76,9 @@ public class ServiceFragment extends Fragment implements
 //    private String mParam1;
 //    private String mParam2;
     private String[] mTitle;
-    private OnFragmentInteractionListener mListener;
-    private AppController app;
 
+    private AppController app;
+    private FragmentTransaction ft;
     private LinearLayout rootLayout;
     private NoneScrollableViewPager pager;
     private ViewPagerAdapter adapter;
@@ -85,13 +91,13 @@ public class ServiceFragment extends Fragment implements
     private LinearLayout navigationControleLayout;
     private int Numboftabs;
     private CustomOnPageChangeListener pageChangeListener;
-
+    private List<OfflineTask> unfinishTasks;
     private LoginData loginData;
     private Task task;
     private TaskDataSource dataSource;
-
+    private OnFragmentInteractionListener mListener;
     //private boolean newTask = false;
-
+    private boolean numBackNoSaveData ;
     private FragmentManager mRetainedChildFragmentManager;
 
 
@@ -107,6 +113,8 @@ public class ServiceFragment extends Fragment implements
         fragment.setArguments(args);
         return fragment;
     }
+
+
 
     public ServiceFragment() {
         // Required empty public constructor
@@ -196,11 +204,20 @@ public class ServiceFragment extends Fragment implements
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
-        saveTask(task, loginData);
+        if(pageChangeListener != null){
+            task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
+            saveTask(task, loginData);
+            Logger.Log("saveTask","1");
 
-        outState.putParcelable("task", task);
-        outState.putParcelable("loginData", loginData);
+            outState.putParcelable("task", task);
+            outState.putParcelable("loginData", loginData);
+        }
+
+//        task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
+//        saveTask(task, loginData);
+//
+//        outState.putParcelable("task", task);
+//        outState.putParcelable("loginData", loginData);
     }
 
     @Override
@@ -281,8 +298,16 @@ public class ServiceFragment extends Fragment implements
     public void onDestroy() {
         super.onDestroy();
 
-        task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
-        saveTask(task, loginData);
+        if(String.valueOf(pageChangeListener.getCurrentPage() + 1) != null){
+            task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
+            Logger.Log("pageChangeListener.getCurrentPage", String.valueOf(pageChangeListener.getCurrentPage() + 1));
+            saveTask(task, loginData);  //no
+            Logger.Log("saveTask","2");
+        }
+        else {
+            Logger.Log("pageChangeListener.getCurrentPage null ", "pageChangeListener.getCurrentPage null");
+        }
+
     }
 
     private void setStepComplete(int step, boolean complete){
@@ -426,9 +451,12 @@ public class ServiceFragment extends Fragment implements
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnFragmentInteractionListener extends UnfinishTaskFragment.OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onSaveTask(OfflineTask task);
+
+        @Override
+        void onDisplayTask(OfflineTask task);
     }
 
     public void setStepTitle(String title){
@@ -492,13 +520,44 @@ public class ServiceFragment extends Fragment implements
         }else if(v == step5Button){
             pager.setCurrentItem(4, true);
         }else if(v == previousButton){
+
+            Logger.Log("previousButton back","previousButton");
             int currentPage = pageChangeListener.getCurrentPage();
-            --currentPage;
-            pager.setCurrentItem(currentPage = (currentPage >= 0 ? currentPage : 0));
+            Logger.Log("currentPage", String.valueOf(currentPage));
+            if(currentPage == 0){
+
+                ft = getFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+                //ft.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_down);
+                UnfinishTaskFragment unfinishTaskFragment = UnfinishTaskFragment.newInstance(unfinishTasks);
+                unfinishTaskFragment.setmListener(mListener,getContext());
+                Bundle bundle = new Bundle();
+                bundle.putString("fragment_noUnfinish", "123");
+                unfinishTaskFragment.setArguments(bundle);
+                ft.replace(R.id.content, unfinishTaskFragment, "unfinishTaskFragment");
+                //ft.addToBackStack(null);
+                // Start the animated transition.
+                ft.commit();
+            }
+            else {
+                --currentPage;
+                pager.setCurrentItem(currentPage = (currentPage >= 0 ? currentPage : 0));
+
+                Logger.Log("currentPage previousButton", String.valueOf(currentPage));
+
+            }
+
+
         }else if(v == nextButton){
+
+
             int currentPage = pageChangeListener.getCurrentPage();
+            Logger.Log("currentPage nextButton", String.valueOf(currentPage));
+
             ++currentPage;
+            Logger.Log("currentPage  nextButton ++ ", String.valueOf(currentPage));
             pager.setCurrentItem(currentPage = (currentPage < adapter.getCount() ? currentPage : (adapter.getCount() - 1)));
+            Logger.Log("adapter.getCount()-1 nextButton", String.valueOf(adapter.getCount() - 1));
         }else if(v == saveButton){
 
             OfflineTask offlineTask = new OfflineTask();
@@ -506,6 +565,8 @@ public class ServiceFragment extends Fragment implements
             offlineTask.setTask(task);
             offlineTask.setLoginData(loginData);
             mListener.onSaveTask(offlineTask);
+            //saveTask(task, loginData);
+            Logger.Log("saveTask","3");
         }
     }
 
@@ -515,6 +576,8 @@ public class ServiceFragment extends Fragment implements
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View layout = inflater.inflate(R.layout.toast_data_complete_layout,
                 (ViewGroup) getActivity().findViewById(R.id.toast_layout_root));
+        TextView textView =  (TextView) layout.findViewById(R.id.textView1) ;
+        textView.setText("Complete");
         Toast toast = new Toast(getActivity());
         toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 480);
         toast.setDuration(Toast.LENGTH_SHORT);
@@ -530,7 +593,7 @@ public class ServiceFragment extends Fragment implements
     @Override
     public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data) {
 
-       if(adapter == null){
+        if(adapter == null){
             Log.e("NULL ###", "adapter");
         }
 
@@ -544,12 +607,16 @@ public class ServiceFragment extends Fragment implements
 
         if(fragment instanceof Step1CustomerDetailFragment){
 
+            Logger.Log("Step1CustomDetailFragment","Step1CustomDetailFragment");
+
             setStepComplete(1, complete);
+
+            Logger.Log("setStepComplete", String.valueOf(complete));
 
             task.setTaskInfo((TaskInfo) data);
 
             if(complete){
-
+                Logger.Log("Step1CustomDetailFragment complete ","Step1CustomDetailFragment complete ");
                 //nextButton.setEnabled(true);
 
                 Step2PhotoFragment step2PhotoFragmentadapter = (Step2PhotoFragment)adapter.getItem(1);
@@ -560,17 +627,25 @@ public class ServiceFragment extends Fragment implements
 
                 if(pageChangeListener.getCurrentPage() == 0){
                     showToastComplete();
-                }
+                    Logger.Log("showToastComplete ","showToastComplete");                }
 
             }else{
                 //nextButton.setEnabled(false);
+                Logger.Log(" no showToastComplete "," no showToastComplete");
+                //  showToastComplete();
             }
+
+
 
             Fragment currentfragment = adapter.getItem(pageChangeListener.getCurrentPage());
             if(fragment == currentfragment){
                 nextButton.setEnabled(((Step1CustomerDetailFragment) fragment).isDataComplete());
+
+                Logger.Log("nextButton", String.valueOf(((Step1CustomerDetailFragment) fragment).isDataComplete()));
             }
         }else if(fragment instanceof Step2PhotoFragment){
+
+            Logger.Log("Step2PhotoFragment","Step2PhotoFragment");
 
             setStepComplete(2, complete);
             task.setTaskImages((ArrayList<Image>) data);
@@ -653,7 +728,8 @@ public class ServiceFragment extends Fragment implements
             }
         }
 
-        saveTask(task, loginData);
+        saveTask(task, loginData);  // ตรงนี้
+
 
     }
 
@@ -692,7 +768,8 @@ public class ServiceFragment extends Fragment implements
     public void onFragmentSaveInstanceState(Fragment fragment) {
         task.setCurrentStep(pageChangeListener.getCurrentPage() + 1);
 
-        saveTask(task, loginData);
+        saveTask(task, loginData); //no
+        Logger.Log("saveTask","4");
     }
 
     @Override
@@ -723,9 +800,11 @@ public class ServiceFragment extends Fragment implements
             Step4QuestionnairFragment step4;
             Step5ConfirmFragment step5;
 
-
+            Logger.Log("position check ", String.valueOf(position));
             switch (position){
                 case 0:
+
+                    Logger.Log("position", String.valueOf(position));
                     previousButton.setEnabled(false);
 
                     if(navigationControleLayout.getVisibility() == View.GONE){
@@ -823,7 +902,7 @@ public class ServiceFragment extends Fragment implements
                     }
 
                     break;
-                case 4:
+                // case 4:
                 default:
                     previousButton.setEnabled(true);
                     nextButton.setEnabled(false);
@@ -857,7 +936,9 @@ public class ServiceFragment extends Fragment implements
 
         dataSource = new TaskDataSource(getActivity());
         dataSource.open();
+
         dataSource.addIncompleteTask(task, loginData);
+
 
     }
 
@@ -884,4 +965,8 @@ public class ServiceFragment extends Fragment implements
 
         }
     }
+
+
+
+
 }

@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.opengl.Visibility;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -292,6 +293,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+
+
         if (savedInstanceState != null) {
 
             //taskInfo = savedInstanceState.getParcelable(KEY_TASK_INFO);
@@ -308,15 +311,30 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         //if(savedInstanceState == null){
 
+        Logger.Log("Step1CustomDetailFragment oncreate","Step1CustomDetailFragment oncreate ");
+
         if (getArguments() != null) {
             taskInfo = getArguments().getParcelable(KEY_TASK_INFO);
             editabled = getArguments().getBoolean(KEY_EDITABLED);
+
+            Logger.Log("step1 taskInfo data", String.valueOf(taskInfo));
+            Logger.Log("step1  editabled checj", String.valueOf(editabled));
         }
         //taskInfo = new TaskInfo();
 
         jobTypeDataList = getResources().getStringArray(R.array.job_type);
+        Logger.Log("step1 jobTypeDataList", String.valueOf(jobTypeDataList.length));
         productDataList = getResources().getStringArray(R.array.product);
+        for(String data :productDataList ){
+            Logger.Log("dataProductDataList",data);
+        }
+        Logger.Log("step1 productDataList", String.valueOf(productDataList.length));
         modelDataList = getModelDataList(0);
+
+        Logger.Log("step1 modelDataList", String.valueOf(modelDataList));
+        Logger.Log("step1 modelDataList length", String.valueOf(modelDataList.length));
+        // Logger.Log("step1 taskInfo.getProduct()", taskInfo.getProduct());
+
 
         if (taskInfo != null && taskInfo.getProduct() != null && !taskInfo.getProduct().isEmpty()) {
 
@@ -324,12 +342,18 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
                 if (taskInfo.getProduct().equals(productDataList[i])) {
                     modelDataList = getModelDataList(i + 1);
+
+
+                    Logger.Log("dataProductDataList selete",modelDataList[i]);
+
+
+                    Logger.Log("step1 modelDataList", String.valueOf(modelDataList));
                     break;
                 }
             }
         }
 
-
+        //set up pinnerAdapter ทั้ง 3
         jobTypeSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), jobTypeDataList);
         productSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), productDataList);
         modelSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), modelDataList);
@@ -495,14 +519,22 @@ public class Step1CustomerDetailFragment extends Fragment implements
         editTextServiceAddress.setText(taskInfo.getAddress());
         editTextCustomerAddress.setText(taskInfo.getCustomerAddress());
 
+
         if (taskInfo.getAddressPosition() != null) {
             String latlon = String.format("%f,%f", taskInfo.getAddressPosition().latitude, taskInfo.getAddressPosition().longitude);
+
             editTextGPSLocation.setText(latlon);
+
+            //  editTextGPSLocation.setText(  String.valueOf(taskInfo.getAddressPosition().latitude) +","+String.valueOf(taskInfo.getAddressPosition().longitude));
+
 
             Logger.Log("taskInfo latitude ", String.valueOf(taskInfo.getAddressPosition().latitude));
             Logger.Log("taskInfo longitude ", String.valueOf(taskInfo.getAddressPosition().longitude));
         }
+        else {
 
+
+        }
 
         if (taskInfo != null && taskInfo.getCustomerAddress() != null && !taskInfo.getCustomerAddress().isEmpty()) {
             customerAddressBlock.setVisibility(View.VISIBLE);
@@ -547,9 +579,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
                     return 0;
                 }
             }
-
         }
-
         return index;
 
     }
@@ -588,13 +618,6 @@ public class Step1CustomerDetailFragment extends Fragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        //mListener.onFragmentPresent(this, title);
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
@@ -647,26 +670,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         } else {
 
-
         }
 
-
-//        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//            // TODO: Consider calling
-//            handleNewLocation(mLocation);
-//            return;
-//        }
-//        else {
-//
-//        }
-
-
-
-
-
-       /* if (mGoogleApiClient != null && mGoogleApiClient.isConnected() && !mRequestingLocationUpdates) {
-            startLocationUpdates();
-        }*/
     }
 
     private void getMapoffine() {
@@ -713,77 +718,6 @@ public class Step1CustomerDetailFragment extends Fragment implements
             Toast.makeText(getContext(), "No Provider Found", Toast.LENGTH_SHORT).show();
         }
 
-
-//        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-//        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            // TODO: Consider calling
-//            //    ActivityCompat#requestPermissions
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for ActivityCompat#requestPermissions for more details.
-//            return;
-//        }
-//        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
-
-
-//        locationManager = (LocationManager) getContext()
-//                .getSystemService(LOCATION_SERVICE);
-//
-//        // getting GPS status
-//
-//        if (LocationService.isGPSEnabled(getContext())) {
-//
-//            if (locationManager != null) {
-//                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                    // TODO: Consider calling
-//                    return;
-//                }
-//                    location = locationManager  .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//
-//                if (location == null) {
-//
-//                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-//                            2000, 1, this);
-//
-//                    //  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0,this);
-//                    Logger.Log("GPS Enabled", "GPS Enabled");
-//                    if (locationManager != null) {
-//
-////                        Logger.Log("locationManager not null", "locationManager nit null");
-////                        //   location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-////                                if (location != null) {
-////                                    Logger.Log("location not null", "location nit null");
-////                                    latitude = location.getLatitude();
-////                                    longitude = location.getLongitude();
-////                                    Logger.Log("latitude and longitude ", latitude + "" + longitude);
-////                                } else {
-////                                    Logger.Log("location is null ", "location is null");
-////                                }
-//
-//                        if (location != null) {
-//                            latitude = location.getLatitude();
-//                            longitude = location.getLongitude();
-//                        }
-//
-//                        Logger.Log("latitude and longitude ",latitude +""+longitude);
-//                        Toast.makeText(
-//                                getContext(),
-//                                "Mobile Location (GPS): \nLatitude: " + latitude
-//                                        + "\nLongitude: " + longitude,
-//                                Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//
-//            }
-//
-//
-//            else {
-//                Logger.Log("locationManager not null  ", "locationManager  not null ");
-//            }
-//            Logger.Log("LocationManager ", String.valueOf(locMgr));
-        //       }
     }
 
 
@@ -798,16 +732,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
         super.onDestroy();
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentDataComplete(Fragment fragment, boolean complete, Object data);
@@ -834,12 +759,23 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 if (Network.isNetworkAvailable(getActivity())) {
                     Logger.Log("checkLocationServiceEnable online", "checkLocationServiceEnable online");
 
-                    openMaps();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        openMaps();
+                    } else {
+
+                        Intent intent = new Intent(getActivity(), MapsFixPointActivity.class);
+//                        Bundle bundle = new Bundle();
+//                        bundle.putParcelable(MapsFixPointActivity.KEY_POSITION, taskInfo.getAddressPosition());
+//                        intent.putExtras(bundle);
+
+                        getActivity().startActivityForResult(intent, REQUEST_CODE_MAP);
+                    }
+
+
                 } else {
                     Logger.Log("checkLocationServiceEnable offline", "checkLocationServiceEnable offine");
-
                     //  getMapoffine();
-
                     if(OnClickMap == 0){
                         OnClickMap =1 ;
                         loadData();
@@ -847,9 +783,6 @@ public class Step1CustomerDetailFragment extends Fragment implements
                     else {
                         Logger.Log("no click", "no click");
                     }
-
-
-
                     //    CallLacationOffine();
                 }
 
@@ -896,6 +829,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
                             String latlon = String.format("%f,%f", servicepoint.latitude, servicepoint.longitude);
                             editTextGPSLocation.setText(latlon);
 
+                            taskInfo.setAddressPosition(servicepoint);
+
                             //set map online
                         }
                         taskInfo.setAddressPosition((LatLng) bundle.getParcelable(MapsFixPointActivity.KEY_POSITION));
@@ -936,21 +871,39 @@ public class Step1CustomerDetailFragment extends Fragment implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-
+        Logger.Log("step1 onItemSelected", String.valueOf(parent)+ position);
         if (parent == spinnerJobType) {
+
+            Logger.Log("step1 onItemSelected spinnerJobType", "step1 onItemSelected spinnerJobType");
 
             boolean productWasSelected = false;
 
             String product = (String) spinnerProduct.getSelectedItem();
+
+
             if (product != null) {
                 for (String s : modelDataList) {
-                    int i = s.indexOf(spinnerModel.getSelectedItem().toString());
-                    if (i >= 0) {
-                        // found a match to "software" at offset i
-                        productWasSelected = true;
-                        break;
+
+                    if( spinnerModel.getSelectedItem() != null){
+                        int i = s.indexOf(spinnerModel.getSelectedItem().toString());
+                        Logger.Log("spinnerModel.getSelectedItem()", String.valueOf(i));
+                        if (i >= 0) {
+                            // found a match to "software" at offset i
+                            productWasSelected = true;
+                            break;
+                        }
                     }
+//                    int i = s.indexOf(spinnerModel.getSelectedItem().toString());
+//                    Logger.Log("spinnerModel.getSelectedItem()", String.valueOf(i));
+//                    if (i >= 0) {
+//                        // found a match to "software" at offset i
+//                        productWasSelected = true;
+//                        break;
+//                    }
                 }
+            }
+            else {
+                Logger.Log("step1 product null","step1 product null");
             }
 
             if (spinnerJobType.getSelectedItemPosition() > 0 && spinnerProduct.getSelectedItem() == null && editabled &&
@@ -961,9 +914,10 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
         } else if (parent == spinnerProduct) {
 
-
+            Logger.Log("step1 onItemSelected spinnerProduct", "step1 onItemSelected spinnerProduct");
             modelDataList = getModelDataList(position);
 
+            Logger.Log("step1OnItemSelectedPosition", String.valueOf(position));
             if (position != 0) {
                 //spinnerModel.setPrompt(productDataList[position - 1]);
                 //selectNoneModelSpinnerAdapter.setPromptText(productDataList[position - 1]);
@@ -984,13 +938,21 @@ public class Step1CustomerDetailFragment extends Fragment implements
             spinnerModel.invalidate();
             spinnerModel.setSelection(getIndex(spinnerModel, taskInfo.getCarModel()));
 
+            Logger.Log("step1 spinnerModel setSelection posintion", String.valueOf(getIndex(spinnerModel, taskInfo.getCarModel())));
+
 
             boolean modelWasSelected = false;
 
             String model = (String) spinnerModel.getSelectedItem();
+
+
+
+
+            //  Logger.Log("model spinner",model);
             if (model != null) {
                 for (String s : modelDataList) {
                     int i = s.indexOf(spinnerModel.getSelectedItem().toString());
+                    Logger.Log("step1 spinnerModel getSelectedItem", String.valueOf(i));
                     if (i >= 0) {
                         // found a match to "software" at offset i
                         modelWasSelected = true;
@@ -998,21 +960,32 @@ public class Step1CustomerDetailFragment extends Fragment implements
                     }
                 }
             }
+            else {
+                Logger.Log("step1 model", "step1 model");
+            }
 
-
+            Logger.Log("step1 pinnerProduct.getSelectedItemPosition()", String.valueOf(spinnerProduct.getSelectedItemPosition()));
             if (Config.showDefault == true) {
                 spinnerModel.setSelection(1);
-            } else if (spinnerProduct.getSelectedItemPosition() > 0 && editabled && !modelWasSelected) {
+
+                Logger.Log("step1 spinnerModel.setSelection","spinnerModel.setSelection");
+            }
+            else if (spinnerProduct.getSelectedItemPosition() > 0 && editabled && !modelWasSelected) {
 
                 spinnerModel.setPrompt(spinnerProduct.getSelectedItem().toString());
-
-                spinnerModel.requestFocus();
+                Logger.Log("step1 spinnerProduct.getSelectedItem()", String.valueOf(spinnerProduct.getSelectedItem()));
+                spinnerModel.requestFocus();  // requestFocus - Android Widgets สำหรับ requestFocus เป็น Widget ใช้สำหรับการ Focus ไปยังตำแหน่งของ Widgets ต่าง ๆ ที่อยู่ใน Form ตามที่ต้องการ เช่นถ้าเป็น EditText เมื่อใช้ requestFocus ตัว Cursor ก็จะเลื่อนไปตำแหน่งนั้น ๆ
                 spinnerModel.performClick();
             }
 
 
         } else if (parent == spinnerModel) {
+
+
+            Logger.Log("step1 onItemSelected spinnerModel", "step1 onItemSelected spinnerModel");
             if (position == selectNoneModelSpinnerAdapter.getCount() - 1) {
+
+                Logger.Log("step1 selectNoneModelSpinnerAdapter count", String.valueOf(selectNoneModelSpinnerAdapter.getCount() - 1));
                 layoutOtherModel.setVisibility(View.VISIBLE);
                 editTextOtherModel.setVisibility(View.VISIBLE);
             } else {
@@ -1235,7 +1208,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
             String text = editTextTaskCode.getText().toString();
             if (text.length() == 10) {
                 String textFormatted = new StringBuilder(text).insert(0, "OJ").insert(4, "-").insert(9, "-").toString();
-                taskInfo.setTaskCode(textFormatted);
+                //  taskInfo.setTaskCode(textFormatted);
+                taskInfo.setTaskCode("OJ123456789");
             } else {
                 taskInfo.setTaskCode(editTextTaskCode.getText().toString());
             }
@@ -1420,7 +1394,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
 
 
             return;
-        } else {
+        }
+        else {
             mLocationCkeck();
         }
     }
@@ -1436,19 +1411,26 @@ public class Step1CustomerDetailFragment extends Fragment implements
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        else {
+            mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-        if (mLocation == null) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, (com.google.android.gms.location.LocationListener) this);
+            if (mLocation == null) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, (com.google.android.gms.location.LocationListener) this);
 
-        } else {
-            handleNewLocation(mLocation);
+            } else {
+                handleNewLocation(mLocation);
+            }
         }
+
+
+
+
+
     }
 
 
     private void handleNewLocation(Location mLocation) {
-      //  Log.d(TAG, "The location is currently: " + mLocation.toString());
+        //  Log.d(TAG, "The location is currently: " + mLocation.toString());
 
         double currentLat = mLocation.getLatitude();
         double currentLng = mLocation.getLongitude();
@@ -1526,7 +1508,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
                             .content("กรุณารอซักครู่ค่ะ")
                             .progress(true, 0);
 
-                     materialDialog = builder.build();
+                    materialDialog = builder.build();
                     materialDialog.show();
                 }
 
@@ -1552,7 +1534,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
                         try {
 
                             CallLacationOffine();
-                           // onLocationChanged(location);
+                            // onLocationChanged(location);
                         } catch (Throwable e) {
                             e.printStackTrace();
 
@@ -1569,7 +1551,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
                 super.onPostExecute(aVoid);
                 Logger.Log("go next","go next");
 
-             //   materialDialog.hide();
+                //   materialDialog.hide();
 
                 Logger.Log("pDialog.dismiss() News", "pDialog.dismiss() News");
 
@@ -1591,7 +1573,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
             Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
 
 
-                LatLng latlng1 = new LatLng(location.getLatitude(), location.getLongitude());
+            LatLng latlng1 = new LatLng(location.getLatitude(), location.getLongitude());
 
             taskInfo.setAddressPosition(latlng1);
 
@@ -1623,6 +1605,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
     }
 
 
+    @SuppressLint("ParcelCreator")
     class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
             super(handler);
@@ -1645,6 +1628,8 @@ public class Step1CustomerDetailFragment extends Fragment implements
                         editTextServiceAddress.setText(mAddressOutput);
 
                         mAddressRequested = false;
+
+                        Logger.Log("step1 mAddressOutput", mAddressOutput);
                     }
                 });
 
@@ -1656,7 +1641,7 @@ public class Step1CustomerDetailFragment extends Fragment implements
                        /* progressBar.setVisibility(View.GONE);
                         infoText.setVisibility(View.VISIBLE);
                         infoText.setText(resultData.getString(Constants.RESULT_DATA_KEY));*/
-                        Log.d("ADDRESS", "Address not found");
+                        Logger.Log("ADDRESS", "Address not found");
                     }
                 });
 
@@ -1735,18 +1720,35 @@ public class Step1CustomerDetailFragment extends Fragment implements
      * Method to verify google play services on the device
      * */
     private boolean checkPlayServices() {
-        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
-        int result = googleAPI.isGooglePlayServicesAvailable(getActivity());
-        if (result != ConnectionResult.SUCCESS) {
-           /* if(googleAPI.isUserResolvableError(result)) {
-                googleAPI.getErrorDialog(getActivity(), result,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            }*/
 
+
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(getContext());
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(getActivity(), resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+                Log.e("apiAvailability", "This device is not supported.");
+            } else {
+                Log.i("TAG", "This device is not supported.");
+                getActivity().finish();
+            }
             return false;
         }
-
         return true;
+
+//        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+//        int result = googleAPI.isGooglePlayServicesAvailable(getActivity());
+//        if (result != ConnectionResult.SUCCESS) {
+//           /* if(googleAPI.isUserResolvableError(result)) {
+//                googleAPI.getErrorDialog(getActivity(), result,
+//                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+//            }*/
+//
+//            return false;
+//        }
+//
+//        return true;
     }
 
     //////////////////////////////////////////////////////////////////// enable GPS
@@ -1856,7 +1858,6 @@ public class Step1CustomerDetailFragment extends Fragment implements
             intent.putExtras(bundle);
             Logger.Log("taskInfo.getAddressPosition() not null ", String.valueOf(taskInfo.getAddressPosition()));
         } else {
-
 
 
             getActivity().startActivityForResult(intent, REQUEST_CODE_MAP);

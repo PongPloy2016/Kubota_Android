@@ -1,0 +1,63 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        flatDir {
+            dirs 'libs'
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.0'
+    }
+}
+
+apply plugin: 'com.android.application'
+repositories {
+	mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.6.1'
+}
+
+android {
+    compileSdkVersion 'android-8'
+    buildToolsVersion '24'
+
+    android {
+        defaultConfig {
+            minSdkVersion 18
+        }
+
+        lintOptions {
+            abortOnError false
+        }
+        sourceSets
+                {
+                    androidTest
+                            {
+                                res.srcDirs = ['res']
+                                assets.srcDirs = ['assets']
+                            }
+                }
+    }
+    buildTypes {
+        release {
+            proguardFile getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+}
+
+task assembleDebug(overwrite: true) {}
+
+task copyTask(type: Copy) {
+    from 'F:/AndroidStudioProjectToCodeGears/Kubota_Android_Codegears/app/app-debug Kubota 060959 v2_debug.apk'
+    into 'build/outputs/apk/'
+    rename {
+        'AppControllerTest-debug.apk'
+    }
+}
+
+assembleDebug.dependsOn copyTask

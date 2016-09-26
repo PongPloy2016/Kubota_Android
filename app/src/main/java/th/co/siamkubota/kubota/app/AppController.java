@@ -26,6 +26,8 @@ import com.android.volley.toolbox.Volley;
 //import com.google.android.gms.analytics.Tracker;
 
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -42,11 +44,11 @@ public class AppController extends MultiDexApplication {
 
     private AppController app;
     public String token;
-  /*  public enum TrackerName {
-        APP_TRACKER // Tracker used only in this app.
-    }
-    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
-*/
+    /*  public enum TrackerName {
+          APP_TRACKER // Tracker used only in this app.
+      }
+      HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+  */
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -55,12 +57,13 @@ public class AppController extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         mInstance = this;
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/SukhumvitSet.ttc")
-                        .setFontAttrId(R.attr.fontPath)
-                        .build()
+                .setDefaultFontPath("fonts/SukhumvitSet.ttc")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
         );
 
         // Get token of creator

@@ -33,6 +33,7 @@ import th.co.siamkubota.kubota.activity.MainActivity;
 import th.co.siamkubota.kubota.adapter.PhotoPagerAdapter;
 import th.co.siamkubota.kubota.adapter.PhotoViewPagerAdapter;
 import th.co.siamkubota.kubota.app.Config;
+import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.model.Photo;
 import th.co.siamkubota.kubota.utils.function.Copier;
 import th.co.siamkubota.kubota.utils.function.ImageFile;
@@ -48,7 +49,7 @@ import th.co.siamkubota.kubota.utils.function.Validate;
  */
 public class Step2PhotoFragment extends Fragment implements
         View.OnClickListener,
-PhotoPageFragment.OnFragmentInteractionListener{
+        PhotoPageFragment.OnFragmentInteractionListener{
 
     private static final String KEY_TITLE = "title";
     private static final String KEY_IMAGES = "images";
@@ -127,7 +128,9 @@ PhotoPageFragment.OnFragmentInteractionListener{
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(KEY_IMAGES, images);
+
+        Logger.Log("onSaveInstanceState","onSaveInstanceState");
+        //  outState.putParcelableArrayList(KEY_IMAGES, images);
         outState.putParcelableArrayList(KEY_PHOTOS, photos);
         outState.putBoolean(KEY_EDITABLED, editabled);
 
@@ -136,8 +139,10 @@ PhotoPageFragment.OnFragmentInteractionListener{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+//เก็บ onActivityCreated ส่วนที่ตาย
         if(savedInstanceState != null){
+
+            Logger.Log("onSaveInstanceState", String.valueOf(savedInstanceState.getParcelableArrayList(KEY_IMAGES)));
             images = savedInstanceState.getParcelableArrayList(KEY_IMAGES);
             photos = savedInstanceState.getParcelableArrayList(KEY_PHOTOS);
             editabled = savedInstanceState.getBoolean(KEY_EDITABLED);
@@ -159,6 +164,8 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
         if(savedInstanceState == null ){
             if (getArguments() != null) {
+
+                Logger.Log("onCreate ", String.valueOf(getArguments().getParcelableArrayList(KEY_IMAGES)));
                 //title = getArguments().getString(ARG_PARAM_TITLE);
                 images = getArguments().getParcelableArrayList(KEY_IMAGES);
                 editabled =  getArguments().getBoolean(KEY_EDITABLED);
@@ -183,13 +190,18 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
             if(images == null){
                 images = new ArrayList<Image>();
-            }else if(images.size()> 0){
+            }
 
-
+            else if(images.size()> 0)
+            {
                 int i = 0;
                 for(Image img : images){
 
                     if(img.getImagePath() != null  && !img.getImagePath().isEmpty()){
+
+                        Logger.Log("photos ", img.getImagePath());
+                        Logger.Log("setDate ", String.valueOf(img.getCapturedAt()));
+
                         photos.get(i).setPath(img.getImagePath());
                         photos.get(i).setDate(img.getCapturedAt());
                         photos.get(i).setComplete(true);
@@ -284,7 +296,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-           // mListener.onFragmentInteraction(uri);
+            // mListener.onFragmentInteraction(uri);
         }
     }
 
@@ -308,7 +320,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
     @Override
     public void onDetach() {
         super.onDetach();
-       // mListener = null;
+        // mListener = null;
     }
 
 
@@ -348,13 +360,18 @@ PhotoPageFragment.OnFragmentInteractionListener{
     public void onClick(View v) {
         if(v == button1){
             pager.setCurrentItem(0, true);
+
+            Logger.Log("pager pic 1",button1.toString());
         }else if(v == button2){
             pager.setCurrentItem(1, true);
         }else if(v == button3){
             pager.setCurrentItem(2, true);
         }else if(v == button4){
             pager.setCurrentItem(3, true);
-        }else if(v == previousButton){
+        }
+
+        else if(v == previousButton){
+
             int currentPage = pageChangeListener.getCurrentPage();
             --currentPage;
 
@@ -379,6 +396,9 @@ PhotoPageFragment.OnFragmentInteractionListener{
     @Override
     public void onPhotoTaken(Fragment fragment, Photo data) {
         for(Photo photo : photos){
+
+            Logger.Log("onPhotoTaken data_id", String.valueOf(data.getId()));
+            Logger.Log("onPhotoTaken photo_id", String.valueOf(photo.getId()));
             if(photo.getId() == data.getId()){
                 photo.setServerPath(null);
                 Copier.copy(data, photo);
@@ -392,6 +412,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
     @Override
     public void onPhotoView(Fragment fragment, Photo data) {
 
+        Logger.Log("onPhotoViewZomm","onPhotoViewZoom");
         ArrayList<Photo> images = new ArrayList<>();
         images.clear();
 
@@ -440,6 +461,7 @@ PhotoPageFragment.OnFragmentInteractionListener{
                     //button1.requestFocus();
                     button1.setTextColor(ContextCompat.getColor(getActivity(), R.color.light_gray_stage));
                     SpannableString content = new SpannableString(button1.getText().toString());
+                    Logger.Log("content", String.valueOf(content));
                     content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
                     button1.setText(content);
                     break;
@@ -459,6 +481,8 @@ PhotoPageFragment.OnFragmentInteractionListener{
         }
 
         public final int getCurrentPage() {
+
+            Logger.Log("currentPage", String.valueOf(currentPage));
             return currentPage;
         }
     }
@@ -467,7 +491,9 @@ PhotoPageFragment.OnFragmentInteractionListener{
 
         images.clear();
 
-        for(Photo photo : photos){
+        for(Photo photo : photos){ // chck photos
+
+            Logger.Log("photo.isComplete()", String.valueOf(photo.isComplete()));
             if(!photo.isComplete()){
                 dataComplete = false;
                 mListener.onFragmentDataComplete(this, dataComplete, images);
@@ -478,12 +504,17 @@ PhotoPageFragment.OnFragmentInteractionListener{
                     return;
                 }
 
-            }else{
+            }
+            else{
                 if(photo.getServerPath() != null && !photo.getServerPath().isEmpty()){
                     images.add(new Image(null, photo.getDate(), photo.getServerPath()));
                 }else{
                     images.add(new Image(photo.getPath(), photo.getDate()));
                 }
+
+                Logger.Log("photo.getDate()", String.valueOf(photo.getDate()));
+                Logger.Log("photo.getServerPath()", String.valueOf(photo.getServerPath()));
+                Logger.Log("photo.getPath()", String.valueOf(photo.getPath()));
             }
         }
 

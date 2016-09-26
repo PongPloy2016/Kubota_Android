@@ -56,6 +56,7 @@ import th.co.siamkubota.kubota.app.AppController;
 import th.co.siamkubota.kubota.app.Config;
 import th.co.siamkubota.kubota.fragment.FinishDialogFragment;
 import th.co.siamkubota.kubota.fragment.LoadingDialogFragment;
+import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.model.OfflineTask;
 import th.co.siamkubota.kubota.sqlite.TaskDataSource;
 import th.co.siamkubota.kubota.utils.function.Copier;
@@ -110,6 +111,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
+        Logger.Log("ResultActivity","ResultActivity");
 
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         imageView = (ImageView)  findViewById(R.id.imageView);
@@ -122,6 +124,8 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
         Bundle bundle = getIntent().getExtras();
         if(bundle.containsKey(ResultActivity.KEY_TASK)){
+
+
             task = bundle.getParcelable(ResultActivity.KEY_TASK);
             taskSave = new Task(task);
         }
@@ -142,6 +146,8 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
 
         if(bundle.containsKey(KEY_FROM)){
             from = bundle.getString(KEY_FROM);
+
+            Logger.Log("from UnfinishTaskFragment ",from);
         }
 
         submitData();
@@ -504,7 +510,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         //if( Network.isNetworkAvailable(this) && (loginData == null || (from != null && !from.isEmpty()))){
         if( Network.isNetworkAvailable(this) && (loginData == null )){
             //go to login page
-
+            Logger.Log("LoginActivity ","LoginActivity");
             Intent intent = new Intent(ResultActivity.this, LoginActivity.class);
             Bundle loginbundle = new Bundle();
             loginbundle.putString(LoginActivity.KEY_REQUEST_LOGIN_FROM,"ResultActivity");
@@ -520,6 +526,8 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         }else if(loginData != null && Network.isNetworkAvailable(this)){
 
             if(task != null){
+
+                Logger.Log("send submitData ","send submitData");
                 //alertLoading = new LoadingDialogFragment(); // loginData.getShopName()
                 alertLoading = LoadingDialogFragment.newInstance(loginData.getShopName());
                 alertLoading.setmListener(new LoadingDialogFragment.onActionListener() {
@@ -547,6 +555,9 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        Logger.Log("startActivityForResult requestCode ture ", String.valueOf(requestCode));
+        Logger.Log("startActivityForResult resultCode ture ", String.valueOf(resultCode));
 
         if(requestCode == REQUEST_CODE_LOGIN && resultCode == RESULT_OK){
 
@@ -576,7 +587,7 @@ public class ResultActivity extends BaseActivity implements View.OnClickListener
         dataSource = new TaskDataSource(ResultActivity.this);
         dataSource.open();
         ArrayList<OfflineTask> unfinishTasks;
-        unfinishTasks = (ArrayList<OfflineTask>) dataSource.getOfflineTasks();
+        unfinishTasks = (ArrayList<OfflineTask>) dataSource.getOfflineTasks(getApplicationContext());
 
         navigateToUnfinishTaskList(unfinishTasks);
 

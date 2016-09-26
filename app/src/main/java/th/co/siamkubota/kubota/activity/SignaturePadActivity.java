@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,10 +25,12 @@ import android.widget.Toast;
 
 import com.github.gcacace.signaturepad.views.SignaturePad;
 
+import java.io.File;
 import java.util.Date;
 
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
+import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.utils.function.Converter;
 import th.co.siamkubota.kubota.utils.function.ImageFile;
 
@@ -177,24 +180,26 @@ public class SignaturePadActivity extends BaseActivity implements View.OnClickLi
             finish();
         }
 
+        Logger.Log("finishWithResult_SignturePad", "finishWithResult_SignturePad");
+
     }
 
     public void replaceColor(Bitmap myBitmap){
 
 
-    int [] allpixels = new int [myBitmap.getHeight()*myBitmap.getWidth()];
+        int [] allpixels = new int [myBitmap.getHeight()*myBitmap.getWidth()];
 
-    myBitmap.getPixels(allpixels, 0, myBitmap.getWidth(), 0, 0, myBitmap.getWidth(), myBitmap.getHeight());
+        myBitmap.getPixels(allpixels, 0, myBitmap.getWidth(), 0, 0, myBitmap.getWidth(), myBitmap.getHeight());
 
-    for(int i = 0; i < allpixels.length; i++)
-    {
-        if(allpixels[i] == Color.TRANSPARENT)
+        for(int i = 0; i < allpixels.length; i++)
         {
-            allpixels[i] = Color.WHITE;
+            if(allpixels[i] == Color.TRANSPARENT)
+            {
+                allpixels[i] = Color.WHITE;
+            }
         }
-    }
 
-    myBitmap.setPixels(allpixels, 0, myBitmap.getWidth(), 0, 0, myBitmap.getWidth(), myBitmap.getHeight());
+        myBitmap.setPixels(allpixels, 0, myBitmap.getWidth(), 0, 0, myBitmap.getWidth(), myBitmap.getHeight());
     }
 
 /*

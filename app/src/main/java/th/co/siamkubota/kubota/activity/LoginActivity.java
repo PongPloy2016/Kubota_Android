@@ -38,6 +38,7 @@ import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
 import th.co.siamkubota.kubota.app.Config;
 import th.co.siamkubota.kubota.fragment.ServiceFragment;
+import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.utils.function.Ui;
 import th.co.siamkubota.kubota.utils.function.Validate;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -72,6 +73,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         if(bundle != null){
             if(bundle.containsKey(KEY_REQUEST_LOGIN_FROM)){
                 requestLoginFrom = bundle.getString(KEY_REQUEST_LOGIN_FROM);
+                Logger.Log("LoginActivity requestLoginFrom",requestLoginFrom);
             }
 
             if(bundle.containsKey(KEY_LOGIN_DATA)){
@@ -206,7 +208,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                     }
                 });
-                //.setNegativeButton(getString(R.string.main_button_no), null);
+        //.setNegativeButton(getString(R.string.main_button_no), null);
 
         alert = builder.create();
         alert.show();
@@ -226,6 +228,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 // Get result Repo from response.body()
 
                 LoginResponse loginData = response.body();
+
+                Logger.Log("loginData response", String.valueOf(loginData));
 
                 if(loginData != null && loginData.getResult().equals("success")){
 
@@ -256,6 +260,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                     }else{
                         finishWithResult(loginData.getParameter());
+
+                        Logger.Log("LoginActivity finishWithResult", String.valueOf(loginData.getParameter()));
                     }
 
 
@@ -290,6 +296,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void finishWithResult(LoginData loginData){
+
+        Logger.Log("LoginActivity finishWithResult intent send"," LoginActivityfinishWithResult intent send");
         Intent intent = new Intent();
 
         Bundle bundle = new Bundle();
@@ -299,7 +307,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
+        Logger.Log("LoginActivity finishWithResult RESULT_OK -1 ", String.valueOf(RESULT_OK));
         finish();
+
+
     }
 
     private void showToast(){
@@ -322,6 +333,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         if(requestLoginFrom != null && !requestLoginFrom.isEmpty()){
             if(requestLoginFrom.equals("ResultActivity")){
+                Logger.Log("LoginActivity onBackPressed login","onBackPressed login");
 
                 finishActivity(ResultActivity.REQUEST_CODE_LOGIN);
                 Intent intent = new Intent(LoginActivity.this, ServiceActivity.class);

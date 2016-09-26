@@ -1,13 +1,18 @@
 package th.co.siamkubota.kubota.sqlite;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.util.Log;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,8 +21,14 @@ import java.util.List;
 
 import io.swagger.client.model.LoginData;
 import io.swagger.client.model.Task;
+import th.co.siamkubota.kubota.fragment.Step1CustomerDetailFragment;
+import th.co.siamkubota.kubota.fragment.UnfinishTaskFragment;
+import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.model.OfflineTask;
 import th.co.siamkubota.kubota.utils.function.Converter;
+import th.co.siamkubota.kubota.utils.function.JsonDateDeserializer;
+
+import static com.google.android.gms.internal.zzhu.runOnUiThread;
 
 
 /**
@@ -28,11 +39,16 @@ public class TaskDataSource {
     // Database fields
     private SQLiteDatabase database;
     private MySQLiteHelper dbHelper;
-
-
+    private Cursor cursor ;
+    private  OfflineTask offlineTask ;
+    private  Gson gson ;
+    private  Task task ;
+    private MaterialDialog materialDialog;
     public TaskDataSource(Context context) {
         dbHelper = new MySQLiteHelper(context);
     }
+    private Context context ;
+
 
     public void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
@@ -236,7 +252,7 @@ public class TaskDataSource {
         return tasktList;
     }
 
-    public List<OfflineTask> getOfflineTasks() {
+    public List<OfflineTask> getOfflineTasks(Context context) {
         List<OfflineTask> tasktList = new ArrayList<OfflineTask>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + DatabaseInfo.KEY_TABLE_TASK;
@@ -249,32 +265,104 @@ public class TaskDataSource {
         String[] args = new String[]{};
 
         database = dbHelper.getWritableDatabase();
-        Cursor cursor = database.rawQuery(selectQuery, args);
+        cursor = database.rawQuery(selectQuery, args);
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
 
-                OfflineTask offlineTask = new OfflineTask();
 
-                String jsonData = cursor.getString(2);
-                Gson gson = new Gson();
-                Task task = gson.fromJson(jsonData, Task.class);
-                // Adding contact to list
 
-                String jsonLoginData = cursor.getString(4);
-                LoginData loginData = gson.fromJson(jsonLoginData, LoginData.class);
+                try {
 
-                offlineTask.setTask(task);
-                offlineTask.setLoginData(loginData);
+                    //    loadData(context);
 
-                tasktList.add(offlineTask);
+                    String jsonData = cursor.getString(2);
+                    gson = new Gson();
+                    task = gson.fromJson(jsonData, Task.class);
+                    offlineTask = new OfflineTask();
+
+                    // Adding contact to list
+
+                    String jsonLoginData = cursor.getString(4);
+                    LoginData loginData = gson.fromJson(jsonLoginData, LoginData.class);
+
+                    offlineTask.setTask(task);
+                    offlineTask.setLoginData(loginData);
+                    tasktList.add(offlineTask);
+
+                    Logger.Log("task to selete", String.valueOf(task));
+                } catch (JsonSyntaxException e) {
+                    Logger.Log( "Error while decoding extraData: ",  e.toString());
+                }
+
+
+
 
             } while (cursor.moveToNext());
         }
 
         // return store list
         return tasktList;
+    }
+
+
+
+    private void loadData(final Context context) {
+        new AsyncTask<Void, Void, Void>(){
+
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //     showIndeterminateProgressDialog(true);
+
+
+
+//                if(materialDialog == null) {
+//                    MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+//                            .title("แจ้งเตือน")
+//                            .content("กรุณารอซักครู่ค่ะ")
+//                            .progress(true, 0);
+//
+//                    materialDialog = builder.build();
+//                    materialDialog.show();
+//                }
+
+
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                runOnUiThread(new Runnable(){
+                    @Override
+                    public void run() {
+                        // do some thing which you want in try block
+                        try {
+                            // getOfflineTask();
+                        } catch (Throwable e) {
+                            e.printStackTrace();
+
+                            //  intentChectSendEmail(e.toString());
+                            //  intentChectSendEmail(nameId);
+                        }
+                    }
+                });
+
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                // materialDialog.hide();
+                //   materialDialog.hide();
+
+                Logger.Log("pDialog.dismiss() News", "pDialog.dismiss() News");
+
+            }
+        }.execute();
     }
 
     public HashMap<Task, LoginData> getIncompleteTask() {
@@ -333,7 +421,9 @@ public class TaskDataSource {
 
 
                 String jsonData = cursor.getString(2);
-                Gson gson = new Gson();
+                //  Gson gson = new Gson();
+                //  Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+                Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new JsonDateDeserializer()).create();
                 Task task = gson.fromJson(jsonData, Task.class);
 
                 String jsonData2 = cursor.getString(4);
@@ -447,7 +537,7 @@ public class TaskDataSource {
 //		db.insert(DatabaseInfo.KEY_TABLE_STORE, null, values);
 //		db.close(); // Closing database connection
 
-        InsertData(DatabaseInfo.KEY_TABLE_TASK, values);
+        InsertData(DatabaseInfo.KEY_TABLE_TASK, values); // ตรงนี้
     }
 
 
@@ -458,13 +548,13 @@ public class TaskDataSource {
         }
     }
 
-	public long deleteTask(String taskId){
+    public long deleteTask(String taskId){
 
         String whereClause = DatabaseInfo.KEY_COL_TASK_ID +" = ? ";
-		long mData = Delete(DatabaseInfo.KEY_TABLE_TASK, whereClause, new String[]{taskId});
+        long mData = Delete(DatabaseInfo.KEY_TABLE_TASK, whereClause, new String[]{taskId});
 
-		return mData;
-	}
+        return mData;
+    }
 
 
 

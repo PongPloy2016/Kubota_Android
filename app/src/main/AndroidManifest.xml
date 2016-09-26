@@ -118,7 +118,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="@string/google_maps_key_release" />
 
         <activity
             android:name=".activity.MapsActivity"
@@ -130,6 +130,9 @@
             android:name=".activity.MapsDragableActivity"
             android:label="@string/title_activity_maps_dragable" />
         <activity android:name=".activity.MapsFixPointActivity"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="b3075ae389e326082de39c145f8a5850110aa43b" />
     </application>
 
 </manifest>

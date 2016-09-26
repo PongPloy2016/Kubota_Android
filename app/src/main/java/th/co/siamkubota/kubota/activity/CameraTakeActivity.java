@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,22 +20,29 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
+import com.nostra13.universalimageloader.utils.L;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 
 import th.co.siamkubota.kubota.R;
 import th.co.siamkubota.kubota.app.AppController;
+import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.utils.function.Converter;
 import th.co.siamkubota.kubota.utils.function.ImageFile;
 
@@ -85,12 +93,13 @@ public class CameraTakeActivity extends BaseActivity implements
         imageView = (ImageView) findViewById(R.id.imageView);
 
         Bundle bundle = getIntent().getExtras();
-        command  = bundle.getInt(CameraTakeActivity.KEY_COMMAND, 0);
+        command  = bundle.getInt(CameraTakeActivity.KEY_COMMAND, 0);  //รับ KEY_COMMAND
+        Logger.Log("command", String.valueOf(command));
         GROUP_CODE = bundle.getInt(CameraTakeActivity.KEY_GROUP_CODE, -1);
         checkPresentImage = bundle.getBoolean(CameraTakeActivity.KEY_CHECK_PRESENT, false);
         //renderDate = bundle.getBoolean(CameraTakeActivity.KEY_RENDER_DATE,false);
-        renderText = bundle.getString(CameraTakeActivity.KEY_RENDER_TEXT, null);
-
+        renderText = bundle.getString(CameraTakeActivity.KEY_RENDER_TEXT, null); //รับ KEY_RENDER_TEXT
+        Logger.Log("renderText", String.valueOf(renderText));
 
        /* switch (command){
             case 0:
@@ -127,10 +136,13 @@ public class CameraTakeActivity extends BaseActivity implements
     private void chooser(int command){
         switch (command){
             case 0:
+
                 requestCamera();
+                Logger.Log("requestCamera_requestCamera", String.valueOf(command));
                 break;
             case 1:
                 selectFile();
+                Logger.Log("requestCamera_selectFile", String.valueOf(command));
                 break;
             default:
                 break;
@@ -138,33 +150,33 @@ public class CameraTakeActivity extends BaseActivity implements
     }
 
 
-    private void selectImage() {
-        final CharSequence[] items = { "Take Photo", "Choose from Library",
-                "Cancel" };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(CameraTakeActivity.this);
-        builder.setTitle("Add Photo!");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("Take Photo")) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent, COMMAND_REQUEST_CAMERA);
-                } else if (items[item].equals("Choose from Library")) {
-                    Intent intent = new Intent(
-                            Intent.ACTION_PICK,
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
-                    startActivityForResult(
-                            Intent.createChooser(intent, "Select File"),
-                            COMMAND_SELECT_FILE);
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
+//    private void selectImage() {
+//        final CharSequence[] items = { "Take Photo", "Choose from Library",
+//                "Cancel" };
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(CameraTakeActivity.this);
+//        builder.setTitle("Add Photo!");
+//        builder.setItems(items, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int item) {
+//                if (items[item].equals("Take Photo")) {
+//                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                    startActivityForResult(intent, COMMAND_REQUEST_CAMERA);
+//                } else if (items[item].equals("Choose from Library")) {
+//                    Intent intent = new Intent(
+//                            Intent.ACTION_PICK,
+//                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                    intent.setType("image/*");
+//                    startActivityForResult(
+//                            Intent.createChooser(intent, "Select File"),
+//                            COMMAND_SELECT_FILE);
+//                } else if (items[item].equals("Cancel")) {
+//                    dialog.dismiss();
+//                }
+//            }
+//        });
+//        builder.show();
+//    }
 
 
     @Override
@@ -180,12 +192,27 @@ public class CameraTakeActivity extends BaseActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Logger.Log("requestCodeCamere", String.valueOf(requestCode));
+
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == COMMAND_SELECT_FILE)
+            if (requestCode == COMMAND_SELECT_FILE) {
+
+                Logger.Log("requestCodeCamere COMMAND_SELECT_FILE =1  ", String.valueOf(requestCode));
                 onSelectFromGalleryResult(data);
+            }
             else if (requestCode == COMMAND_REQUEST_CAMERA){
+                Logger.Log("requestCodeCamere COMMAND_REQUEST_CAMERA = 0", String.valueOf(requestCode));
                 //onCaptureImageResult(data);
                 grabImage(imageView);
+
+//                {
+//                    Uri imageUri = data.getData();
+//                    try {
+//                        Bitmap bitmap = getThumbnail(imageUri);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
             }
 
         }else{
@@ -195,17 +222,53 @@ public class CameraTakeActivity extends BaseActivity implements
         }
     }
 
+
+
+
     public void grabImage(ImageView imageView)
     {
-        this.getContentResolver().notifyChange(mImageUri, null);
+        this.getContentResolver().notifyChange(mImageUri, null);  //Return a ContentResolver instance for your application's package.
         ContentResolver cr = this.getContentResolver();
         Bitmap bitmap;
+
+        int inWidth = 0;
+        int inHeight = 0;
+
         try
         {
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+
+
+
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            //inJustDecodeBounds = true <-- will not load the bitmap into memory
+            bmOptions.inJustDecodeBounds = true;
+
+
+            WindowManager wm = (WindowManager) getApplication().getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+
+            Point size = new Point();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+                display.getSize(size);
+            }
+            int width = size.x;
+            int height = size.y;
+
+            Logger.Log("width", String.valueOf(width));
+            Logger.Log("height", String.valueOf(height));
+
+
+
             //bitmap = MediaStore.Images.Media.getBitmap(cr, mImageUri);
-            bitmap = ImageFile.decodeSampledBitmapFromUri(cr, mImageUri, 960, 960);
+            bitmap = ImageFile.decodeSampledBitmapFromUri(cr, mImageUri,width, height);
+            Logger.Log("bitmap", String.valueOf(bitmap));
             //image = ImageFile.ImageResize(bitmap, 640, ImageFile.getImageOrientation(mImageUri.getPath()));
-            image = ImageFile.ImageResizeFixWidth(bitmap, 960, ImageFile.getImageOrientation(mImageUri.getPath()));
+            image = ImageFile.ImageResizeFixWidth(bitmap, width, ImageFile.getImageOrientation(mImageUri.getPath()));  //set path
+            Logger.Log("mImageUri.getPath()",mImageUri.getPath());
+            Logger.Log("image camere ", String.valueOf(image));
             //imageView.setImageBitmap(image);
             takenDate = new Date();
             finishWithResult(image);
@@ -221,6 +284,7 @@ public class CameraTakeActivity extends BaseActivity implements
         catch (Exception e)
         {
             Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT).show();
+            Logger.Log("Failed to load",e.toString());
             Log.d(TAG, "Failed to load", e);
             finish();
         }
@@ -318,6 +382,8 @@ public class CameraTakeActivity extends BaseActivity implements
             return ;
         }
         mImageUri = Uri.fromFile(photo);
+
+        Logger.Log("mImageUri", String.valueOf(mImageUri));
         intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
         //start camera intent
         startActivityForResult(intent, COMMAND_REQUEST_CAMERA);
@@ -343,9 +409,12 @@ public class CameraTakeActivity extends BaseActivity implements
         if(renderText != null && !renderText.isEmpty()){
             //String strDate = Converter.DateToString(takenDate, "dd/MM/yyyy");
             bitmap = ImageFile.drawTextToBitmap(CameraTakeActivity.this, bitmap, renderText );
+
+            Logger.Log("bitmap finishWithResult", String.valueOf(bitmap));
         }
 
         String imagePath = ImageFile.saveBitmapToPath(CameraTakeActivity.this, bitmap, getString(R.string.image_path), Converter.DateToString(takenDate, "yyyyMMddHHmmss"));
+        Logger.Log("imagePath finishWithResult",imagePath);
 
         //Convert to byte array
 //        ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -409,4 +478,43 @@ public class CameraTakeActivity extends BaseActivity implements
             // permissions this app might request
         }
     }
+
+///**********************************
+
+
+//
+//    public Bitmap getThumbnail(Uri uri) throws FileNotFoundException, IOException{
+//        InputStream input = this.getContentResolver().openInputStream(uri);
+//
+//        BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
+//        onlyBoundsOptions.inJustDecodeBounds = true;
+//        onlyBoundsOptions.inDither=true;//optional
+//        onlyBoundsOptions.inPreferredConfig=Bitmap.Config.ARGB_8888;//optional
+//        BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
+//        input.close();
+//        if ((onlyBoundsOptions.outWidth == -1) || (onlyBoundsOptions.outHeight == -1))
+//            return null;
+//
+//        int originalSize = (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth) ? onlyBoundsOptions.outHeight : onlyBoundsOptions.outWidth;
+//
+//        double ratio = (originalSize > THUMBNAIL_SIZE) ? (originalSize / THUMBNAIL_SIZE) : 1.0;
+//
+//        BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+//        bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio);
+//        bitmapOptions.inDither=true;//optional
+//        bitmapOptions.inPreferredConfig=Bitmap.Config.ARGB_8888;//optional
+//        input = this.getContentResolver().openInputStream(uri);
+//        Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
+//        input.close();
+//        return bitmap;
+//    }
+//
+//    private static int getPowerOfTwoForSampleRatio(double ratio){
+//        int k = Integer.highestOneBit((int)Math.floor(ratio));
+//        if(k==0) return 1;
+//        else return k;
+//    }
+
+
+
 }

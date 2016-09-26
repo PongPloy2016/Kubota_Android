@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import th.co.siamkubota.kubota.R;
+import th.co.siamkubota.kubota.logger.Logger;
 
 
 public class LoadingDialogFragment extends DialogFragment implements View.OnClickListener{
@@ -103,7 +104,7 @@ public class LoadingDialogFragment extends DialogFragment implements View.OnClic
 
         return dialog;
 
-       // return super.onCreateDialog(savedInstanceState);
+        // return super.onCreateDialog(savedInstanceState);
     }
 
     @Override
@@ -145,6 +146,8 @@ public class LoadingDialogFragment extends DialogFragment implements View.OnClic
         runnable = new Runnable() {
             public void run() {
                 delayDismiss();
+
+                Logger.Log("delayDismiss","delayDismiss");
             }
         };
 
@@ -154,6 +157,9 @@ public class LoadingDialogFragment extends DialogFragment implements View.OnClic
     }
 
     private void delayDismiss(){
+
         super.dismiss();
+
+
     }
 }

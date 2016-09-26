@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.bumptech.glide.Glide;
 import com.joooonho.SelectableRoundedImageView;
 
 import java.io.File;
@@ -35,6 +36,7 @@ import th.co.siamkubota.kubota.activity.MainActivity;
 import th.co.siamkubota.kubota.activity.SignaturePadActivity;
 import th.co.siamkubota.kubota.app.AppController;
 import th.co.siamkubota.kubota.app.Config;
+import th.co.siamkubota.kubota.logger.Logger;
 import th.co.siamkubota.kubota.model.Photo;
 import th.co.siamkubota.kubota.utils.function.Converter;
 import th.co.siamkubota.kubota.utils.function.ImageFile;
@@ -178,7 +180,11 @@ public class Step3SignFragment extends Fragment implements
         if(signature != null && signature.getCustomerName() != null && !signature.getCustomerName().isEmpty()){
             editTextCustomerName.setText(signature.getCustomerName());
         }else if(signature == null ||  signature.getCustomerName() == null || signature.getCustomerName().isEmpty() ){
-            editTextCustomerName.setText(customerName);
+
+            if(customerName != null){
+                editTextCustomerName.setText(customerName);
+            }
+
         }
     }
 
@@ -215,13 +221,15 @@ public class Step3SignFragment extends Fragment implements
 
 
                 if(imageCustomer != null && imageCustomer.getPath() != null && !imageCustomer.getPath().isEmpty()){
-                    imageCustomerSignature.setImageURI(Uri.fromFile(new File(imageCustomer.getPath())));
+                    //  imageCustomerSignature.setImageURI(Uri.fromFile(new File(imageCustomer.getPath())));
+                    Glide.with(getContext()).load(Uri.fromFile(new File(imageCustomer.getPath()))).into(imageCustomerSignature);
                     editTextCustomerSignDate.setText(Converter.DateToString(imageCustomer.getDate(),"dd/MM/yyyy"));
                     signatureCustomerHintLayout.setVisibility(View.GONE);
                 }
 
                 if(imageTechnician != null && imageTechnician.getPath() != null && !imageTechnician.getPath().isEmpty()){
-                    imageTechnicianSignature.setImageURI(Uri.fromFile(new File(imageTechnician.getPath())));
+                    //  imageTechnicianSignature.setImageURI(Uri.fromFile(new File(imageTechnician.getPath())));
+                    Glide.with(getContext()).load(Uri.fromFile(new File(imageTechnician.getPath()))).into(imageTechnicianSignature);
                     editTextTechnicianSignDate.setText(Converter.DateToString(imageTechnician.getDate(),"dd/MM/yyyy"));
                     signatureTechnicianHintLayout.setVisibility(View.GONE);
                 }
@@ -369,7 +377,7 @@ public class Step3SignFragment extends Fragment implements
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-           // mListener.onFragmentInteraction(uri);
+            // mListener.onFragmentInteraction(uri);
         }
     }
 
@@ -455,6 +463,7 @@ public class Step3SignFragment extends Fragment implements
             intent.putExtras(bundle);
             //startActivityForResult(intent, requestCode);
             getActivity().startActivityForResult(intent, requestCode);
+            Logger.Log("send to SignaturePadActivity","send to SignaturePadActivity");
         }
 
     }
@@ -476,6 +485,7 @@ public class Step3SignFragment extends Fragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Logger.Log("onActivityResult Step3", String.valueOf(requestCode));
         if(resultCode == Activity.RESULT_OK){
 
             Bundle bundle = data.getExtras();
@@ -493,7 +503,11 @@ public class Step3SignFragment extends Fragment implements
                 imageCustomer.setPath(imagePath);
                 //imageCustomer.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
                 imageCustomer.setDate(new Date());
-                imageCustomerSignature.setImageURI(Uri.fromFile(new File(imageCustomer.getPath())));
+                //   imageCustomerSignature.setImageURI(Uri.fromFile(new File(imageCustomer.getPath())));
+
+                Glide.with(getContext()).load(Uri.fromFile(new File(imageCustomer.getPath()))).into(imageCustomerSignature);
+
+                Logger.Log("imageCustomerSignature", String.valueOf(Uri.fromFile(new File(imageCustomer.getPath()))));
                 //imageView.setVisibility(View.VISIBLE);
                 editTextCustomerSignDate.setText(Converter.DateToString(imageCustomer.getDate(), "dd/MM/yyyy" ));
                 signatureCustomerHintLayout.setVisibility(View.GONE);
@@ -512,7 +526,10 @@ public class Step3SignFragment extends Fragment implements
                 imageTechnician.setPath(imagePath);
                 //imageTechnician.setDate(Converter.StringToDate(dateInfo, "dd/MM/yyyy"));
                 imageTechnician.setDate(new Date());
-                imageTechnicianSignature.setImageURI(Uri.fromFile(new File(imageTechnician.getPath())));
+                //  imageTechnicianSignature.setImageURI(Uri.fromFile(new File(imageTechnician.getPath())));
+
+                Glide.with(getContext()).load(Uri.fromFile(new File(imageTechnician.getPath()))).into(imageTechnicianSignature);
+                Logger.Log("imageTechnicianSignature", String.valueOf(Uri.fromFile(new File(imageTechnician.getPath()))));
                 //imageView.setVisibility(View.VISIBLE);
                 editTextTechnicianSignDate.setText(Converter.DateToString(imageTechnician.getDate(), "dd/MM/yyyy"));
                 signatureTechnicianHintLayout.setVisibility(View.GONE);
